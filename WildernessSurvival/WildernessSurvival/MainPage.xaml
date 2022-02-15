@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:game="clr-namespace:WildernessSurvival.game" x:DataType="game:Player"
+             mc:Ignorable="d"
+             x:Class="WildernessSurvival_Xamarin.MainPage">
+    <ContentPage.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="Large"></Setter>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="30"></Setter>
+        </Style>
+        
+    </ContentPage.Resources>
+    
+    <StackLayout Padding="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Label x:Name="Label_HP"  Text="生命值：" Grid.Row="0"></Label>
+            <Label x:Name="Label_FOOD"  Text="饱腹值：" Grid.Row="1"></Label>
+            <Label x:Name="Label_WATER" Text="饮水值："  Grid.Row="2"></Label>
+            <Label x:Name="Label_ENERGY" Text="体力值：" Grid.Row="3"></Label>
+            <Label x:Name="Label_POS" Text="当前位置：" Grid.Row="4"></Label>
+            
+            <Label x:Name="Content_HP" Text="{Binding HP,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="0"></Label>
+            <Label x:Name="Content_FOOD"  Text="{Binding FOOD,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="1"></Label>
+            <Label x:Name="Content_WATER" Text="{Binding WATER,Source={StaticResource player},Mode=TwoWay}"  Grid.Column="1" Grid.Row="2"></Label>
+            <Label x:Name="Content_ENERGY" Text="{Binding ENERGY,Source={StaticResource player},Mode=TwoWay}"  Grid.Column="1" Grid.Row="3"></Label>
+            <Label x:Name="Content_POS" Text="{Binding POS,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="4"></Label>
+        </Grid>
+
+        <ProgressBar x:Name="Trip" HorizontalOptions="Fill"/>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="Act" Text="行动" Clicked="Act_Cliked" Grid.Row="0" Grid.Column="0"></Button>
+            <Button x:Name="Hunt" Text="打猎" Clicked="Hunt_Clicked" Grid.Row="0" Grid.Column="1"></Button>
+            <Button x:Name="Cut" Text="砍树" Clicked="Cut_Clicked" Grid.Row="0" Grid.Column="2" ></Button>
+            <Button x:Name="Backpack" Text="背包" Clicked="Backpack_Clicked"  Grid.Row="1" Grid.Column="0"></Button>
+            <Button x:Name="Fish" Text="钓鱼" Clicked="Fish_Clicked" Grid.Row="1" Grid.Column="1"></Button>
+            <Button x:Name="Explore" Text="探索" Clicked="Explore_Cliked" Grid.Row="1" Grid.Column="2"></Button>
+            <Button x:Name="Rest" Text="休息" Clicked="Rest_Cliked" Grid.Row="2" Grid.Column="0"></Button>
+            <Button x:Name="Fire" Text="生火" Clicked="Fire_Clicked" Grid.Row="2" Grid.Column="1"></Button>
+            <Button x:Name="Cook" Text="烹饪" Clicked="Cook_Clicked" IsEnabled="{Binding HasFire,Source={StaticResource player},Mode=TwoWay}" Grid.Row="2" Grid.Column="2"></Button>
+            <Button x:Name="Restart" Text="重新开始" Clicked="RestartGame" Grid.Row="3" Grid.ColumnSpan="3">
+                <Button.IsVisible>false</Button.IsVisible>
+            </Button>
+
+        </Grid>
+    </StackLayout>
+
+</ContentPage>

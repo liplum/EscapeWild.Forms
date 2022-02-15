@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="WildernessSurvival.CookPage">
+    <ContentPage.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontSize" Value="50"></Setter>
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+            <Label Text="烹饪" FontSize="Header" HorizontalOptions="Center"></Label>
+            <Picker x:Name="RawItemsPicker" FontSize="30" Title="选择要加热的物品" SelectedIndexChanged="RawItemsPicker_SelectedIndexChanged">
+            </Picker>
+            <Label x:Name="ItemDescription" FontSize="20"></Label>
+            <Button Text="加热" x:Name="Heat" Grid.Column="0" Clicked="Heat_Clicked">
+            </Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
