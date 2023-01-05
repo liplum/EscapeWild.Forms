@@ -2,6 +2,6 @@
 {
     public abstract class Effect
     {
-        public abstract void Work(Player player);
+        public abstract void Perform(Player player);
     }
 }

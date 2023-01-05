@@ -32,21 +32,21 @@
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <Label x:Name="Label_HP" Text="{x:Static prop:AppResources.AttrHealth}" Grid.Row="0" />
-      <Label x:Name="Label_FOOD" Text="{x:Static prop:AppResources.AttrFood}" Grid.Row="1" />
-      <Label x:Name="Label_WATER" Text="{x:Static prop:AppResources.AttrWater}" Grid.Row="2" />
-      <Label x:Name="Label_ENERGY" Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3" />
-      <Label x:Name="Label_POS" Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4" />
+      <Label Text="{x:Static prop:AppResources.AttrHealth}" Grid.Row="0" Grid.Column="0" />
+      <Label Text="{x:Static prop:AppResources.AttrFood}" Grid.Row="1" Grid.Column="0" />
+      <Label Text="{x:Static prop:AppResources.AttrWater}" Grid.Row="2" Grid.Column="0" />
+      <Label Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3" Grid.Column="0" />
+      <Label Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4" Grid.Column="0" />
 
-      <Label x:Name="Content_HP" Text="{Binding HP,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+      <Label Text="{Binding HP,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="0" />
-      <Label x:Name="Content_FOOD" Text="{Binding FOOD,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+      <Label Text="{Binding FOOD,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="1" />
-      <Label x:Name="Content_WATER" Text="{Binding WATER,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+      <Label Text="{Binding WATER,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="2" />
-      <Label x:Name="Content_ENERGY" Text="{Binding ENERGY,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+      <Label Text="{Binding ENERGY,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="3" />
-      <Label x:Name="Content_POS" Text="{Binding POS,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+      <Label Text="{Binding POS,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="4" />
     </Grid>
 
@@ -81,9 +81,9 @@
       <Button x:Name="Fire" Text="{x:Static prop:AppResources.Fire}" Clicked="Fire_Clicked" Grid.Row="3"
         Grid.Column="1" />
       <Button x:Name="Cook" Text="{x:Static prop:AppResources.Cook}" Clicked="Cook_Clicked"
-        IsEnabled="{Binding HasFire,Source={StaticResource player},Mode=TwoWay}" Grid.Row="4" Grid.Column="0" />
-      <Button x:Name="Restart" Text="{x:Static prop:AppResources.Restart}" Clicked="RestartGame" Grid.Row="3"
-        Grid.ColumnSpan="1">
+        IsEnabled="{Binding HasFire,Source={StaticResource player},Mode=OneWay}" Grid.Row="4" Grid.Column="0" />
+      <Button x:Name="Restart" Text="{x:Static prop:AppResources.Restart}" Clicked="RestartGame" Grid.Row="4"
+        Grid.Column="1">
         <Button.IsVisible>false</Button.IsVisible>
       </Button>
 

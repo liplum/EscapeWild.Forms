@@ -15,60 +15,15 @@ namespace WildernessSurvival.game
 
         public IList<ItemBase> AllItems { get; private set; }
 
-        public bool HasRaw
-        {
-            get
-            {
-                foreach (var item in AllItems)
-                    if (item is IRawItem)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasRaw => AllItems.OfType<IRawItem>().Any();
 
-        public bool HasOxe
-        {
-            get
-            {
-                foreach (var item in AllItems)
-                    if (item is Oxe)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasOxe => AllItems.OfType<Oxe>().Any();
 
-        public bool HasFishRod
-        {
-            get
-            {
-                foreach (var item in AllItems)
-                    if (item is FishRod)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasFishRod => AllItems.OfType<FishRod>().Any();
 
-        public bool HasHunting
-        {
-            get
-            {
-                foreach (var item in AllItems)
-                    if (item is Hunting)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasHunting => AllItems.OfType<Hunting>().Any();
 
-        public bool HasWood
-        {
-            get
-            {
-                foreach (var item in AllItems)
-                    if (item is Wood)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasWood => AllItems.OfType<Wood>().Any();
 
         /*public IList<ItemBase> AvailableItems
         {
@@ -91,7 +46,7 @@ namespace WildernessSurvival.game
 
         public IList<ItemBase> HuntingTools => (from item in AllItems where item is Hunting select item).ToList();
 
-        public IList<ItemBase> Woods => (from item in AllItems where item is Wood select item).ToList();
+        private IList<ItemBase> Woods => (from item in AllItems where item is Wood select item).ToList();
 
         public void AddItem(ItemBase item)
         {

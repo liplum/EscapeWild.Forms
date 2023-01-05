@@ -43,7 +43,7 @@ namespace WildernessSurvival.game
             const int 浆果概率 = 60, 脏水概率 = 60, 木头概率 = 20, 双倍概率 = 30;
             if (POS == "平原")
             {
-                var proportion = 10 - CurPositionExploreCount;
+                var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
                 var prop = proportion / 10f;
 
@@ -81,7 +81,7 @@ namespace WildernessSurvival.game
             const int 浆果概率 = 30, 脏水概率 = 20, 木头概率 = 50, 坚果概率 = 60, 坚果双倍概率 = 40, 木头双倍概率 = 20;
             if (POS == "森林")
             {
-                var proportion = 10 - CurPositionExploreCount;
+                var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
                 var prop = proportion / 10f;
 
@@ -126,7 +126,7 @@ namespace WildernessSurvival.game
             const int 生鱼概率 = 20, 净水概率 = 70, 净水双倍概率 = 40;
             if (POS == "河边")
             {
-                var proportion = 10 - CurPositionExploreCount;
+                var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
                 var prop = proportion / 10f;
 
@@ -161,7 +161,7 @@ namespace WildernessSurvival.game
             const int 斧子概率 = 50, 鱼竿概率 = 30, 陷阱概率 = 20, 猎枪概率 = 5;
             if (POS == "小屋")
             {
-                var prop = CurPositionExploreCount == 0 ? 1 : 0;
+                var prop = _curPositionExploreCount == 0 ? 1 : 0;
 
                 var 获得的物品 = new List<ItemBase>();
 

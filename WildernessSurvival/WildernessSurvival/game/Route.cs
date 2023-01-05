@@ -6,7 +6,7 @@ namespace WildernessSurvival.game
 {
     public class Route
     {
-        private const int CHANGED_RATE = 30; //%
+        private const int ChangedRate = 30; //%
         private static readonly Random Random = new Random();
 
         /// <summary>
@@ -19,17 +19,17 @@ namespace WildernessSurvival.game
             new Place("小屋", false, false, 10, 30, true)
         );
 
-        private readonly List<Place> AllPlace;
+        private readonly List<Place> _allPlace;
 
         public Route(params Place[] Places)
         {
-            AllPlace = Places.ToList();
-            CurPlace = AllPlace[0];
+            _allPlace = Places.ToList();
+            CurPlace = _allPlace[0];
         }
 
         public Route(Route route)
         {
-            AllPlace = route.AllPlace;
+            _allPlace = route._allPlace;
         }
 
         public Place CurPlace { get; private set; }
@@ -39,11 +39,11 @@ namespace WildernessSurvival.game
             get
             {
                 var isChanged = Random.Next(100);
-                if (CurPlace.IsSpecial || isChanged < CHANGED_RATE)
+                if (CurPlace.IsSpecial || isChanged < ChangedRate)
                 {
                     var range = 100 - CurPlace.AppearRate;
                     var next = Random.Next(range);
-                    var OtherPlace = (from p in AllPlace where p.Name != CurPlace.Name select p).ToList();
+                    var OtherPlace = (from p in _allPlace where p.Name != CurPlace.Name select p).ToList();
 
                     for (int i = 0, sum = 0; i <= OtherPlace.Count; ++i)
                     {
@@ -63,7 +63,7 @@ namespace WildernessSurvival.game
 
         public void Reset()
         {
-            CurPlace = AllPlace[0];
+            CurPlace = _allPlace[0];
         }
 
         public class Place

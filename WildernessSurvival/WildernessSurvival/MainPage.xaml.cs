@@ -23,7 +23,7 @@ namespace WildernessSurvival
         private void Move_Cliked(object sender, EventArgs e)
         {
             player.Move();
-            Trip.ProgressTo(player.Trip, 300, Easing.Linear);
+            Trip.ProgressTo(player.TripRatio, 300, Easing.Linear);
             CheckDeadOrWin();
         }
 
@@ -97,7 +97,7 @@ namespace WildernessSurvival
         {
             player.Reset();
             Restart.IsVisible = false;
-            Trip.ProgressTo(player.Trip, 300, Easing.Linear);
+            Trip.ProgressTo(player.TripRatio, 300, Easing.Linear);
         }
 
         private void Backpack_Clicked(object sender, EventArgs e)

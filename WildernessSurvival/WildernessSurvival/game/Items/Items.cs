@@ -8,7 +8,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.FOOD);
+            player.Modify(Restore, Player.ValueType.Food);
         }
     }
 
@@ -26,7 +26,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.WATER);
+            player.Modify(Restore, Player.ValueType.Water);
         }
     }
 
@@ -44,7 +44,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.FOOD);
+            player.Modify(Restore, Player.ValueType.Food);
         }
     }
 
@@ -56,7 +56,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.FOOD);
+            player.Modify(Restore, Player.ValueType.Food);
         }
     }
 
@@ -81,8 +81,8 @@
 
         public override void Use(Player player)
         {
-            player.Modify(FoodRestore, Player.ValueType.FOOD);
-            player.Modify(WaterRestore, Player.ValueType.WATER);
+            player.Modify(FoodRestore, Player.ValueType.Food);
+            player.Modify(WaterRestore, Player.ValueType.Water);
         }
     }
 
@@ -100,7 +100,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.WATER);
+            player.Modify(Restore, Player.ValueType.Water);
         }
     }
 
@@ -112,7 +112,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.WATER);
+            player.Modify(Restore, Player.ValueType.Water);
         }
     }
 
@@ -124,7 +124,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.FOOD);
+            player.Modify(Restore, Player.ValueType.Food);
         }
     }
 
@@ -136,7 +136,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.HP);
+            player.Modify(Restore, Player.ValueType.Hp);
         }
     }
 
@@ -149,8 +149,8 @@
 
         public override void Use(Player player)
         {
-            player.Modify(HPRestore, Player.ValueType.HP);
-            player.Modify(EnergyRestore, Player.ValueType.ENERGY);
+            player.Modify(HPRestore, Player.ValueType.Hp);
+            player.Modify(EnergyRestore, Player.ValueType.Energy);
         }
     }
 
@@ -163,8 +163,8 @@
 
         public override void Use(Player player)
         {
-            player.Modify(WaterRestore, Player.ValueType.WATER);
-            player.Modify(EnergyRestore, Player.ValueType.ENERGY);
+            player.Modify(WaterRestore, Player.ValueType.Water);
+            player.Modify(EnergyRestore, Player.ValueType.Energy);
         }
     }
 
@@ -182,7 +182,7 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.FOOD);
+            player.Modify(Restore, Player.ValueType.Food);
         }
     }
 
@@ -194,21 +194,21 @@
 
         public override void Use(Player player)
         {
-            player.Modify(Restore, Player.ValueType.FOOD);
+            player.Modify(Restore, Player.ValueType.Food);
         }
     }
 
     public class 老旧的猎枪 : Hunting
     {
         public override string Description => "还是双管的。";
-        public override Level HuntingLevel => Level.HIGH;
+        public override Level HuntingLevel => Level.High;
         protected override string Name => $"{nameof(老旧的猎枪)}";
     }
 
     public class 捕兽陷阱 : Hunting
     {
         public override string Description => "应该没有傻子会自己踩到它吧。";
-        public override Level HuntingLevel => Level.LOW;
+        public override Level HuntingLevel => Level.Low;
         protected override string Name => $"{nameof(捕兽陷阱)}";
     }
 }

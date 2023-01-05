@@ -8,38 +8,38 @@ namespace WildernessSurvival.game
     {
         public enum ValueType
         {
-            HP,
-            FOOD,
-            WATER,
-            ENERGY
+            Hp,
+            Food,
+            Water,
+            Energy
         }
 
-        private const int MAX_VALUE = 10;
+        private const int MaxValue = 10;
 
-        public const float PER_ACT_STEP = 0.05f;
+        private const float PerActStep = 0.05f;
 
-        private Backpack Backpack;
+        private Backpack _backpack;
 
-        private int CurPositionExploreCount;
-        private Route CurRoute;
+        private int _curPositionExploreCount;
+        private Route _curRoute;
 
-        private int ENERGY_Value;
+        private int _energyValue;
 
-        private int FOOD_Value;
+        private int _foodValue;
 
-        private bool HasFire_Value;
+        private bool _hasFireValue;
 
-        private int HP_Value;
+        private int _hpValue;
 
-        private string POS_Value;
+        private string _locationValue;
 
-        private Place Position;
+        private Place _location;
 
-        private float Trip_Value;
+        private float _tripRatio;
 
-        private int TurnCount_Value;
+        private int _turnNumber;
 
-        private int WATER_Value;
+        private int _waterValue;
 
         public Player()
         {
@@ -48,120 +48,110 @@ namespace WildernessSurvival.game
             Reset();
         }
 
-        public IList<ItemBase> AllItems => Backpack.AllItems;
+        public IList<ItemBase> AllItems => _backpack.AllItems;
 
-        public IList<IRawItem> RawItems => Backpack.RawItems;
+        public IList<IRawItem> RawItems => _backpack.RawItems;
 
-        public IList<ItemBase> HuntingTools => Backpack.HuntingTools;
+        public IList<ItemBase> HuntingTools => _backpack.HuntingTools;
 
-        public bool HasWood => Backpack.HasWood;
+        public bool HasWood => _backpack.HasWood;
 
         public string POS
         {
-            get => POS_Value;
+            get => _locationValue;
             private set
             {
-                if (POS_Value != value)
-                {
-                    POS_Value = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(POS)));
-                }
+                if (_locationValue == value) return;
+                _locationValue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(POS)));
             }
         }
 
         public int TurnCount
         {
-            get => TurnCount_Value;
-            private set => TurnCount_Value = value < 0 ? 0 : value;
+            get => _turnNumber;
+            private set => _turnNumber = value < 0 ? 0 : value;
         }
 
         public int HP
         {
-            get => HP_Value;
+            get => _hpValue;
             private set
             {
-                if (HP_Value != value)
-                {
-                    if (value > MAX_VALUE)
-                        HP_Value = MAX_VALUE;
-                    else if (value < 0)
-                        HP_Value = 0;
-                    else
-                        HP_Value = value;
+                if (_hpValue == value) return;
+                if (value > MaxValue)
+                    _hpValue = MaxValue;
+                else if (value < 0)
+                    _hpValue = 0;
+                else
+                    _hpValue = value;
 
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HP)));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HP)));
             }
         }
 
         public int FOOD
         {
-            get => FOOD_Value;
+            get => _foodValue;
             private set
             {
-                if (FOOD_Value != value)
-                {
-                    if (value > MAX_VALUE)
-                        FOOD_Value = MAX_VALUE;
-                    else if (value < 0)
-                        FOOD_Value = 0;
-                    else
-                        FOOD_Value = value;
+                if (_foodValue == value) return;
+                if (value > MaxValue)
+                    _foodValue = MaxValue;
+                else if (value < 0)
+                    _foodValue = 0;
+                else
+                    _foodValue = value;
 
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FOOD)));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FOOD)));
             }
         }
 
         public int WATER
         {
-            get => WATER_Value;
+            get => _waterValue;
             private set
             {
-                if (WATER_Value != value)
-                {
-                    if (value > MAX_VALUE)
-                        WATER_Value = MAX_VALUE;
-                    else if (value < 0)
-                        WATER_Value = 0;
-                    else
-                        WATER_Value = value;
+                if (_waterValue == value) return;
+                if (value > MaxValue)
+                    _waterValue = MaxValue;
+                else if (value < 0)
+                    _waterValue = 0;
+                else
+                    _waterValue = value;
 
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WATER)));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(WATER)));
             }
         }
 
         public int ENERGY
         {
-            get => ENERGY_Value;
+            get => _energyValue;
             private set
             {
-                if (ENERGY_Value != value)
-                {
-                    if (value > MAX_VALUE)
-                        ENERGY_Value = MAX_VALUE;
-                    else if (value < 0)
-                        ENERGY_Value = 0;
-                    else
-                        ENERGY_Value = value;
+                if (_energyValue == value) return;
+                if (value > MaxValue)
+                    _energyValue = MaxValue;
+                else if (value < 0)
+                    _energyValue = 0;
+                else
+                    _energyValue = value;
 
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ENERGY)));
-                }
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ENERGY)));
             }
         }
 
-        public float Trip
+        public float TripRatio
         {
-            get => Trip_Value;
+            get => _tripRatio;
             private set
             {
                 if (value < 0)
-                    Trip_Value = 0;
+                    _tripRatio = 0;
                 else if (value > 1)
-                    Trip_Value = 1;
+                    _tripRatio = 1;
                 else
-                    Trip_Value = value;
+                    _tripRatio = value;
             }
         }
 
@@ -170,26 +160,24 @@ namespace WildernessSurvival.game
         /// </summary>
         public bool HasFire
         {
-            get => HasFire_Value;
+            get => _hasFireValue;
             set
             {
-                if (HasFire_Value != value)
-                {
-                    HasFire_Value = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasFire)));
-                }
+                if (_hasFireValue == value) return;
+                _hasFireValue = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasFire)));
             }
         }
 
-        public bool CanFish => Backpack.HasFishRod;
+        private bool CanFish => _backpack.HasFishRod;
 
-        public bool HasOxe => Backpack.HasOxe;
+        private bool HasOxe => _backpack.HasOxe;
 
-        public bool CanHunt => Backpack.HasHunting;
+        private bool CanHunt => _backpack.HasHunting;
 
         public bool IsDead => HP <= 0 || FOOD <= 0 || WATER <= 0 || ENERGY <= 0;
 
-        public bool IsWin => Trip >= 1;
+        public bool IsWin => TripRatio >= 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -197,75 +185,70 @@ namespace WildernessSurvival.game
         {
             switch (type)
             {
-                case ValueType.HP:
+                case ValueType.Hp:
                     HP += delta;
                     break;
-                case ValueType.FOOD:
+                case ValueType.Food:
                     FOOD += delta;
                     break;
-                case ValueType.WATER:
+                case ValueType.Water:
                     WATER += delta;
                     break;
-                case ValueType.ENERGY:
+                case ValueType.Energy:
                     ENERGY += delta;
                     break;
             }
         }
 
-        public void AddTrip(float delta)
+        private void AddTrip(float delta = PerActStep)
         {
-            Trip += delta;
-        }
-
-        public void AddTrip()
-        {
-            AddTrip(PER_ACT_STEP);
+            TripRatio += delta;
         }
 
         public void Reset()
         {
-            HP = FOOD = WATER = ENERGY = MAX_VALUE;
+            HP = FOOD = WATER = ENERGY = MaxValue;
             HasFire = false;
-            Trip_Value = 0;
-            CurRoute = SubtropicsRoute;
-            CurRoute.Reset();
-            SetLocation(CurRoute.CurPlace);
+            _tripRatio = 0;
+            _curRoute = SubtropicsRoute;
+            _curRoute.Reset();
+            SetLocation(_curRoute.CurPlace);
             TurnCount = 0;
-            CurPositionExploreCount = 0;
-            Backpack = new Backpack(this);
+            _curPositionExploreCount = 0;
+            _backpack = new Backpack(this);
         }
 
         public bool Use(ItemBase item)
         {
-            return Backpack.Use(item);
+            return _backpack.Use(item);
         }
 
         public void Remove(ItemBase item)
         {
-            Backpack.Remove(item);
+            _backpack.Remove(item);
         }
 
         public void AddItem(ItemBase item)
         {
-            Backpack.AddItem(item);
+            _backpack.AddItem(item);
         }
 
-        public void AddItems(IList<ItemBase> items)
+        private void AddItems(IList<ItemBase> items)
         {
-            Backpack.Append(items);
+            _backpack.Append(items);
         }
 
         private void SetLocation(Place NewP)
         {
-            if (Position?.Name != NewP.Name)
-                CurPositionExploreCount = 0;
-            Position = NewP;
+            if (_location?.Name != NewP.Name)
+                _curPositionExploreCount = 0;
+            _location = NewP;
             POS = NewP.Name;
         }
 
         public void ConsumeWood(int Count)
         {
-            Backpack.ConsumeWood(Count);
+            _backpack.ConsumeWood(Count);
         }
     }
 }

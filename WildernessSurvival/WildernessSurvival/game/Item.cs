@@ -44,10 +44,10 @@
     {
         public enum Level
         {
-            LOW,
-            NOMAL,
-            HIGH,
-            MAX
+            Low,
+            Normal,
+            High,
+            Max
         }
 
         public abstract Level HuntingLevel { get; }
