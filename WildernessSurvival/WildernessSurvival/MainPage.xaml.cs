@@ -18,7 +18,7 @@ namespace WildernessSurvival_Xamarin {
         /// <summary>
         /// 行动
         /// </summary>
-        private void Act_Cliked(object sender, EventArgs e) {
+        private void Move_Cliked(object sender, EventArgs e) {
             player.Act();
             Trip.ProgressTo(player.Trip, 300, Easing.Linear);
             CheckDeadOrWin();

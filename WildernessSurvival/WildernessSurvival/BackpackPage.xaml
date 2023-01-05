@@ -4,19 +4,15 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
+               xmlns:prop="clr-namespace:WildernessSurvival.Properties"
              x:Class="WildernessSurvival.BackpackPage">
-    <ContentPage.Resources>
-        <Style TargetType="Button">
-            <Setter Property="FontSize" Value="50"></Setter>
-        </Style>
-    </ContentPage.Resources>
     <ContentPage.Content>
         <StackLayout Padding="10">
-            <Label Text="背包" FontSize="Header" HorizontalOptions="Center"></Label>
-            <Picker x:Name="ItemsPicker" FontSize="30" Title="选择使用物品" SelectedIndexChanged="ItemsPicker_SelectedIndexChanged">
+            <Label Text="{x:Static prop:AppResources.Backpack}" FontSize="50" HorizontalOptions="Center"></Label>
+            <Picker x:Name="ItemsPicker" FontSize="Large" Title="{x:Static prop:AppResources.UseTip}" SelectedIndexChanged="ItemsPicker_SelectedIndexChanged">
             </Picker>
-            <Label x:Name="ItemDescription" FontSize="20"></Label>
-            <Button Text="使用" x:Name="Use" Grid.Column="0" Clicked="Use_Clicked"/>
+            <Label x:Name="ItemDescription" FontSize="Large"></Label>
+            <Button Text="{x:Static prop:AppResources.Use}" x:Name="Use" FontSize="30" Grid.Column="0" Clicked="Use_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
