@@ -171,7 +171,7 @@
   <data name="UseTip" xml:space="preserve">
     <value>选择要使用的物品</value>
   </data>
-  <data name="AttrPosition" xml:space="preserve">
-    <value>位置</value>
+  <data name="AttrLocation" xml:space="preserve">
+    <value>地点</value>
   </data>
 </root>

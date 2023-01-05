@@ -34,7 +34,7 @@
             <Label x:Name="Label_FOOD"  Text="{x:Static prop:AppResources.AttrFood}" Grid.Row="1"></Label>
             <Label x:Name="Label_WATER" Text="{x:Static prop:AppResources.AttrWater}"  Grid.Row="2"></Label>
             <Label x:Name="Label_ENERGY" Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3"></Label>
-            <Label x:Name="Label_POS" Text="{x:Static prop:AppResources.AttrPosition}" Grid.Row="4"></Label>
+            <Label x:Name="Label_POS" Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4"></Label>
             
             <Label x:Name="Content_HP" Text="{Binding HP,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="0"></Label>
             <Label x:Name="Content_FOOD"  Text="{Binding FOOD,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="1"></Label>

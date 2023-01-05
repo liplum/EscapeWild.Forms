@@ -88,11 +88,11 @@ namespace WildernessSurvival.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to POSITION.
+        ///   Looks up a localized string similar to LOCATION.
         /// </summary>
-        internal static string AttrPosition {
+        internal static string AttrLocation {
             get {
-                return ResourceManager.GetString("AttrPosition", resourceCulture);
+                return ResourceManager.GetString("AttrLocation", resourceCulture);
             }
         }
         
