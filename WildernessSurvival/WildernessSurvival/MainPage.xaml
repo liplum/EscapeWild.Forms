@@ -1,78 +1,93 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:game="clr-namespace:WildernessSurvival.game" x:DataType="game:Player"
-             xmlns:prop="clr-namespace:WildernessSurvival.Properties"
-             mc:Ignorable="d"
-             x:Class="WildernessSurvival_Xamarin.MainPage">
-    <ContentPage.Resources>
-        <Style TargetType="Button">
-            <Setter Property="FontSize" Value="Large"></Setter>
-        </Style>
-        <Style TargetType="Label">
-            <Setter Property="FontSize" Value="Title"></Setter>
-        </Style>
-        
-    </ContentPage.Resources>
-    
-    <StackLayout Padding="10">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  xmlns:game="clr-namespace:WildernessSurvival.game" x:DataType="game:Player"
+  xmlns:prop="clr-namespace:WildernessSurvival.Properties"
+  mc:Ignorable="d"
+  x:Class="WildernessSurvival.MainPage">
+  <ContentPage.Resources>
+    <Style TargetType="Button">
+      <Setter Property="FontSize" Value="Large" />
+    </Style>
+    <Style TargetType="Label">
+      <Setter Property="FontSize" Value="Title" />
+    </Style>
 
-            <Label x:Name="Label_HP"  Text="{x:Static prop:AppResources.AttrHealth}" Grid.Row="0"></Label>
-            <Label x:Name="Label_FOOD"  Text="{x:Static prop:AppResources.AttrFood}" Grid.Row="1"></Label>
-            <Label x:Name="Label_WATER" Text="{x:Static prop:AppResources.AttrWater}"  Grid.Row="2"></Label>
-            <Label x:Name="Label_ENERGY" Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3"></Label>
-            <Label x:Name="Label_POS" Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4"></Label>
-            
-            <Label x:Name="Content_HP" Text="{Binding HP,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="0"></Label>
-            <Label x:Name="Content_FOOD"  Text="{Binding FOOD,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="1"></Label>
-            <Label x:Name="Content_WATER" Text="{Binding WATER,Source={StaticResource player},Mode=TwoWay}"  Grid.Column="1" Grid.Row="2"></Label>
-            <Label x:Name="Content_ENERGY" Text="{Binding ENERGY,Source={StaticResource player},Mode=TwoWay}"  Grid.Column="1" Grid.Row="3"></Label>
-            <Label x:Name="Content_POS" Text="{Binding POS,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1" Grid.Row="4"></Label>
-        </Grid>
+  </ContentPage.Resources>
 
-        <ProgressBar x:Name="Trip" HorizontalOptions="Fill"/>
+  <StackLayout Padding="10">
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+      <Label x:Name="Label_HP" Text="{x:Static prop:AppResources.AttrHealth}" Grid.Row="0" />
+      <Label x:Name="Label_FOOD" Text="{x:Static prop:AppResources.AttrFood}" Grid.Row="1" />
+      <Label x:Name="Label_WATER" Text="{x:Static prop:AppResources.AttrWater}" Grid.Row="2" />
+      <Label x:Name="Label_ENERGY" Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3" />
+      <Label x:Name="Label_POS" Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4" />
 
-            <Button x:Name="Move" Text="{x:Static prop:AppResources.Move}" Clicked="Move_Cliked" Grid.Row="0" Grid.Column="0"></Button>
-            <Button x:Name="Hunt" Text="{x:Static prop:AppResources.Hunt}" Clicked="Hunt_Clicked" Grid.Row="0" Grid.Column="1"></Button>
-            <Button x:Name="Cut" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="Cut_Clicked" Grid.Row="1" Grid.Column="0" ></Button>
-            <Button x:Name="Backpack" Text="{x:Static prop:AppResources.Backpack}" Clicked="Backpack_Clicked"  Grid.Row="1" Grid.Column="1"></Button>
-            <Button x:Name="Fish" Text="{x:Static prop:AppResources.Fish}" Clicked="Fish_Clicked" Grid.Row="2" Grid.Column="0"></Button>
-            <Button x:Name="Explore" Text="{x:Static prop:AppResources.Explore}" Clicked="Explore_Cliked" Grid.Row="2" Grid.Column="1"></Button>
-            <Button x:Name="Rest" Text="{x:Static prop:AppResources.Rest}" Clicked="Rest_Cliked" Grid.Row="3" Grid.Column="0"></Button>
-            <Button x:Name="Fire" Text="{x:Static prop:AppResources.Fire}" Clicked="Fire_Clicked" Grid.Row="3" Grid.Column="1"></Button>
-            <Button x:Name="Cook" Text="{x:Static prop:AppResources.Cook}" Clicked="Cook_Clicked" IsEnabled="{Binding HasFire,Source={StaticResource player},Mode=TwoWay}" Grid.Row="4" Grid.Column="0"></Button>
-            <Button x:Name="Restart" Text="{x:Static prop:AppResources.Restart}" Clicked="RestartGame" Grid.Row="3" Grid.ColumnSpan="1">
-                <Button.IsVisible>false</Button.IsVisible>
-            </Button>
+      <Label x:Name="Content_HP" Text="{Binding HP,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+        Grid.Row="0" />
+      <Label x:Name="Content_FOOD" Text="{Binding FOOD,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+        Grid.Row="1" />
+      <Label x:Name="Content_WATER" Text="{Binding WATER,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+        Grid.Row="2" />
+      <Label x:Name="Content_ENERGY" Text="{Binding ENERGY,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+        Grid.Row="3" />
+      <Label x:Name="Content_POS" Text="{Binding POS,Source={StaticResource player},Mode=TwoWay}" Grid.Column="1"
+        Grid.Row="4" />
+    </Grid>
 
-        </Grid>
-    </StackLayout>
+    <ProgressBar x:Name="Trip" HorizontalOptions="Fill" />
+
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="*" />
+        <ColumnDefinition Width="*" />
+      </Grid.ColumnDefinitions>
+
+      <Button x:Name="Move" Text="{x:Static prop:AppResources.Move}" Clicked="Move_Cliked" Grid.Row="0" Grid.Column="0" />
+      <Button x:Name="Hunt" Text="{x:Static prop:AppResources.Hunt}" Clicked="Hunt_Clicked" Grid.Row="0"
+        Grid.Column="1" />
+      <Button x:Name="Cut" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="Cut_Clicked" Grid.Row="1"
+        Grid.Column="0" />
+      <Button x:Name="Backpack" Text="{x:Static prop:AppResources.Backpack}" Clicked="Backpack_Clicked" Grid.Row="1"
+        Grid.Column="1" />
+      <Button x:Name="Fish" Text="{x:Static prop:AppResources.Fish}" Clicked="Fish_Clicked" Grid.Row="2"
+        Grid.Column="0" />
+      <Button x:Name="Explore" Text="{x:Static prop:AppResources.Explore}" Clicked="Explore_Cliked" Grid.Row="2"
+        Grid.Column="1" />
+      <Button x:Name="Rest" Text="{x:Static prop:AppResources.Rest}" Clicked="Rest_Cliked" Grid.Row="3" Grid.Column="0" />
+      <Button x:Name="Fire" Text="{x:Static prop:AppResources.Fire}" Clicked="Fire_Clicked" Grid.Row="3"
+        Grid.Column="1" />
+      <Button x:Name="Cook" Text="{x:Static prop:AppResources.Cook}" Clicked="Cook_Clicked"
+        IsEnabled="{Binding HasFire,Source={StaticResource player},Mode=TwoWay}" Grid.Row="4" Grid.Column="0" />
+      <Button x:Name="Restart" Text="{x:Static prop:AppResources.Restart}" Clicked="RestartGame" Grid.Row="3"
+        Grid.ColumnSpan="1">
+        <Button.IsVisible>false</Button.IsVisible>
+      </Button>
+
+    </Grid>
+  </StackLayout>
 
 </ContentPage>

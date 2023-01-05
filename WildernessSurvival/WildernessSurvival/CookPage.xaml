@@ -1,19 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
-             xmlns:prop="clr-namespace:WildernessSurvival.Properties"
-             x:Class="WildernessSurvival.CookPage">
-    <ContentPage.Content>
-        <StackLayout Padding="10">
-            <Label Text="{x:Static prop:AppResources.Campfire}" FontSize="50" HorizontalOptions="Center"></Label>
-            <Picker x:Name="RawItemsPicker" FontSize="Large" Title="{x:Static prop:AppResources.CookTip}" SelectedIndexChanged="RawItemsPicker_SelectedIndexChanged">
-            </Picker>
-            <Label x:Name="ItemDescription" FontSize="Large"></Label>
-            <Button Text="{x:Static prop:AppResources.Cook}" x:Name="Heat" FontSize="30" Grid.Column="0" Clicked="Heat_Clicked">
-            </Button>
-        </StackLayout>
-    </ContentPage.Content>
+  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+  xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  xmlns:prop="clr-namespace:WildernessSurvival.Properties"
+  x:Class="WildernessSurvival.CookPage">
+  <ContentPage.Content>
+    <StackLayout Padding="10">
+      <Label Text="{x:Static prop:AppResources.Campfire}" FontSize="50" HorizontalOptions="Center" />
+      <Picker x:Name="RawItemsPicker" FontSize="Large" Title="{x:Static prop:AppResources.CookTip}"
+        SelectedIndexChanged="RawItemsPicker_SelectedIndexChanged" />
+      <Label x:Name="ItemDescription" FontSize="Large" />
+      <Button Text="{x:Static prop:AppResources.Cook}" x:Name="Heat" FontSize="30" Clicked="Heat_Clicked" />
+    </StackLayout>
+  </ContentPage.Content>
 </ContentPage>

@@ -1,21 +1,26 @@
-﻿using WildernessSurvival_Xamarin;
-using Xamarin.Forms;
+﻿using Xamarin.Forms;
 
-namespace WildernessSurvival {
-    public partial class App : Application {
-        public App() {
+namespace WildernessSurvival
+{
+    public partial class App : Application
+    {
+        public App()
+        {
             InitializeComponent();
 
             MainPage = new MainPage();
         }
 
-        protected override void OnStart() {
+        protected override void OnStart()
+        {
         }
 
-        protected override void OnSleep() {
+        protected override void OnSleep()
+        {
         }
 
-        protected override void OnResume() {
+        protected override void OnResume()
+        {
         }
     }
 }

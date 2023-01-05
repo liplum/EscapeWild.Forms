@@ -9,7 +9,7 @@
 
         public static int SetBitOff(this int target, int digit)
         {
-            return target & (~(1 << digit));
+            return target & ~(1 << digit);
         }
 
         public static int ReverseBit(this int target, int digit)
@@ -22,7 +22,7 @@
             return target ^ (1 << digit);
         }
 
-        public static bool IsBitOn(this int target,int digit)
+        public static bool IsBitOn(this int target, int digit)
         {
             return ((target >> digit) & 1) != 0;
         }

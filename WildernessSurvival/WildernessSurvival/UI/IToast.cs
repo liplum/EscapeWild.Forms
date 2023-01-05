@@ -1,5 +1,7 @@
-﻿namespace WildernessSurvival.UI {
-    public interface IToast {
+﻿namespace WildernessSurvival.UI
+{
+    public interface IToast
+    {
         void LongAlert(string message);
         void ShortAlert(string message);
 

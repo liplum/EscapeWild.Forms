@@ -5,37 +5,48 @@ using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace WildernessSurvival {
+namespace WildernessSurvival
+{
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class BackpackPage : ContentPage {
-        public BackpackPage() {
+    public partial class BackpackPage : ContentPage
+    {
+        private static readonly Player player = (Player)Application.Current.Resources["player"];
+
+        private static IList<ItemBase> AllItems;
+
+        public BackpackPage()
+        {
             InitializeComponent();
             AllItems = player.AllItems;
             foreach (var item in AllItems)
                 ItemsPicker.Items.Add(item.ToString());
         }
 
-        private static readonly Player player = (Player)Application.Current.Resources["player"];
-
-        private static IList<ItemBase> AllItems;
-
-        private async void Use_Clicked(object sender, EventArgs e) {
-            int index = ItemsPicker.SelectedIndex;
-            if (index != -1) {
+        private async void Use_Clicked(object sender, EventArgs e)
+        {
+            var index = ItemsPicker.SelectedIndex;
+            if (index != -1)
+            {
                 var item = AllItems[index];
-                if (player.Use(item)) {
+                if (player.Use(item))
+                {
                     DependencyService.Get<IToast>().ShortAlert($"你成功使用了{item}");
                     player.Remove(item);
                     await Navigation.PopModalAsync();
-                } else {
+                }
+                else
+                {
                     DependencyService.Get<IToast>().ShortAlert("该物品无法直接使用");
                 }
-            } else {
+            }
+            else
+            {
                 await DisplayAlert("提示", "请选择物品！", "好的");
             }
         }
 
-        private void ItemsPicker_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
             ItemDescription.Text = AllItems[ItemsPicker.SelectedIndex].Description;
         }
     }

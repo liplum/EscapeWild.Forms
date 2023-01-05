@@ -5,10 +5,17 @@ using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace WildernessSurvival {
+namespace WildernessSurvival
+{
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CookPage : ContentPage {
-        public CookPage() {
+    public partial class CookPage : ContentPage
+    {
+        private static readonly Player player = (Player)Application.Current.Resources["player"];
+
+        private static IList<IRawItem> AllRawItems;
+
+        public CookPage()
+        {
             InitializeComponent();
 
             AllRawItems = player.RawItems;
@@ -16,14 +23,13 @@ namespace WildernessSurvival {
                 RawItemsPicker.Items.Add(item.ToString());
         }
 
-        private static readonly Player player = (Player)Application.Current.Resources["player"];
-
-        private static IList<IRawItem> AllRawItems;
-
-        private async void Heat_Clicked(object sender, EventArgs e) {
+        private async void Heat_Clicked(object sender, EventArgs e)
+        {
             var index = RawItemsPicker.SelectedIndex;
-            if (index != -1) {
-                if (player.HasWood) {
+            if (index != -1)
+            {
+                if (player.HasWood)
+                {
                     var rawItem = AllRawItems[index];
                     ItemBase cooked = rawItem.Cook();
                     player.Remove((ItemBase)rawItem);
@@ -32,17 +38,21 @@ namespace WildernessSurvival {
                     DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked}");
 
                     await Navigation.PopModalAsync();
-                } else {
+                }
+                else
+                {
                     await DisplayAlert("提示", "你没有足够的木头！", "退出");
                     await Navigation.PopModalAsync();
                 }
-
-            } else {
+            }
+            else
+            {
                 await DisplayAlert("提示", "请选择物品！", "好的");
             }
         }
 
-        private void RawItemsPicker_SelectedIndexChanged(object sender, EventArgs e) {
+        private void RawItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
             ItemDescription.Text = AllRawItems[RawItemsPicker.SelectedIndex].RawDescription;
         }
     }
