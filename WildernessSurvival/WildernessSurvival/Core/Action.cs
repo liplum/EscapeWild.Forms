@@ -28,7 +28,7 @@ namespace WildernessSurvival.Core
 
     public static class ActionTypeI18N
     {
-        public static string LocalizedName(this ActionType action) => I18N.Get($"Action.{action.Name}.Name");
+        public static string LocalizedName(this ActionType action) => I18N.Get($"Action.{action.Name}");
     }
 
     public partial class Player

@@ -5,15 +5,15 @@
   xmlns:d="http://xamarin.com/schemas/2014/forms/design"
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   mc:Ignorable="d"
-  xmlns:prop="clr-namespace:WildernessSurvival.Properties"
+  xmlns:ui="clr-namespace:WildernessSurvival.UI"
   x:Class="WildernessSurvival.BackpackPage">
   <ContentPage.Content>
     <StackLayout Padding="10">
-      <Label Text="{x:Static prop:AppResources.Backpack}" FontSize="50" HorizontalOptions="Center" />
-      <Picker x:Name="ItemsPicker" FontSize="Large" Title="{x:Static prop:AppResources.UseTip}"
+      <Label Text="{ui:I18N Key=Backpack.Header}" FontSize="50" HorizontalOptions="Center" />
+      <Picker x:Name="ItemsPicker" FontSize="Large" Title="{ui:I18N Key=Backpack.UseTip}"
         SelectedIndexChanged="ItemsPicker_SelectedIndexChanged" />
       <Label x:Name="ItemDescription" FontSize="Large" />
-      <Button Text="{x:Static prop:AppResources.Use}" x:Name="Use" FontSize="30" Clicked="Use_Clicked" />
+      <Button Text="{ui:I18N Key=Backpack.Use}" x:Name="Use" FontSize="30" Clicked="Use_Clicked" />
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>
