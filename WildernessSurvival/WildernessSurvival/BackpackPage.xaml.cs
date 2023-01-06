@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WildernessSurvival.Core;
-using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -31,8 +31,9 @@ namespace WildernessSurvival
             var item = _allItems[index];
             if (!(item is IUsableItem i)) return;
             _player.UseItem(i);
-            DependencyService.Get<IToast>().ShortAlert($"你成功使用了{item.LocalizedName()}");
             _player.RemoveItem(item);
+            Use.IsEnabled = false;
+            await Task.Delay(500);
             await Navigation.PopModalAsync();
         }
 

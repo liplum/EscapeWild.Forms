@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
-using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -35,8 +35,10 @@ namespace WildernessSurvival
             _player.RemoveItem(rawItem);
             _player.ConsumeWood(1);
             _player.AddItem(cooked);
-            DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked.LocalizedName()}");
             UpdateUI();
+            Cook.IsEnabled = false;
+            await Task.Delay(500);
+            await Navigation.PopModalAsync();
             await Navigation.PopModalAsync();
         }
 

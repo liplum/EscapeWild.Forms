@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
+using WildernessSurvival.Localization;
 using Xamarin.Forms;
 
 namespace WildernessSurvival
@@ -106,30 +107,31 @@ namespace WildernessSurvival
         {
             if (_player.IsDead)
             {
-                var answer = await DisplayAlert("失败", $"你死了！共坚持了{_player.TurnCount}个回合。", "重新开始", "返回");
-                if (answer)
-                {
-                    RestartGame();
-                }
-                else
-                {
-                    Restart.IsVisible = true;
-                }
+                await ShowDialog("Failed");
             }
             else if (_player.IsWon)
             {
-                var answer = await DisplayAlert("恭喜", $"经历了{_player.TurnCount}个回合,你成功逃了出来！", "新的一次", "再欣赏一下");
-                if (answer)
-                {
-                    RestartGame();
-                }
-                else
-                {
-                    Restart.IsVisible = true;
-                }
+                await ShowDialog("Win");
             }
         }
 
+        private async Task ShowDialog(string state)
+        {
+            string i(string key) => I18N.Get($"Dialog.{state}.{key}");
+            var answer = await DisplayAlert(i("Title"),
+                string.Format(i("Content"), _player.TurnCount),
+                i("Accept"),
+                i("Cancel")
+            );
+            if (answer)
+            {
+                RestartGame();
+            }
+            else
+            {
+                Restart.IsVisible = true;
+            }
+        }
 
         private void RestartGame()
         {

@@ -47,6 +47,14 @@ namespace WildernessSurvival.Localization
             { "Item.Trap.Desc", "应该没有傻子会自己踩到它吧。" },
             { "Cook.Cook", "烹饪" },
             { "Cook.NoWood", "没有木头" },
+            { "Dialog.Failed.Title", "失败" },
+            { "Dialog.Failed.Content", "你死了，撑过了 {0} 个回合。" },
+            { "Dialog.Failed.Accept", "重新开始" },
+            { "Dialog.Failed.Cancel", "再等等" },
+            { "Dialog.Win.Title", "恭喜！" },
+            { "Dialog.Win.Content", "经过了 {0} 个回合，你成功逃离了荒野！" },
+            { "Dialog.Win.Accept", "再来一次" },
+            { "Dialog.Win.Cancel", "再等等" },
         };
     }
 }

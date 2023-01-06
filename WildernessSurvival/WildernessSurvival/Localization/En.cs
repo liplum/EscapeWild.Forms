@@ -47,6 +47,14 @@ namespace WildernessSurvival.Localization
             { "Item.Trap.Desc", "Wait and see." },
             { "Cook.Cook", "Cook" },
             { "Cook.NoWood", "No Wood" },
+            { "Dialog.Failed.Title", "Failed" },
+            { "Dialog.Failed.Content", "You are dead, but last {0} turns." },
+            { "Dialog.Failed.Accept", "Restart" },
+            { "Dialog.Failed.Cancel", "Not Now" },
+            { "Dialog.Win.Title", "Congratulation!" },
+            { "Dialog.Win.Content", "You escape from the wild after {0} turns!" },
+            { "Dialog.Win.Accept", "Play Again" },
+            { "Dialog.Win.Cancel", "Not Now" },
         };
     }
 }
