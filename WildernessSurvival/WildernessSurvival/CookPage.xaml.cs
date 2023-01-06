@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
@@ -13,8 +12,6 @@ namespace WildernessSurvival
     {
         private readonly Player _player;
 
-        private IList<IRawItem> AllRawItems => _player.RawItems;
-
         public CookPage()
         {
             InitializeComponent();
@@ -25,14 +22,14 @@ namespace WildernessSurvival
         private void RebuildPicker()
         {
             ItemsPicker.Items.Clear();
-            foreach (var item in AllRawItems)
+            foreach (var item in _player.GetRawItems())
                 ItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Cook_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            var allRawItems = AllRawItems;
+            var allRawItems = _player.GetRawItems();
             if (index < 0 || index >= allRawItems.Count) return;
             if (!_player.HasWood) return;
             var rawItem = allRawItems[index];
@@ -40,7 +37,7 @@ namespace WildernessSurvival
             _player.RemoveItem(rawItem);
             _player.ConsumeWood(1);
             _player.AddItem(cooked);
-            if (AllRawItems.Count <= 0)
+            if (_player.GetRawItems().Count <= 0)
             {
                 UpdateUI();
                 await Task.Delay(500);
@@ -67,7 +64,7 @@ namespace WildernessSurvival
         private void UpdateUI()
         {
             var index = ItemsPicker.SelectedIndex;
-            var allRawItems = AllRawItems;
+            var allRawItems = _player.GetRawItems();
             if (index < 0 || index >= allRawItems.Count)
             {
                 Cook.Text = _i18n("Cook");

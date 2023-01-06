@@ -131,14 +131,15 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Move:
-        /// Cost: Food[0.05], Energy[0.08]
+        /// Cost: Food[0.05], Water[0.05], Energy[0.08]
         /// Go to next place
         /// </summary>
         protected virtual async Task PerformMove(Player player)
         {
             player.Modify(-0.05f, AttrType.Food, HardnessFix);
+            player.Modify(-0.05f, AttrType.Water, HardnessFix);
             player.Modify(-0.08f, AttrType.Energy, HardnessFix);
-            player.AdvanceTrip();
+            player.AdvanceTrip(HardnessFix(Player.MoveStep));
             player.Location = await Owner.GoNextPlace(player);
             player.HasFire = false;
         }
@@ -168,13 +169,13 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Hunt
-        /// Cost: Food[0.05], Water[0.05], Energy[0.15]
+        /// Cost: Food[0.08], Water[0.08], Energy[0.15]
         /// Prerequisites: Has any hunting tool
         /// </summary>
         protected virtual async Task PerformHunt(Player player)
         {
-            player.Modify(-0.05f, AttrType.Food, HardnessFix);
-            player.Modify(-0.05f, AttrType.Water, HardnessFix);
+            player.Modify(-0.08f, AttrType.Food, HardnessFix);
+            player.Modify(-0.08f, AttrType.Water, HardnessFix);
             player.Modify(-0.15f, AttrType.Energy, HardnessFix);
 
 

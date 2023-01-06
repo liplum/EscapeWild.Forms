@@ -20,7 +20,7 @@ namespace WildernessSurvival.Core
     {
         private const float MaxValue = 1f;
 
-        private const float PerActStep = 0.05f;
+        public const float MoveStep = 0.05f;
 
         private Backpack _backpack;
 
@@ -52,13 +52,13 @@ namespace WildernessSurvival.Core
 
         public IList<IItem> AllItems => _backpack.AllItems;
 
-        public IList<IRawItem> RawItems => _backpack.RawItems;
+        public IList<IRawItem> GetRawItems() => _backpack.GetRawItems();
 
-        public IList<IHuntingToolItem> HuntingTools => _backpack.HuntingTools;
+        public IList<IHuntingToolItem> GetHuntingTools() => _backpack.GetHuntingTools();
 
         public IHuntingToolItem GetBestHuntingTool()
         {
-            return HuntingTools.OrderByDescending(t => t.Level).FirstOrDefault();
+            return GetHuntingTools().OrderByDescending(t => t.Level).FirstOrDefault();
         }
 
         public bool HasWood => _backpack.HasWood;
@@ -208,15 +208,15 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public void AdvanceTrip(float delta = PerActStep) => TripRatio += delta;
+        public void AdvanceTrip(float delta = MoveStep) => TripRatio += delta;
 
-        public void UseItem(IUsableItem item) => _backpack.Use(item);
+        public void UseItem(IUsableItem item) => item.Use(this);
 
         public void RemoveItem(IItem item) => _backpack.Remove(item);
 
         public void AddItem(IItem item) => _backpack.AddItem(item);
 
-        public void AddItems(IEnumerable<IItem> items) => _backpack.Append(items);
+        public void AddItems(IEnumerable<IItem> items) => _backpack.AddItems(items);
 
         public void ConsumeWood(int Count) => _backpack.ConsumeWood(Count);
     }

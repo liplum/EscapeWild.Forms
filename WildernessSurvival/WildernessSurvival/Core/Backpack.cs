@@ -14,8 +14,6 @@ namespace WildernessSurvival.Core
 
         public readonly List<IItem> AllItems = new List<IItem>();
 
-        public bool HasRaw => AllItems.OfType<IRawItem>().Any();
-
         public bool HasOxe => AllItems.OfType<IOxeItem>().Any();
 
         public bool HasFishingTool => AllItems.OfType<IFishToolItem>().Any();
@@ -24,19 +22,9 @@ namespace WildernessSurvival.Core
 
         public bool HasWood => AllItems.OfType<LogItem>().Any();
 
-        public IList<IRawItem> RawItems
-        {
-            get
-            {
-                var raws = new List<IRawItem>();
-                foreach (var item in AllItems)
-                    if (item is IRawItem raw)
-                        raws.Add(raw);
-                return raws;
-            }
-        }
+        public IList<IRawItem> GetRawItems() => AllItems.OfType<IRawItem>().ToList();
 
-        public IList<IHuntingToolItem> HuntingTools => AllItems.OfType<IHuntingToolItem>().ToList();
+        public IList<IHuntingToolItem> GetHuntingTools() => AllItems.OfType<IHuntingToolItem>().ToList();
 
         private IList<LogItem> Woods => AllItems.OfType<LogItem>().ToList();
 
@@ -45,18 +33,13 @@ namespace WildernessSurvival.Core
             AllItems.Add(item);
         }
 
-        public void Use(IUsableItem item)
-        {
-            item.Use(Owner);
-        }
-
         public void Remove(IItem item)
         {
             if (AllItems.Contains(item))
                 AllItems.Remove(item);
         }
 
-        public void Append(IEnumerable<IItem> items)
+        public void AddItems(IEnumerable<IItem> items)
         {
             AllItems.AddRange(items);
         }
