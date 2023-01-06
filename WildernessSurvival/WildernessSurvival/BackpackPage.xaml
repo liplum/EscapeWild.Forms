@@ -13,9 +13,9 @@
       <Picker x:Name="ItemsPicker" FontSize="Large" Title="{ui:I18N Key=Backpack.UseTip}"
         SelectedIndexChanged="ItemsPicker_SelectedIndexChanged" />
       <Label x:Name="ItemDescription" FontSize="Large" />
-      <StackLayout x:Name="AfterUsedArea" VerticalOptions="CenterAndExpand">
+      <StackLayout x:Name="AfterUseArea" VerticalOptions="CenterAndExpand" Padding="15,0,15,0">
         <StackLayout.IsVisible>False</StackLayout.IsVisible>
-        <Label x:Name="AfterUsedLabel" Text="{ui:I18N Key=Backpack.AfterUsed}" FontSize="Title" HorizontalOptions="Center"></Label>
+        <Label x:Name="AfterUseLabel" Text="{ui:I18N Key=Backpack.AfterUsed}" FontSize="Title" HorizontalOptions="Center"></Label>
         <Grid>
           <Grid.Resources>
             <Style TargetType="Label">

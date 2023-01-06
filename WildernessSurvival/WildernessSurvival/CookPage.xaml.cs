@@ -13,52 +13,72 @@ namespace WildernessSurvival
     {
         private readonly Player _player;
 
-        private readonly IList<IRawItem> _allRawItems;
+        private IList<IRawItem> AllRawItems => _player.RawItems;
 
         public CookPage()
         {
             InitializeComponent();
             _player = (Player)Application.Current.Resources["player"];
-            _allRawItems = _player.RawItems;
-            UpdateUI();
-            foreach (var item in _allRawItems)
-                RawItemsPicker.Items.Add(item.LocalizedName());
+            RebuildPicker();
         }
 
-        private async void Heat_Clicked(object sender, EventArgs e)
+        private void RebuildPicker()
         {
-            var index = RawItemsPicker.SelectedIndex;
+            ItemsPicker.Items.Clear();
+            foreach (var item in AllRawItems)
+                ItemsPicker.Items.Add(item.LocalizedName());
+        }
+
+        private async void Cook_Clicked(object sender, EventArgs e)
+        {
+            var index = ItemsPicker.SelectedIndex;
             if (index < 0) return;
             if (!_player.HasWood) return;
-            var rawItem = _allRawItems[index];
+            var rawItem = AllRawItems[index];
             IItem cooked = rawItem.Cook();
             _player.RemoveItem(rawItem);
             _player.ConsumeWood(1);
             _player.AddItem(cooked);
+            if (AllRawItems.Count <= 0)
+            {
+                await Task.Delay(500);
+                await Navigation.PopModalAsync();
+                return;
+            }
+
+            RebuildPicker();
+            if (ItemsPicker.Items.Count > 0)
+            {
+                // Go to the next item automatically
+                ItemsPicker.SelectedIndex = (index + 1) % ItemsPicker.Items.Count;
+            }
             UpdateUI();
-            Cook.IsEnabled = false;
-            await Task.Delay(500);
-            await Navigation.PopModalAsync();
         }
 
         private void RawItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selected = _allRawItems[RawItemsPicker.SelectedIndex];
-            var key = "AfterCooked";
-            if (selected.CookType == CookType.Boil)
-            {
-                key = "AfterBoiled";
-            }
-
-            ItemDescription.Text = string.Format(_i18n(key), selected.Cook().LocalizedName());
             UpdateUI();
         }
 
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
-            Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood && RawItemsPicker.SelectedIndex > 0;
-            Cook.Text = _i18n(_player.HasWood ? "Cook" : "NoWood");
+            var index = ItemsPicker.SelectedIndex;
+            if (index < 0)
+            {
+                Cook.Text = _i18n("Cook");
+                Cook.IsEnabled = false;
+                ItemDescription.Text = string.Empty;
+            }
+            else
+            {
+                Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood;
+                var selected = AllRawItems[ItemsPicker.SelectedIndex];
+                Cook.Text = _player.HasWood ? _i18n(selected.CookType.ToString()) : _i18n("NoWood");
+
+                ItemDescription.Text =
+                    string.Format(_i18n($"After{selected.CookType}"), selected.Cook().LocalizedName());
+            }
         }
 
         private static string _i18n(string key)

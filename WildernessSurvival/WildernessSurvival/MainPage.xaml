@@ -20,8 +20,8 @@
   </ContentPage.Resources>
 
   <StackLayout Padding="10">
-    <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center"/>
-    <Grid>
+    <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
+    <Grid Padding="10">
       <Grid.RowDefinitions>
         <RowDefinition Height="*" />
         <RowDefinition Height="*" />

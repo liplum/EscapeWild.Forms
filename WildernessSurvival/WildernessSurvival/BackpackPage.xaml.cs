@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
@@ -20,13 +21,19 @@ namespace WildernessSurvival
             InitializeComponent();
             _player = (Player)Application.Current.Resources["player"];
             _allItems = _player.AllItems;
-            Use.IsEnabled = _player.CanPerformAnyAction && ItemsPicker.SelectedIndex > 0;
-            foreach (var item in _allItems)
-                ItemsPicker.Items.Add(item.LocalizedName());
+            Use.IsEnabled = _player.CanPerformAnyAction && ItemsPicker.SelectedIndex >= 0;
+            RebuildPicker();
             HealthProgressBar.Progress = _player.Health;
             FoodProgressBar.Progress = _player.Food;
             WaterProgressBar.Progress = _player.Water;
             EnergyProgressBar.Progress = _player.Energy;
+        }
+
+        private void RebuildPicker()
+        {
+            ItemsPicker.Items.Clear();
+            foreach (var item in _allItems)
+                ItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Use_Clicked(object sender, EventArgs e)
@@ -37,50 +44,81 @@ namespace WildernessSurvival
             if (!(item is IUsableItem i)) return;
             _player.UseItem(i);
             _player.RemoveItem(item);
-            Use.IsEnabled = false;
-            await Task.Delay(500);
-            await Navigation.PopModalAsync();
+            if (_allItems.Count <= 0)
+            {
+                await Task.Delay(500);
+                await Navigation.PopModalAsync();
+                return;
+            }
+            RebuildPicker();
+            if (ItemsPicker.Items.Count > 0)
+            {
+                // Go to the next item automatically
+                ItemsPicker.SelectedIndex = (index + 1) % ItemsPicker.Items.Count;
+            }
+            UpdateUI();
         }
 
         private void ItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selected = _allItems[ItemsPicker.SelectedIndex];
-            ItemDescription.Text = selected.LocalizedDesc();
+            UpdateUI();
+        }
 
-            if (selected is IUsableItem item)
+        // ReSharper disable once InconsistentNaming
+        private void UpdateUI()
+        {
+            var index = ItemsPicker.SelectedIndex;
+
+            void Clear()
             {
-                Use.IsEnabled = _player.CanPerformAnyAction;
-                Use.Text = $"Backpack.{item.UseType}".Tr();
-                AfterUsedLabel.Text = $"Backpack.After{item.UseType}".Tr();
-                var builder = new UseEffectBuilder();
-                item.BuildUseEffect(builder);
-                if (builder.HasAnyEffect)
-                {
-                    var mock = new MockPlayerAcceptUseEffect
-                    {
-                        Health = _player.Health,
-                        Food = _player.Food,
-                        Water = _player.Water,
-                        Energy = _player.Energy,
-                    };
-                    builder.PerformUseEffects(mock);
-                    AfterUsedArea.IsVisible = true;
-                    HealthProgressBar.ProgressTo(mock.Health, 300, Easing.Linear);
-                    FoodProgressBar.ProgressTo(mock.Food, 300, Easing.Linear);
-                    WaterProgressBar.ProgressTo(mock.Water, 300, Easing.Linear);
-                    EnergyProgressBar.ProgressTo(mock.Energy, 300, Easing.Linear);
-                }
-                else
-                {
-                    AfterUsedArea.IsVisible = false;
-                }
+                AfterUseArea.IsVisible = false;
+                Use.IsEnabled = false;
+                AfterUseLabel.Text = $"Backpack.After{UseType.Use}".Tr();
+            }
+
+            if (index < 0)
+            {
+                Clear();
+                Use.Text = $"Backpack.{UseType.Use}".Tr();
+                ItemDescription.Text = string.Empty;
             }
             else
             {
-                AfterUsedArea.IsVisible = false;
-                Use.IsEnabled = false;
-                Use.Text = "Backpack.CannotUse".Tr();
-                AfterUsedLabel.Text = $"Backpack.After{UseType.Use}".Tr();
+                var selected = _allItems[index];
+                ItemDescription.Text = selected.LocalizedDesc();
+                if (selected is IUsableItem item)
+                {
+                    Use.IsEnabled = _player.CanPerformAnyAction;
+                    Use.Text = $"Backpack.{item.UseType}".Tr();
+                    AfterUseLabel.Text = $"Backpack.After{item.UseType}".Tr();
+                    var builder = new UseEffectBuilder();
+                    item.BuildUseEffect(builder);
+                    if (builder.HasAnyEffect)
+                    {
+                        var mock = new MockPlayerAcceptUseEffect
+                        {
+                            Health = _player.Health,
+                            Food = _player.Food,
+                            Water = _player.Water,
+                            Energy = _player.Energy,
+                        };
+                        builder.PerformUseEffects(mock);
+                        AfterUseArea.IsVisible = true;
+                        HealthProgressBar.ProgressTo(mock.Health, 300, Easing.Linear);
+                        FoodProgressBar.ProgressTo(mock.Food, 300, Easing.Linear);
+                        WaterProgressBar.ProgressTo(mock.Water, 300, Easing.Linear);
+                        EnergyProgressBar.ProgressTo(mock.Energy, 300, Easing.Linear);
+                    }
+                    else
+                    {
+                        AfterUseArea.IsVisible = false;
+                    }
+                }
+                else
+                {
+                    Clear();
+                    Use.Text = "Backpack.CannotUse".Tr();
+                }
             }
         }
     }
