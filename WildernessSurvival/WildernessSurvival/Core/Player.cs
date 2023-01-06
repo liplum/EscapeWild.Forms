@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using static WildernessSurvival.Core.Route;
+using WildernessSurvival.Game;
 
 namespace WildernessSurvival.Core
 {
@@ -22,7 +22,7 @@ namespace WildernessSurvival.Core
         private Backpack _backpack;
 
         private int _curPositionExploreCount;
-        private Route _curRoute;
+        private IRoute<IPlace> _curRoute;
 
         private int _energyValue;
 
@@ -32,7 +32,7 @@ namespace WildernessSurvival.Core
 
         private int _hpValue;
 
-        private Place _location;
+        private IPlace _location;
 
         private float _tripRatio;
 
@@ -52,8 +52,7 @@ namespace WildernessSurvival.Core
             Hp = Food = Water = Energy = MaxValue;
             HasFire = false;
             _tripRatio = 0;
-            _curRoute = SubtropicsRoute();
-            _curRoute.Reset();
+            _curRoute = Routes.SubtropicsRoute();
             Location = _curRoute.CurPlace;
             TurnCount = 0;
             _curPositionExploreCount = 0;
@@ -73,7 +72,7 @@ namespace WildernessSurvival.Core
 
         public bool HasWood => _backpack.HasWood;
 
-        public Place Location
+        public IPlace Location
         {
             get => _location;
             private set

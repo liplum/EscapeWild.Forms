@@ -1,41 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using WildernessSurvival.Localization;
+using WildernessSurvival.Core;
 
-namespace WildernessSurvival.Core
+namespace WildernessSurvival.Game
 {
-    public class Route
+    public static class Routes
+    {
+        public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new SubtropicsRoute(
+            new SubtropicsPlace("Plain", false, false, 30, 50, false),
+            new SubtropicsPlace("Riverside", false, true, 30, 30, false),
+            new SubtropicsPlace("Forest", true, false, 30, 60, false),
+            new SubtropicsPlace("Hut", false, false, 10, 30, true)
+        );
+    }
+
+    public class SubtropicsRoute : IRoute<SubtropicsPlace>
     {
         private const int ChangedRate = 30;
         private static readonly Random Random = new Random();
-        private readonly List<Place> _allPlace;
+        private readonly List<SubtropicsPlace> _allPlace;
 
-        /// <summary>
-        ///     亚热带平原
-        /// </summary>
-        public static readonly Func<Route> SubtropicsRoute = () => new Route(
-            new Place("Plain", false, false, 30, 50, false),
-            new Place("Riverside", false, true, 30, 30, false),
-            new Place("Forest", true, false, 30, 60, false),
-            new Place("Hut", false, false, 10, 30, true)
-        );
-
-
-        public Route(params Place[] Places)
+        public SubtropicsRoute(params SubtropicsPlace[] Places)
         {
             _allPlace = Places.ToList();
             CurPlace = _allPlace[0];
         }
 
-        public Route(Route route)
-        {
-            _allPlace = route._allPlace;
-        }
+        public SubtropicsPlace CurPlace { get; private set; }
 
-        public Place CurPlace { get; private set; }
-
-        public Place NextPlace
+        public SubtropicsPlace NextPlace
         {
             get
             {
@@ -69,9 +63,9 @@ namespace WildernessSurvival.Core
         }
     }
 
-    public class Place
+    public class SubtropicsPlace : IPlace
     {
-        public Place(string name, bool hasLog, bool canFish, int appearRate, int huntingRate, bool isSpecial)
+        public SubtropicsPlace(string name, bool hasLog, bool canFish, int appearRate, int huntingRate, bool isSpecial)
         {
             Name = name;
             HasLog = hasLog;
@@ -91,10 +85,5 @@ namespace WildernessSurvival.Core
         public int HuntingRate { get; }
 
         public bool IsSpecial { get; }
-    }
-
-    public static class PlaceI18N
-    {
-        public static string LocalizedName(this Place place) => I18N.Get($"Place.{place.Name}.Name");
     }
 }
