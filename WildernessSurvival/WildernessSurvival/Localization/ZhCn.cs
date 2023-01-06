@@ -6,6 +6,7 @@ namespace WildernessSurvival.Localization
     public class LangZhCn : ILocalization
     {
         public CultureInfo BoundCulture { get; } = new CultureInfo("zh-CN");
+
         public Dictionary<string, string> TranslationKey2Localized { get; } = new Dictionary<string, string>
         {
             { "Item.Log.Name", "木头" },
@@ -44,6 +45,8 @@ namespace WildernessSurvival.Localization
             { "Item.OldShotgun.Desc", "还是双管的。" },
             { "Item.Trap.Name", "捕兽陷阱" },
             { "Item.Trap.Desc", "应该没有傻子会自己踩到它吧。" },
+            { "Cook.Cook", "烹饪" },
+            { "Cook.NoWood", "没有木头" },
         };
     }
 }

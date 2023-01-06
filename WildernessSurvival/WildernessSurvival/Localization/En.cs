@@ -45,6 +45,8 @@ namespace WildernessSurvival.Localization
             { "Item.OldShotgun.Desc", "It still can work." },
             { "Item.Trap.Name", "Trap" },
             { "Item.Trap.Desc", "Wait and see." },
+            { "Cook.Cook", "Cook" },
+            { "Cook.NoWood", "No Wood" },
         };
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using WildernessSurvival.Core;
+using WildernessSurvival.Localization;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -49,7 +50,13 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
-            Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood;
+            Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood && RawItemsPicker.SelectedIndex > 0;
+            Cook.Text = _i18n(_player.HasWood ? "Cook" : "NoWood");
+        }
+
+        private static string _i18n(string key)
+        {
+            return I18N.Get($"Cook.{key}");
         }
     }
 }

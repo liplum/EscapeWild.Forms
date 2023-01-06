@@ -19,7 +19,7 @@ namespace WildernessSurvival
             InitializeComponent();
             _player = (Player)Application.Current.Resources["player"];
             _allItems = _player.AllItems;
-            Use.IsEnabled = _player.CanPerformAnyAction;
+            Use.IsEnabled = _player.CanPerformAnyAction && ItemsPicker.SelectedIndex > 0;
             foreach (var item in _allItems)
                 ItemsPicker.Items.Add(item.LocalizedName());
         }

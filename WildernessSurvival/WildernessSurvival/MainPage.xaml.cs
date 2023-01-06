@@ -78,7 +78,6 @@ namespace WildernessSurvival
 
         private void Backpack_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
             Navigation.PushModalAsync(new BackpackPage(), true);
         }
 
@@ -95,7 +94,6 @@ namespace WildernessSurvival
             Move.IsEnabled &= _player.CanPerformAnyAction;
             Hunt.IsEnabled &= _player.CanPerformAnyAction;
             Cut.IsEnabled &= _player.CanPerformAnyAction;
-            Backpack.IsEnabled &= _player.IsAlive;
             Fish.IsEnabled &= _player.CanPerformAnyAction;
             Explore.IsEnabled &= _player.CanPerformAnyAction;
             Cut.IsEnabled &= _player.CanPerformAnyAction;
@@ -138,6 +136,10 @@ namespace WildernessSurvival
             _player.Reset();
             Restart.IsVisible = false;
             Trip.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+            Move.IsEnabled = true;
+            Explore.IsEnabled = true;
+            Rest.IsEnabled = true;
+            UpdateUI();
         }
 
         private void Restart_OnClicked(object sender, EventArgs e)
