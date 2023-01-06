@@ -55,10 +55,10 @@ namespace WildernessSurvival.Localization
             { "Dialog.Win.Content", "经过了 {0} 个回合，你成功逃离了荒野！" },
             { "Dialog.Win.Accept", "再来一次" },
             { "Dialog.Win.Cancel", "再等等" },
-            { "Place.Plain.Name", "平原" },
-            { "Place.Riverside.Name", "河边" },
-            { "Place.Forest.Name", "森林" },
-            { "Place.Hut.Name", "小屋" },
+            { "Place.Subtropics.Plain.Name", "平原" },
+            { "Place.Subtropics.Riverside.Name", "河边" },
+            { "Place.Subtropics.Forest.Name", "森林" },
+            { "Place.Subtropics.Hut.Name", "小屋" },
         };
     }
 }

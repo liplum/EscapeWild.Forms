@@ -1,4 +1,5 @@
-﻿using WildernessSurvival.Localization;
+﻿using System.Collections.Generic;
+using WildernessSurvival.Localization;
 
 namespace WildernessSurvival.Core
 {
@@ -6,6 +7,7 @@ namespace WildernessSurvival.Core
 
     public interface IRoute<out TPlace> where TPlace : IPlace
     {
+        string Name { get; }
         TPlace CurPlace { get; }
 
         TPlace NextPlace { get; }
@@ -13,6 +15,9 @@ namespace WildernessSurvival.Core
 
     public interface IPlace
     {
+        IRoute<IPlace> Route { get; }
+        void PerformAction(Player player, ActionType action);
+        ISet<ActionType> AvailableActions { get; }
         string Name { get; }
 
         public bool HasLog { get; }
@@ -23,6 +28,7 @@ namespace WildernessSurvival.Core
 
     public static class PlaceI18N
     {
-        public static string LocalizedName(this IPlace place) => I18N.Get($"Place.{place.Name}.Name");
+        public static string LocalizedName(this IPlace place) =>
+            I18N.Get($"Place.{place.Route.Name}.{place.Name}.Name");
     }
 }

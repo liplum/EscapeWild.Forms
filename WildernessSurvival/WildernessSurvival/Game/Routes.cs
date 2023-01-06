@@ -17,13 +17,19 @@ namespace WildernessSurvival.Game
 
     public class SubtropicsRoute : IRoute<SubtropicsPlace>
     {
+        public string Name => "Subtropics";
         private const int ChangedRate = 30;
         private static readonly Random Random = new Random();
         private readonly List<SubtropicsPlace> _allPlace;
 
-        public SubtropicsRoute(params SubtropicsPlace[] Places)
+        public SubtropicsRoute(params SubtropicsPlace[] places)
         {
-            _allPlace = Places.ToList();
+            _allPlace = places.ToList();
+            foreach (var place in places)
+            {
+                place.Route = this;
+            }
+
             CurPlace = _allPlace[0];
         }
 
@@ -65,7 +71,8 @@ namespace WildernessSurvival.Game
 
     public class SubtropicsPlace : IPlace
     {
-        public SubtropicsPlace(string name, bool hasLog, bool canFish, int appearRate, int huntingRate, bool isSpecial)
+        public SubtropicsPlace(string name, bool hasLog, bool canFish, int appearRate,
+            int huntingRate, bool isSpecial)
         {
             Name = name;
             HasLog = hasLog;
@@ -73,6 +80,30 @@ namespace WildernessSurvival.Game
             AppearRate = appearRate;
             HuntingRate = huntingRate;
             IsSpecial = isSpecial;
+        }
+
+        public IRoute<IPlace> Route { get; set; }
+
+        public void PerformAction(Player player, ActionType action)
+        {
+        }
+
+        public ISet<ActionType> AvailableActions
+        {
+            get
+            {
+                var actions = new HashSet<ActionType>
+                {
+                    ActionType.Move,
+                    ActionType.Explore,
+                    ActionType.Rest,
+                    ActionType.Fire,
+                    ActionType.Hunt,
+                };
+                if (HasLog) actions.Add(ActionType.CutDownTree);
+                if (CanFish) actions.Add(ActionType.Fish);
+                return actions;
+            }
         }
 
         public string Name { get; }

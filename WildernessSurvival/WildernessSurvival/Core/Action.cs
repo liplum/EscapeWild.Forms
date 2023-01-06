@@ -4,6 +4,24 @@ using Xamarin.Forms;
 
 namespace WildernessSurvival.Core
 {
+    public class ActionType
+    {
+        public string Name;
+
+        private ActionType(string name)
+        {
+            Name = name;
+        }
+
+        public static readonly ActionType Move = new ActionType("Move"),
+            Explore = new ActionType("Explore"),
+            Rest = new ActionType("Rest"),
+            Fire = new ActionType("Fire"),
+            Hunt = new ActionType("Hunt"),
+            CutDownTree = new ActionType("CutDownTree"),
+            Fish = new ActionType("Fish");
+    }
+
     public partial class Player
     {
         /// <summary>
