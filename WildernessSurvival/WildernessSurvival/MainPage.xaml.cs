@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
@@ -78,7 +79,12 @@ namespace WildernessSurvival
 
         private async void Backpack_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushModalAsync(new BackpackPage(), true);
+            // Await the navigation pop
+            var waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+            var backpackPage = new BackpackPage();
+            backpackPage.Disappearing += (sender2, e2) => { waitHandle.Set(); };
+            await Navigation.PushModalAsync(backpackPage, true);
+            await Task.Run(() => waitHandle.WaitOne());
             UpdateUI();
         }
 
