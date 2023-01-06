@@ -39,7 +39,6 @@ namespace WildernessSurvival
             Cook.IsEnabled = false;
             await Task.Delay(500);
             await Navigation.PopModalAsync();
-            await Navigation.PopModalAsync();
         }
 
         private void RawItemsPicker_SelectedIndexChanged(object sender, EventArgs e)

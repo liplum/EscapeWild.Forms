@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WildernessSurvival.Localization;
 
 namespace WildernessSurvival.Core
@@ -8,15 +9,13 @@ namespace WildernessSurvival.Core
     public interface IRoute<out TPlace> where TPlace : IPlace
     {
         string Name { get; }
-        TPlace CurPlace { get; }
-
-        TPlace NextPlace { get; }
+        TPlace InitialPlace { get; }
     }
 
     public interface IPlace
     {
         IRoute<IPlace> Route { get; }
-        void PerformAction(Player player, ActionType action);
+        Task PerformAction(Player player, ActionType action);
         ISet<ActionType> AvailableActions { get; }
         string Name { get; }
 

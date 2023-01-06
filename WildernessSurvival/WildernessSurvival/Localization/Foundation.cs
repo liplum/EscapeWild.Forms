@@ -66,5 +66,7 @@ namespace WildernessSurvival.Localization
             if (_curLocalization is null) return key;
             return _curLocalization.TranslationKey2Localized.TryGetValue(key, out var localized) ? localized : key;
         }
+
+        public static string Tr(this string key) => Get(key);
     }
 }

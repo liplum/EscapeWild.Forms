@@ -1,120 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using WildernessSurvival.Core;
+﻿using WildernessSurvival.Core;
 
 namespace WildernessSurvival.Game
 {
     public static class Routes
     {
-        public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new SubtropicsRoute(
-            new SubtropicsPlace("Plain", false, false, 30, 50, false),
-            new SubtropicsPlace("Riverside", false, true, 30, 30, false),
-            new SubtropicsPlace("Forest", true, false, 30, 60, false),
-            new SubtropicsPlace("Hut", false, false, 10, 30, true)
+        public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new Route(
+            name: "Subtropics",
+            new PlainPlace(name: "Plain", appearRate: 30, huntingRate: 50),
+            new RiversidePlace(name: "Riverside", appearRate: 30, huntingRate: 30),
+            new ForestPlace(name: "Forest", appearRate: 30, huntingRate: 60),
+            new HutPlace(name: "Hut", appearRate: 10, huntingRate: 30)
         );
-    }
-
-    public class SubtropicsRoute : IRoute<SubtropicsPlace>
-    {
-        public string Name => "Subtropics";
-        private const int ChangedRate = 30;
-        private static readonly Random Random = new Random();
-        private readonly List<SubtropicsPlace> _allPlace;
-
-        public SubtropicsRoute(params SubtropicsPlace[] places)
-        {
-            _allPlace = places.ToList();
-            foreach (var place in places)
-            {
-                place.Route = this;
-            }
-
-            CurPlace = _allPlace[0];
-        }
-
-        public SubtropicsPlace CurPlace { get; private set; }
-
-        public SubtropicsPlace NextPlace
-        {
-            get
-            {
-                var needChange = Random.Next(100);
-                if (CurPlace.IsSpecial || needChange < ChangedRate)
-                {
-                    var cur = CurPlace;
-                    var range = 100 - CurPlace.AppearRate;
-                    var next = Random.Next(range);
-                    var OtherPlace = (from p in _allPlace where p != cur select p).ToList();
-
-                    for (int i = 0, sum = 0; i <= OtherPlace.Count; ++i)
-                    {
-                        var p = OtherPlace[i];
-                        sum += p.AppearRate;
-                        if (next <= sum)
-                        {
-                            CurPlace = p;
-                            return p;
-                        }
-                    }
-                }
-
-                return CurPlace;
-            }
-        }
-
-        public void Reset()
-        {
-            CurPlace = _allPlace[0];
-        }
-    }
-
-    public class SubtropicsPlace : IPlace
-    {
-        public SubtropicsPlace(string name, bool hasLog, bool canFish, int appearRate,
-            int huntingRate, bool isSpecial)
-        {
-            Name = name;
-            HasLog = hasLog;
-            CanFish = canFish;
-            AppearRate = appearRate;
-            HuntingRate = huntingRate;
-            IsSpecial = isSpecial;
-        }
-
-        public IRoute<IPlace> Route { get; set; }
-
-        public void PerformAction(Player player, ActionType action)
-        {
-        }
-
-        public ISet<ActionType> AvailableActions
-        {
-            get
-            {
-                var actions = new HashSet<ActionType>
-                {
-                    ActionType.Move,
-                    ActionType.Explore,
-                    ActionType.Rest,
-                    ActionType.Fire,
-                    ActionType.Hunt,
-                };
-                if (HasLog) actions.Add(ActionType.CutDownTree);
-                if (CanFish) actions.Add(ActionType.Fish);
-                return actions;
-            }
-        }
-
-        public string Name { get; }
-
-        public bool HasLog { get; }
-        public bool CanFish { get; }
-
-        public int AppearRate { get; }
-
-        public int HuntingRate { get; }
-
-        public bool IsSpecial { get; }
     }
 }

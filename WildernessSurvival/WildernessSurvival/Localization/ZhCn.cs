@@ -59,6 +59,16 @@ namespace WildernessSurvival.Localization
             { "Place.Subtropics.Riverside.Name", "河边" },
             { "Place.Subtropics.Forest.Name", "森林" },
             { "Place.Subtropics.Hut.Name", "小屋" },
+            { "Action.Move.Name", "前进" },
+            { "Action.Explore.Name", "探索" },
+            { "Action.Rest.Name", "休息" },
+            { "Action.Fire.Name", "生火" },
+            { "Action.Hunt.Name", "打猎" },
+            { "Action.CutDownTree.Name", "砍树" },
+            { "Action.Fish.Name", "钓鱼" },
+            { "Subtropics.Common.Rest", "你休息了一会，感觉又充满了力量。" },
+            { "Subtropics.Common.Fire", "你生起了火。" },
+            { "OK", "好" }
         };
     }
 }

@@ -1,4 +1,7 @@
-﻿using WildernessSurvival.Game;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using WildernessSurvival.Game;
+using WildernessSurvival.Localization;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 
@@ -22,8 +25,20 @@ namespace WildernessSurvival.Core
             Fish = new ActionType("Fish");
     }
 
+    public static class ActionTypeI18N
+    {
+        public static string LocalizedName(this ActionType action) => I18N.Get($"Action.{action.Name}.Name");
+    }
+
     public partial class Player
     {
+        public async Task PerformAction(ActionType action)
+        {
+            if (IsDead) return;
+            await Location.PerformAction(this, action);
+            ++TurnCount;
+        }
+
         /// <summary>
         ///     意外受伤 10%
         /// </summary>
@@ -31,7 +46,7 @@ namespace WildernessSurvival.Core
         {
             const int 受伤概率 = 10;
             var 失去的生命 = -damage;
-            var 受伤 = Random.Next(100);
+            var 受伤 = Rand.Int(100);
             if (受伤 < 受伤概率)
             {
                 Modify(失去的生命, AttrType.Hp);
@@ -39,71 +54,6 @@ namespace WildernessSurvival.Core
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Move:
-        /// Cost: Food[1]
-        /// Go to next place
-        /// </summary>
-        public void Move()
-        {
-            if (IsDead) return;
-            if (Injured(2))
-                DependencyService.Get<IToast>().ShortAlert("你在路上遇到了野兽，你被抓伤了！");
-            else
-                DependencyService.Get<IToast>().ShortAlert("你前进了一段路。");
-            Modify(-1, AttrType.Food);
-            Modify(-1, AttrType.Energy);
-            AddTrip();
-            Location = _curRoute.NextPlace;
-            HasFire = false;
-            ++TurnCount;
-        }
-
-        /// <summary>
-        /// Explore
-        /// Cost: Food[1], Energy[1]
-        /// </summary>
-        public void Explore()
-        {
-            if (IsDead) return;
-            if (Injured(3))
-                DependencyService.Get<IToast>().ShortAlert("你在探索的时候遇到了野兽，你被咬伤了！");
-            Modify(-1, AttrType.Water);
-            Modify(-1, AttrType.Energy);
-            ExploreActions();
-            ++_curPositionExploreCount;
-            ++TurnCount;
-        }
-
-        /// <summary>
-        /// Rest
-        /// Cost: Food[1], Water[1]
-        /// Restore: Health[2], Energy[4]
-        /// </summary>
-        public void Rest()
-        {
-            if (IsDead) return;
-            Modify(-1, AttrType.Food);
-            Modify(-1, AttrType.Water);
-            Modify(2, AttrType.Hp);
-            Modify(4, AttrType.Energy);
-            DependencyService.Get<IToast>().ShortAlert("你休息了一会，感觉充满了力量！");
-            ++TurnCount;
-        }
-
-        /// <summary>
-        /// Fire
-        /// Cost: Log x1
-        /// </summary>
-        public void Fire()
-        {
-            if (IsDead) return;
-            if (!HasWood) return;
-            ConsumeWood(1);
-            HasFire = true;
-            DependencyService.Get<IToast>().ShortAlert("你生起了火。");
         }
 
         /// <summary>
@@ -148,11 +98,11 @@ namespace WildernessSurvival.Core
                         break;
                 }
 
-                var r = Random.Next(100);
+                var r = Rand.Int(100);
                 if (r < rate)
                 {
                     AddItem(new RawRabbit());
-                    if (Random.Next(100) < doubleRate)
+                    if (Rand.Int(100) < doubleRate)
                         AddItem(new RawRabbit());
                     DependencyService.Get<IToast>().ShortAlert("你满载而归，获得了大量的兔肉！");
                     return;
@@ -177,7 +127,7 @@ namespace WildernessSurvival.Core
             Modify(-2, AttrType.Energy);
             AddItem(LogItem.One);
             var count = 1;
-            var rate = Random.Next(100);
+            var rate = Rand.Int(100);
             if (rate < 50)
             {
                 AddItem(LogItem.One);
@@ -188,7 +138,7 @@ namespace WildernessSurvival.Core
             {
                 AddItem(LogItem.One);
                 ++count;
-                if (Random.Next(100) < 50)
+                if (Rand.Int(100) < 50)
                 {
                     AddItem(LogItem.One);
                     ++count;
@@ -211,11 +161,11 @@ namespace WildernessSurvival.Core
             if (!CanFish || !Location.CanFish) return;
             Modify(-1, AttrType.Food);
             Modify(-1, AttrType.Water);
-            var r = Random.Next(100);
+            var r = Rand.Int(100);
             if (r < 80)
             {
                 AddItem(new RawFish());
-                if (Random.Next(100) < 20)
+                if (Rand.Int(100) < 20)
                     AddItem(new RawFish());
                 DependencyService.Get<IToast>().ShortAlert("经过漫长地等待，你终于钓上了大鱼。");
                 return;
@@ -223,6 +173,20 @@ namespace WildernessSurvival.Core
 
             DependencyService.Get<IToast>().ShortAlert("很可惜，你没有钓上鱼。");
             ++TurnCount;
+        }
+
+        public async Task DisplayAchievements(List<IItem> achievements)
+        {
+            if (achievements.Count != 0)
+            {
+                var result = "";
+                foreach (var item in achievements) result += $" {item.LocalizedName()} ";
+                DependencyService.Get<IToast>().ShortAlert($"你获得了：{result}。");
+            }
+            else
+            {
+                DependencyService.Get<IToast>().ShortAlert("你没有收获。");
+            }
         }
     }
 }

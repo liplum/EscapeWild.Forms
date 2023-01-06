@@ -59,6 +59,16 @@ namespace WildernessSurvival.Localization
             { "Place.Subtropics.Riverside.Name", "Riverside" },
             { "Place.Subtropics.Forest.Name", "Forest" },
             { "Place.Subtropics.Hut.Name", "Hut" },
+            { "Action.Move.Name", "Move" },
+            { "Action.Explore.Name", "Explore" },
+            { "Action.Rest.Name", "Rest" },
+            { "Action.Fire.Name", "Fire" },
+            { "Action.Hunt.Name", "Hunt" },
+            { "Action.CutDownTree.Name", "Cut Down" },
+            { "Action.Fish.Name", "Fish" },
+            { "Subtropics.Common.Rest", "You took a break and feel better." },
+            { "Subtropics.Common.Fire", "You start a fire." },
+            { "OK", "OK" }
         };
     }
 }

@@ -21,65 +21,64 @@ namespace WildernessSurvival
             UpdateUI();
         }
 
-        private void Move_Clicked(object sender, EventArgs e)
+        private async void Move_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Move();
-            Trip.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+            await _player.PerformAction(ActionType.Move);
             UpdateUI();
         }
 
-        private void Explore_Clicked(object sender, EventArgs e)
+        private async void Explore_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Explore();
+            await _player.PerformAction(ActionType.Explore);
             UpdateUI();
         }
 
-        private void Rest_Clicked(object sender, EventArgs e)
+        private async void Rest_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Rest();
+            await _player.PerformAction(ActionType.Rest);
             UpdateUI();
         }
 
-        private void Hunt_Clicked(object sender, EventArgs e)
+        private async void Hunt_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Hunt();
+            await _player.PerformAction(ActionType.Hunt);
             UpdateUI();
         }
 
-        private void Cut_Clicked(object sender, EventArgs e)
+        private async void Cut_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Cut();
+            await _player.PerformAction(ActionType.CutDownTree);
             UpdateUI();
         }
 
-        private void Fish_Clicked(object sender, EventArgs e)
+        private async void Fish_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Fish();
+            await _player.PerformAction(ActionType.Fish);
             UpdateUI();
         }
 
-        private void Fire_Clicked(object sender, EventArgs e)
+        private async void Fire_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            _player.Fire();
+            await _player.PerformAction(ActionType.Fire);
             UpdateUI();
         }
 
-        private void Cook_Clicked(object sender, EventArgs e)
+        private async void Cook_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            Navigation.PushModalAsync(new CookPage(), true);
+            await Navigation.PushModalAsync(new CookPage(), true);
         }
 
-        private void Backpack_Clicked(object sender, EventArgs e)
+        private async void Backpack_Clicked(object sender, EventArgs e)
         {
-            Navigation.PushModalAsync(new BackpackPage(), true);
+            await Navigation.PushModalAsync(new BackpackPage(), true);
         }
 
 
@@ -101,6 +100,7 @@ namespace WildernessSurvival
             Rest.IsEnabled &= _player.CanPerformAnyAction;
             Fire.IsEnabled &= _player.CanPerformAnyAction;
             Cook.IsEnabled &= _player.CanPerformAnyAction;
+            await Trip.ProgressTo(_player.TripRatio, 300, Easing.Linear);
         }
 
         private async Task CheckDeadOrWin()
@@ -118,10 +118,11 @@ namespace WildernessSurvival
         private async Task ShowDialog(string state)
         {
             string i(string key) => I18N.Get($"Dialog.{state}.{key}");
-            var answer = await DisplayAlert(i("Title"),
-                string.Format(i("Content"), _player.TurnCount),
-                i("Accept"),
-                i("Cancel")
+            var answer = await DisplayAlert(
+                title: i("Title"),
+                message: string.Format(i("Content"), _player.TurnCount),
+                accept: i("Accept"),
+                cancel: i("Cancel")
             );
             if (answer)
             {

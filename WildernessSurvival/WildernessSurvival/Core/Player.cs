@@ -21,8 +21,7 @@ namespace WildernessSurvival.Core
 
         private Backpack _backpack;
 
-        private int _curPositionExploreCount;
-        private IRoute<IPlace> _curRoute;
+        public IRoute<IPlace> CurRoute;
 
         private int _energyValue;
 
@@ -42,8 +41,6 @@ namespace WildernessSurvival.Core
 
         public Player()
         {
-            if (ExploreActions == null)
-                RegisterExplore();
             Reset();
         }
 
@@ -52,10 +49,9 @@ namespace WildernessSurvival.Core
             Hp = Food = Water = Energy = MaxValue;
             HasFire = false;
             _tripRatio = 0;
-            _curRoute = Routes.SubtropicsRoute();
-            Location = _curRoute.CurPlace;
+            CurRoute = Routes.SubtropicsRoute();
+            Location = CurRoute.InitialPlace;
             TurnCount = 0;
-            _curPositionExploreCount = 0;
             _backpack = new Backpack(this);
         }
 
@@ -75,9 +71,9 @@ namespace WildernessSurvival.Core
         public IPlace Location
         {
             get => _location;
-            private set
+            set
             {
-                if (_location != value) _curPositionExploreCount = 0;
+                if (_location == value) return;
                 _location = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LocationName)));
             }
@@ -88,7 +84,7 @@ namespace WildernessSurvival.Core
         public int TurnCount
         {
             get => _turnNumber;
-            private set => _turnNumber = value < 0 ? 0 : value;
+            set => _turnNumber = value < 0 ? 0 : value;
         }
 
         public int Hp
@@ -216,35 +212,17 @@ namespace WildernessSurvival.Core
             }
         }
 
-        private void AddTrip(float delta = PerActStep)
-        {
-            TripRatio += delta;
-        }
+        public void AdvanceTrip(float delta = PerActStep) => TripRatio += delta;
 
 
-        public void UseItem(IUsableItem item)
-        {
-            _backpack.Use(item);
-        }
+        public void UseItem(IUsableItem item) => _backpack.Use(item);
 
-        public void RemoveItem(IItem item)
-        {
-            _backpack.Remove(item);
-        }
+        public void RemoveItem(IItem item) => _backpack.Remove(item);
 
-        public void AddItem(IItem item)
-        {
-            _backpack.AddItem(item);
-        }
+        public void AddItem(IItem item) => _backpack.AddItem(item);
 
-        private void AddItems(IEnumerable<IItem> items)
-        {
-            _backpack.Append(items);
-        }
+        public void AddItems(IEnumerable<IItem> items) => _backpack.Append(items);
 
-        public void ConsumeWood(int Count)
-        {
-            _backpack.ConsumeWood(Count);
-        }
+        public void ConsumeWood(int Count) => _backpack.ConsumeWood(Count);
     }
 }
