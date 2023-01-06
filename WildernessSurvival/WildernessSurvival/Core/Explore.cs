@@ -41,7 +41,7 @@ namespace WildernessSurvival.Core
         private void ExplorePlain()
         {
             const int 浆果概率 = 60, 脏水概率 = 60, 木头概率 = 20, 双倍概率 = 30;
-            if (LocationName == "平原")
+            if (Location.Name == "Plain")
             {
                 var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
@@ -79,7 +79,7 @@ namespace WildernessSurvival.Core
         private void ExploreForest()
         {
             const int 浆果概率 = 30, 脏水概率 = 20, 木头概率 = 50, 坚果概率 = 60, 坚果双倍概率 = 40, 木头双倍概率 = 20;
-            if (LocationName == "森林")
+            if (Location.Name == "Forest")
             {
                 var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
@@ -124,7 +124,7 @@ namespace WildernessSurvival.Core
         private void ExploreRiverFront()
         {
             const int 生鱼概率 = 20, 净水概率 = 70, 净水双倍概率 = 40;
-            if (LocationName == "河边")
+            if (Location.Name == "Riverside")
             {
                 var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
@@ -159,7 +159,7 @@ namespace WildernessSurvival.Core
         private void ExploreHut()
         {
             const int 斧子概率 = 50, 鱼竿概率 = 30, 陷阱概率 = 20, 猎枪概率 = 5;
-            if (LocationName == "小屋")
+            if (Location.Name == "Hut")
             {
                 var prop = _curPositionExploreCount == 0 ? 1 : 0;
 

@@ -47,6 +47,19 @@ namespace WildernessSurvival.Core
             Reset();
         }
 
+        public void Reset()
+        {
+            Hp = Food = Water = Energy = MaxValue;
+            HasFire = false;
+            _tripRatio = 0;
+            _curRoute = SubtropicsRoute();
+            _curRoute.Reset();
+            Location = _curRoute.CurPlace;
+            TurnCount = 0;
+            _curPositionExploreCount = 0;
+            _backpack = new Backpack(this);
+        }
+
         public IList<IItem> AllItems => _backpack.AllItems;
 
         public IList<IRawItem> RawItems => _backpack.RawItems;
@@ -71,7 +84,7 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public string LocationName => Location.Name;
+        public string LocationName => Location.LocalizedName();
 
         public int TurnCount
         {
@@ -209,18 +222,6 @@ namespace WildernessSurvival.Core
             TripRatio += delta;
         }
 
-        public void Reset()
-        {
-            Hp = Food = Water = Energy = MaxValue;
-            HasFire = false;
-            _tripRatio = 0;
-            _curRoute = SubtropicsRoute;
-            _curRoute.Reset();
-            Location = _curRoute.CurPlace;
-            TurnCount = 0;
-            _curPositionExploreCount = 0;
-            _backpack = new Backpack(this);
-        }
 
         public void UseItem(IUsableItem item)
         {

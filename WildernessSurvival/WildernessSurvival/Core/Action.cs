@@ -182,9 +182,10 @@ namespace WildernessSurvival.Core
         }
 
         /// <summary>
-        ///     钓鱼：消耗 饱腹值1和饮水值1
-        ///     仅在可以钓鱼的地方钓鱼
-        ///     80%x1,20%x2
+        /// Go Fishing
+        /// Cost: Food[1], Water[1]
+        /// Gain: Raw Fish x1(80%) + x1(20%)
+        /// Prerequisites: Current location allows fishing.
         /// </summary>
         public void Fish()
         {

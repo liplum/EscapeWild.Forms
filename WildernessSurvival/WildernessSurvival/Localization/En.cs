@@ -55,6 +55,10 @@ namespace WildernessSurvival.Localization
             { "Dialog.Win.Content", "You escape from the wild after {0} turns!" },
             { "Dialog.Win.Accept", "Play Again" },
             { "Dialog.Win.Cancel", "Not Now" },
+            { "Place.Plain.Name", "Plain" },
+            { "Place.Riverside.Name", "Riverside" },
+            { "Place.Forest.Name", "Forest" },
+            { "Place.Hut.Name", "Hut" },
         };
     }
 }

@@ -8,12 +8,11 @@ namespace WildernessSurvival
     {
         public App()
         {
-            InitializeComponent();
-
-            MainPage = new MainPage();
             I18N.RegisterLocalization(new LangEn(), isDefault: true);
             I18N.RegisterLocalization(new LangZhCn());
             I18N.SetCulture(CultureInfo.CurrentUICulture);
+            InitializeComponent();
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
