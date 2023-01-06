@@ -55,6 +55,10 @@ namespace WildernessSurvival.Localization
             { "Dialog.Win.Content", "经过了 {0} 个回合，你成功逃离了荒野！" },
             { "Dialog.Win.Accept", "再来一次" },
             { "Dialog.Win.Cancel", "再等等" },
+            { "Dialog.DisplayGainedItems.Title", "结果" },
+            { "Dialog.DisplayGainedItems.Content", "你获得了 {0}。" },
+            { "Dialog.DisplayNoItemGained.Title", "太糟了" },
+            { "Dialog.DisplayNoItemGained.Content", "你没有任何收获。" },
             { "Place.Subtropics.Plain.Name", "平原" },
             { "Place.Subtropics.Riverside.Name", "河边" },
             { "Place.Subtropics.Forest.Name", "森林" },
@@ -68,7 +72,8 @@ namespace WildernessSurvival.Localization
             { "Action.Fish.Name", "钓鱼" },
             { "Subtropics.Common.Rest", "你休息了一会，感觉又充满了力量。" },
             { "Subtropics.Common.Fire", "你生起了火。" },
-            { "OK", "好" }
+            { "OK", "好" },
+            { "Alright", "Alright" }
         };
     }
 }

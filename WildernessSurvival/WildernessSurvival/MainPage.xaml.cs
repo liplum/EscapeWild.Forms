@@ -18,7 +18,7 @@ namespace WildernessSurvival
         {
             InitializeComponent();
             _player = (Player)Application.Current.Resources["player"];
-            UpdateUI();
+            UpdateUI(updateProgressBarInSequence: true);
         }
 
         private async void Move_Clicked(object sender, EventArgs e)
@@ -83,7 +83,7 @@ namespace WildernessSurvival
 
 
         // ReSharper disable once InconsistentNaming
-        private async void UpdateUI()
+        private async void UpdateUI(bool updateProgressBarInSequence = false)
         {
             // Initialized by location actions
             var actions = _player.Location.AvailableActions;
@@ -100,7 +100,6 @@ namespace WildernessSurvival
             Hunt.IsEnabled &= _player.HasHuntingTool;
             Fish.IsEnabled &= _player.HasFishingTool;
             Cook.IsEnabled &= _player.HasFire;
-            await CheckDeadOrWin();
             // Modified by win or failure
             Move.IsEnabled &= _player.CanPerformAnyAction;
             Hunt.IsEnabled &= _player.CanPerformAnyAction;
@@ -110,7 +109,26 @@ namespace WildernessSurvival
             Rest.IsEnabled &= _player.CanPerformAnyAction;
             Fire.IsEnabled &= _player.CanPerformAnyAction;
             Cook.IsEnabled &= _player.CanPerformAnyAction;
-            await Trip.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+            // Update Restart button
+            Restart.IsVisible = !_player.CanPerformAnyAction;
+            if (updateProgressBarInSequence)
+            {
+                await TripProgressBar.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+                await HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
+                await FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
+                await WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
+                await EnergyProgressBar.ProgressTo(_player.Energy, 300, Easing.Linear);
+            }
+            else
+            {
+                TripProgressBar.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+                HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
+                FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
+                WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
+                EnergyProgressBar.ProgressTo(_player.Energy, 300, Easing.Linear);
+            }
+
+            await CheckDeadOrWin();
         }
 
         private async Task CheckDeadOrWin()
@@ -128,19 +146,14 @@ namespace WildernessSurvival
         private async Task ShowDialog(string state)
         {
             string i(string key) => I18N.Get($"Dialog.{state}.{key}");
-            var answer = await DisplayAlert(
-                title: i("Title"),
-                message: string.Format(i("Content"), _player.TurnCount),
-                accept: i("Accept"),
-                cancel: i("Cancel")
-            );
-            if (answer)
+            if (await DisplayAlert(
+                    title: i("Title"),
+                    message: string.Format(i("Content"), _player.TurnCount),
+                    accept: i("Accept"),
+                    cancel: i("Cancel")
+                ))
             {
                 RestartGame();
-            }
-            else
-            {
-                Restart.IsVisible = true;
             }
         }
 
@@ -148,7 +161,6 @@ namespace WildernessSurvival
         {
             _player.Reset();
             Restart.IsVisible = false;
-            Trip.ProgressTo(_player.TripRatio, 300, Easing.Linear);
             Move.IsEnabled = true;
             Explore.IsEnabled = true;
             Rest.IsEnabled = true;

@@ -115,13 +115,13 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Move:
-        /// Cost: Food[1]
+        /// Cost: Food[0.05], Energy[0.08]
         /// Go to next place
         /// </summary>
         protected virtual async Task PerformMove(Player player)
         {
-            player.Modify(-1, AttrType.Food);
-            player.Modify(-1, AttrType.Energy);
+            player.Modify(-0.05f, AttrType.Food);
+            player.Modify(-0.08f, AttrType.Energy);
             player.AdvanceTrip();
             player.Location = await Owner.GoNextPlace(player);
             player.HasFire = false;
@@ -129,15 +129,15 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Rest
-        /// Cost: Food[1], Water[1]
-        /// Restore: Health[2], Energy[4]
+        /// Cost: Food[0.03], Water[0.03]
+        /// Restore: Health[0.1], Energy[0.25]
         /// </summary>
         protected virtual async Task PerformRest(Player player)
         {
-            player.Modify(-1, AttrType.Food);
-            player.Modify(-1, AttrType.Water);
-            player.Modify(2, AttrType.Hp);
-            player.Modify(4, AttrType.Energy);
+            player.Modify(-0.03f, AttrType.Food);
+            player.Modify(-0.03f, AttrType.Water);
+            player.Modify(0.1f, AttrType.Hp);
+            player.Modify(0.25f, AttrType.Energy);
 
             await App.Current.MainPage.DisplayAlert(
                 title: ActionType.Rest.LocalizedName(),
@@ -152,14 +152,14 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Hunt
-        /// Cost: Food[1], Water[-1], Energy[-3]
+        /// Cost: Food[0.05], Water[0.05], Energy[0.15]
         /// Prerequisites: Has any hunting tool
         /// </summary>
         protected virtual async Task PerformHunt(Player player)
         {
-            player.Modify(-1, AttrType.Food);
-            player.Modify(-1, AttrType.Water);
-            player.Modify(-3, AttrType.Energy);
+            player.Modify(-0.05f, AttrType.Food);
+            player.Modify(-0.05f, AttrType.Water);
+            player.Modify(-0.15f, AttrType.Energy);
 
 
             var huntingTool = player.GetBestHuntingTool();
@@ -200,13 +200,13 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
-        /// Cost: Food[2], Energy[2]
+        /// Cost: Food[0.02], Energy[0.3]
         /// Gain: Log x1 + x1(50%)
         /// </summary>
         protected virtual async Task PerformCutDownTree(Player player)
         {
-            player.Modify(-2, AttrType.Food);
-            player.Modify(-2, AttrType.Energy);
+            player.Modify(-0.02f, AttrType.Food);
+            player.Modify(-0.3f, AttrType.Energy);
             var gained = new List<IItem>();
             gained.Add(LogItem.One);
             var rate = Rand.Int(100);
@@ -223,11 +223,14 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Fire
+        /// Cost: Water[0.01], Energy[0.05]
         /// Cost: Log x1
         /// </summary>
         protected virtual async Task PerformFire(Player player)
         {
             if (!player.HasWood) return;
+            player.Modify(-0.01f, AttrType.Food);
+            player.Modify(-0.05f, AttrType.Energy);
             player.ConsumeWood(1);
             player.HasFire = true;
             await App.Current.MainPage.DisplayAlert(
@@ -270,14 +273,15 @@ namespace WildernessSurvival.Game
 
 
         /// <summary>
+        /// Cost: Water[0.04], Energy[0.08]
         /// Berry x1(60%) + x1(30%)
         /// Dirty Water x1(60%) + x1(30%)
         /// Log x1(20%)
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-1, AttrType.Water);
-            player.Modify(-1, AttrType.Energy);
+            player.Modify(-0.04f, AttrType.Water);
+            player.Modify(-0.08f, AttrType.Energy);
             const int 浆果概率 = 60, 脏水概率 = 60, 木头概率 = 20, 双倍概率 = 30;
 
             var proportion = 10 - ExploreCount;
@@ -336,14 +340,14 @@ namespace WildernessSurvival.Game
         public override int AppearRate { get; }
 
         /// <summary>
-        /// Cost: Food[1], Water[1]
+        /// Cost: Food[0.08], Water[0.08]
         /// Gain: Raw Fish x1(80%) + x1(20%)
         /// Prerequisites: Current location allows fishing.
         /// </summary>
         protected override async Task PerformFish(Player player)
         {
-            player.Modify(-1, AttrType.Food);
-            player.Modify(-1, AttrType.Water);
+            player.Modify(-0.08f, AttrType.Food);
+            player.Modify(-0.08f, AttrType.Water);
             var r = Rand.Int(100);
             var gained = new List<IItem>();
             if (r < 80)
@@ -362,13 +366,14 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
+        /// Cost: Water[0.04], Energy[0.08]
         /// Raw Fish x1(20%)
         /// Clean Water x1(70%) + x1(40%) 
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-1, AttrType.Water);
-            player.Modify(-1, AttrType.Energy);
+            player.Modify(-0.04f, AttrType.Water);
+            player.Modify(-0.08f, AttrType.Energy);
             const int 生鱼概率 = 20, 净水概率 = 70, 净水双倍概率 = 40;
 
             var proportion = 10 - ExploreCount;
@@ -420,6 +425,7 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
+        /// Cost: Water[0.04], Energy[0.08]
         /// Bottled Water x2
         /// Energy Bar x2
         /// Log x2
@@ -432,8 +438,8 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-1, AttrType.Water);
-            player.Modify(-1, AttrType.Energy);
+            player.Modify(-0.04f, AttrType.Water);
+            player.Modify(-0.08f, AttrType.Energy);
             const int 斧子概率 = 50, 鱼竿概率 = 30, 陷阱概率 = 20, 猎枪概率 = 5;
             var prop = ExploreCount == 0 ? 1 : 0;
 
@@ -519,13 +525,14 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
+        /// Cost: Water[0.04], Energy[0.08]
         /// Raw Fish x1(20%)
         /// Clean Water x1(70%) + x1(40%) 
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-1, AttrType.Water);
-            player.Modify(-1, AttrType.Energy);
+            player.Modify(-0.04f, AttrType.Water);
+            player.Modify(-0.08f, AttrType.Energy);
             const int 浆果概率 = 30, 脏水概率 = 20, 木头概率 = 50, 坚果概率 = 60, 坚果双倍概率 = 40, 木头双倍概率 = 20;
 
             var proportion = 10 - ExploreCount;

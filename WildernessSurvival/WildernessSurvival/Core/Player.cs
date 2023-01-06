@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using WildernessSurvival.Game;
@@ -15,21 +16,20 @@ namespace WildernessSurvival.Core
 
     public partial class Player : INotifyPropertyChanged
     {
-        private const int MaxValue = 10;
+        private const float MaxValue = 1f;
 
         private const float PerActStep = 0.05f;
 
         private Backpack _backpack;
 
-        public IRoute<IPlace> CurRoute;
+        private IRoute<IPlace> CurRoute;
 
-        private int _energyValue;
-
-        private int _foodValue;
+        private float _healthValue;
+        private float _energyValue;
+        private float _foodValue;
+        private float _waterValue;
 
         private bool _hasFire;
-
-        private int _hpValue;
 
         private IPlace _location;
 
@@ -37,7 +37,6 @@ namespace WildernessSurvival.Core
 
         private int _turnNumber;
 
-        private int _waterValue;
 
         public Player()
         {
@@ -46,7 +45,7 @@ namespace WildernessSurvival.Core
 
         public void Reset()
         {
-            Hp = Food = Water = Energy = MaxValue;
+            Health = Food = Water = Energy = MaxValue;
             HasFire = false;
             _tripRatio = 0;
             CurRoute = Routes.SubtropicsRoute();
@@ -84,32 +83,30 @@ namespace WildernessSurvival.Core
         public int TurnCount
         {
             get => _turnNumber;
-            set => _turnNumber = value < 0 ? 0 : value;
+            private set => _turnNumber = value < 0 ? 0 : value;
         }
 
-        public int Hp
+        public float Health
         {
-            get => _hpValue;
+            get => _healthValue;
             private set
             {
-                if (_hpValue == value) return;
                 if (value > MaxValue)
-                    _hpValue = MaxValue;
+                    _healthValue = MaxValue;
                 else if (value < 0)
-                    _hpValue = 0;
+                    _healthValue = 0;
                 else
-                    _hpValue = value;
+                    _healthValue = value;
 
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Hp)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Health)));
             }
         }
 
-        public int Food
+        public float Food
         {
             get => _foodValue;
             private set
             {
-                if (_foodValue == value) return;
                 if (value > MaxValue)
                     _foodValue = MaxValue;
                 else if (value < 0)
@@ -121,12 +118,11 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public int Water
+        public float Water
         {
             get => _waterValue;
             private set
             {
-                if (_waterValue == value) return;
                 if (value > MaxValue)
                     _waterValue = MaxValue;
                 else if (value < 0)
@@ -138,12 +134,11 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public int Energy
+        public float Energy
         {
             get => _energyValue;
             private set
             {
-                if (_energyValue == value) return;
                 if (value > MaxValue)
                     _energyValue = MaxValue;
                 else if (value < 0)
@@ -186,19 +181,19 @@ namespace WildernessSurvival.Core
 
         public bool HasHuntingTool => _backpack.HasHuntingTool;
 
-        public bool IsDead => Hp <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
+        public bool IsDead => Health <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
         public bool IsAlive => !IsDead;
         public bool CanPerformAnyAction => IsAlive && !IsWon;
         public bool IsWon => TripRatio >= 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void Modify(int delta, AttrType type)
+        public void Modify(float delta, AttrType type)
         {
             switch (type)
             {
                 case AttrType.Hp:
-                    Hp += delta;
+                    Health += delta;
                     break;
                 case AttrType.Food:
                     Food += delta;
@@ -213,7 +208,6 @@ namespace WildernessSurvival.Core
         }
 
         public void AdvanceTrip(float delta = PerActStep) => TripRatio += delta;
-
 
         public void UseItem(IUsableItem item) => _backpack.Use(item);
 

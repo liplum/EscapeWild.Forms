@@ -39,19 +39,28 @@
       <Label Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3" Grid.Column="0" />
       <Label Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4" Grid.Column="0" />
 
-      <Label Text="{Binding Hp,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <ProgressBar HorizontalOptions="Fill"
+        x:Name="HealthProgressBar"
+        Grid.Column="1"
         Grid.Row="0" />
-      <Label Text="{Binding Food,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <ProgressBar HorizontalOptions="Fill"
+        x:Name="FoodProgressBar"
+        Grid.Column="1"
         Grid.Row="1" />
-      <Label Text="{Binding Water,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <ProgressBar HorizontalOptions="Fill"
+        x:Name="WaterProgressBar"
+        Grid.Column="1"
         Grid.Row="2" />
-      <Label Text="{Binding Energy,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <ProgressBar HorizontalOptions="Fill"
+        x:Name="EnergyProgressBar"
+        Grid.Column="1"
         Grid.Row="3" />
-      <Label Text="{Binding LocationName,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <Label
+        Text="{Binding LocationName,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="4" />
     </Grid>
 
-    <ProgressBar x:Name="Trip" HorizontalOptions="Fill" />
+    <ProgressBar x:Name="TripProgressBar" HorizontalOptions="Fill" />
 
     <Grid>
       <Grid.RowDefinitions>
@@ -71,7 +80,8 @@
         Grid.Column="0" />
       <Button x:Name="Hunt" Text="{x:Static prop:AppResources.Hunt}" Clicked="Hunt_Clicked" Grid.Row="0"
         Grid.Column="1" />
-      <Button x:Name="CutDownTree" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="CutDownTree_Clicked" Grid.Row="1"
+      <Button x:Name="CutDownTree" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="CutDownTree_Clicked"
+        Grid.Row="1"
         Grid.Column="0" />
       <Button x:Name="Backpack" Text="{x:Static prop:AppResources.Backpack}" Clicked="Backpack_Clicked" Grid.Row="1"
         Grid.Column="1" />
