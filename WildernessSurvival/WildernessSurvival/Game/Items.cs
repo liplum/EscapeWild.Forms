@@ -4,7 +4,7 @@ namespace WildernessSurvival.Game
 {
     public class EnergyBar : IUsableItem
     {
-        private const int Restore = 3;
+        private const float Restore = 0.3f;
         public string Name => nameof(EnergyBar);
         public UseType UseType => UseType.Eat;
 
@@ -22,7 +22,7 @@ namespace WildernessSurvival.Game
 
     public class BottledWater : IUsableItem
     {
-        private const int Restore = 4;
+        private const float Restore = 0.4f;
         public string Name => nameof(BottledWater);
         public UseType UseType => UseType.Drink;
 
@@ -34,7 +34,7 @@ namespace WildernessSurvival.Game
 
     public class RawRabbit : IUsableItem, IRawItem
     {
-        private const int Restore = 5;
+        private const float Restore = 0.5f;
         public string Name => nameof(RawRabbit);
 
         public CookType CookType => CookType.Cook;
@@ -53,7 +53,7 @@ namespace WildernessSurvival.Game
 
     public class CookedRabbit : IUsableItem
     {
-        private const int Restore = 10;
+        private const float Restore = 0.9f;
         public string Name => nameof(CookedRabbit);
         public UseType UseType => UseType.Eat;
 
@@ -71,8 +71,8 @@ namespace WildernessSurvival.Game
 
     public class Berry : IUsableItem
     {
-        private const int FoodRestore = 2;
-        private const int WaterRestore = 1;
+        private const float FoodRestore = 0.2f;
+        private const float WaterRestore = 0.1f;
         public string Name => nameof(Berry);
         public UseType UseType => UseType.Eat;
 
@@ -85,7 +85,7 @@ namespace WildernessSurvival.Game
 
     public class DirtyWater : IUsableItem, IRawItem
     {
-        private const int Restore = 1;
+        private const float Restore = 0.1f;
         public string Name => nameof(DirtyWater);
         public CookType CookType => CookType.Boil;
         public UseType UseType => UseType.Drink;
@@ -103,7 +103,7 @@ namespace WildernessSurvival.Game
 
     public class CleanWater : IUsableItem
     {
-        private const int Restore = 3;
+        private const float Restore = 0.3f;
         public string Name => nameof(CleanWater);
         public UseType UseType => UseType.Drink;
 
@@ -115,7 +115,7 @@ namespace WildernessSurvival.Game
 
     public class Nuts : IUsableItem
     {
-        private const int Restore = 2;
+        private const float Restore = 0.2f;
         public string Name => nameof(Nuts);
         public UseType UseType => UseType.Eat;
 
@@ -127,7 +127,7 @@ namespace WildernessSurvival.Game
 
     public class Bandage : IMedicalSupplyItem
     {
-        private const int Restore = 3;
+        private const float Restore = 0.3f;
         public string Name => nameof(Bandage);
         public UseType UseType => UseType.Use;
 
@@ -139,8 +139,8 @@ namespace WildernessSurvival.Game
 
     public class FistAidKit : IMedicalSupplyItem
     {
-        private const int HpRestore = 3;
-        private const int EnergyRestore = 2;
+        private const float HpRestore = 0.3f;
+        private const float EnergyRestore = 0.2f;
         public string Name => nameof(FistAidKit);
         public UseType UseType => UseType.Use;
 
@@ -153,8 +153,8 @@ namespace WildernessSurvival.Game
 
     public class EnergyDrink : IUsableItem
     {
-        private const int WaterRestore = 3;
-        private const int EnergyRestore = 4;
+        private const float WaterRestore = 0.3f;
+        private const float EnergyRestore = 0.4f;
         public string Name => nameof(EnergyDrink);
         public UseType UseType => UseType.Drink;
 
@@ -167,7 +167,8 @@ namespace WildernessSurvival.Game
 
     public class RawFish : IUsableItem, IRawItem
     {
-        private const int Restore = 6;
+        private const float FoodRestore = 0.4f;
+        private const float WaterRestore = 0.2f;
         public string Name => nameof(RawFish);
         public CookType CookType => CookType.Cook;
         public UseType UseType => UseType.Eat;
@@ -179,13 +180,14 @@ namespace WildernessSurvival.Game
 
         public void Use(Player player)
         {
-            player.Modify(Restore, AttrType.Food);
+            player.Modify(FoodRestore, AttrType.Food);
+            player.Modify(WaterRestore, AttrType.Food);
         }
     }
 
     public class CookedFish : IUsableItem
     {
-        private const int Restore = 9;
+        private const float Restore = 0.6f;
         public string Name => nameof(CookedFish);
         public UseType UseType => UseType.Eat;
 

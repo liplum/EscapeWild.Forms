@@ -13,7 +13,9 @@
       <Picker x:Name="RawItemsPicker" FontSize="Large" Title="{ui:I18N Key=Backpack.CookTip}"
         SelectedIndexChanged="RawItemsPicker_SelectedIndexChanged" />
       <Label x:Name="ItemDescription" FontSize="Large" />
-      <Button Text="{ui:I18N Key=Cook.Cook}" x:Name="Cook" FontSize="30" Clicked="Heat_Clicked" />
+      <StackLayout VerticalOptions="CenterAndExpand" />
+      <Button Text="{ui:I18N Key=Cook.Cook}" x:Name="Cook"
+        FontSize="30" Clicked="Heat_Clicked" />
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>

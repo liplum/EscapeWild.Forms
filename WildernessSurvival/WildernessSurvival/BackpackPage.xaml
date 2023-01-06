@@ -13,6 +13,7 @@
       <Picker x:Name="ItemsPicker" FontSize="Large" Title="{ui:I18N Key=Backpack.UseTip}"
         SelectedIndexChanged="ItemsPicker_SelectedIndexChanged" />
       <Label x:Name="ItemDescription" FontSize="Large" />
+      <StackLayout VerticalOptions="CenterAndExpand"/>
       <Button Text="{ui:I18N Key=Backpack.Use}" x:Name="Use" FontSize="30" Clicked="Use_Clicked" />
     </StackLayout>
   </ContentPage.Content>
