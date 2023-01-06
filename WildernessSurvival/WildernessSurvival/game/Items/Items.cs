@@ -66,12 +66,6 @@
         public string Name => $"{nameof(老旧的钓鱼竿)}";
     }
 
-    public class 木头 : IWoodItem
-    {
-        public string Description => "一根没什么特点的木头。";
-        public string Name => "木头";
-    }
-
     public class 浆果 : IEdibleItem
     {
         private const int FoodRestore = 2;

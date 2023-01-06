@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using WildernessSurvival.game.Items;
 
 namespace WildernessSurvival.game
 {
@@ -23,7 +24,7 @@ namespace WildernessSurvival.game
 
         public bool HasHunting => AllItems.OfType<IHuntingToolItem>().Any();
 
-        public bool HasWood => AllItems.OfType<IWoodItem>().Any();
+        public bool HasWood => AllItems.OfType<LogItem>().Any();
 
         /*public IList<ItemBase> AvailableItems
         {
@@ -46,7 +47,7 @@ namespace WildernessSurvival.game
 
         public IList<IItem> HuntingTools => (from item in AllItems where item is IHuntingToolItem select item).ToList();
 
-        private IList<IItem> Woods => (from item in AllItems where item is IWoodItem select item).ToList();
+        private IList<IItem> Woods => (from item in AllItems where item is LogItem select item).ToList();
 
         public void AddItem(IItem item)
         {

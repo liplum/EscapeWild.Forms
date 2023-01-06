@@ -30,6 +30,7 @@
     public interface IOxeItem : IToolItem
     {
     }
+
     public enum ToolLevel
     {
         Low,
@@ -37,6 +38,7 @@
         High,
         Max
     }
+
     public interface IFishToolItem : IToolItem
     {
     }
@@ -46,8 +48,16 @@
         public ToolLevel HuntingToolLevel { get; }
     }
 
-    public interface IWoodItem : IItem
+    public class LogItem : IItem
     {
+        public static readonly LogItem One = new LogItem();
+
+        private LogItem()
+        {
+            
+        }
+        public string Description => "一根没什么特点的木头。";
+        public string Name => "木头";
     }
 
     public interface IMedicalSupplyItem : IUsableItem

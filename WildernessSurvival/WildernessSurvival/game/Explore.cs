@@ -25,7 +25,7 @@ namespace WildernessSurvival.game
             if (achievements.Count != 0)
             {
                 var result = "";
-                foreach (var item in achievements) result += $" {item} ";
+                foreach (var item in achievements) result += $" {item.Name} ";
                 DependencyService.Get<IToast>().ShortAlert($"你获得了：{result}。");
             }
             else
@@ -98,9 +98,9 @@ namespace WildernessSurvival.game
                 var 木头 = Random.Next(100);
                 if (木头 < 木头概率 * prop)
                 {
-                    获得的物品.Add(new 木头());
+                    获得的物品.Add(LogItem.One);
                     if (Random.Next(100) < 木头双倍概率)
-                        获得的物品.Add(new 木头());
+                        获得的物品.Add(LogItem.One);
                 }
 
                 var 坚果 = Random.Next(100);
@@ -195,8 +195,8 @@ namespace WildernessSurvival.game
                 var 木头 = Random.Next(100);
                 if (木头 < 100 * prop)
                 {
-                    获得的物品.Add(new 木头());
-                    获得的物品.Add(new 木头());
+                    获得的物品.Add(LogItem.One);
+                    获得的物品.Add(LogItem.One);
                 }
 
                 if (!CanHunt)

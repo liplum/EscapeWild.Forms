@@ -164,22 +164,22 @@ namespace WildernessSurvival.game
             {
                 Modify(-2, AttrType.Food);
                 Modify(-2, AttrType.Energy);
-                AddItem(new 木头());
+                AddItem(LogItem.One);
                 var count = 1;
                 var rate = Random.Next(100);
                 if (rate < 50)
                 {
-                    AddItem(new 木头());
+                    AddItem(LogItem.One);
                     ++count;
                 }
 
                 if (_location.HasLog)
                 {
-                    AddItem(new 木头());
+                    AddItem(LogItem.One);
                     ++count;
                     if (Random.Next(100) < 50)
                     {
-                        AddItem(new 木头());
+                        AddItem(LogItem.One);
                         ++count;
                     }
                 }
