@@ -20,9 +20,12 @@ namespace WildernessSurvival.Core
         ISet<ActionType> AvailableActions { get; }
     }
 
-    public static class PlaceI18N
+    public static class RouteI18N
     {
         public static string LocalizedName(this IPlace place) =>
-            I18N.Get($"Place.{place.Route.Name}.{place.Name}.Name");
+            I18N.Get($"Route.{place.Route.Name}.{place.Name}");
+
+        public static string LocalizedName<T>(this IRoute<T> route) where T : IPlace =>
+            I18N.Get($"Route.{route.Name}");
     }
 }

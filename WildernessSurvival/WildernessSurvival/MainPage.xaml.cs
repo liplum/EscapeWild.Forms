@@ -92,6 +92,7 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private async void UpdateUI(bool updateProgressBarInSequence = false)
         {
+            RouteLabel.Text = _player.CurRoute.LocalizedName();
             // Initialized by location actions
             var actions = _player.Location.AvailableActions;
             Move.IsEnabled = actions.Contains(ActionType.Move);
