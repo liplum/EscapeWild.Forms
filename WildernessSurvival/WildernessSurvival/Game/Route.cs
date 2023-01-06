@@ -9,7 +9,7 @@ namespace WildernessSurvival.Game
     public class Route : IRoute<Place>
     {
         public string Name { get; }
-        private const int ChangedRate = 30;
+        public int ChangedRate = 30;
         private readonly List<Place> _allPlace;
 
         /// <summary>
@@ -44,25 +44,22 @@ namespace WildernessSurvival.Game
 
         public async Task<Place> GoNextPlace(Player player)
         {
-            var needChange = Rand.Int(100);
-            if (_curPlace.IsSpecial || needChange < ChangedRate)
-            {
-                var cur = _curPlace;
-                var range = 100 - _curPlace.AppearRate;
-                var next = Rand.Int(range);
-                var OtherPlace = (from p in _allPlace where p != cur select p).ToList();
+            if (Rand.Int(100) >= _curPlace.ChangedRate) return _curPlace;
+            var cur = _curPlace;
+            var range = 100 - _curPlace.AppearRate;
+            var next = Rand.Int(range);
+            var OtherPlace = (from p in _allPlace where p != cur select p).ToList();
 
-                for (int i = 0, sum = 0; i <= OtherPlace.Count; ++i)
+            for (int i = 0, sum = 0; i <= OtherPlace.Count; ++i)
+            {
+                var p = OtherPlace[i];
+                sum += p.AppearRate;
+                if (next <= sum)
                 {
-                    var p = OtherPlace[i];
-                    sum += p.AppearRate;
-                    if (next <= sum)
-                    {
-                        await _curPlace.OnLeave(player);
-                        _curPlace = p;
-                        await p.OnEnter(player);
-                        return p;
-                    }
+                    await _curPlace.OnLeave(player);
+                    _curPlace = p;
+                    await p.OnEnter(player);
+                    return p;
                 }
             }
 
@@ -78,10 +75,10 @@ namespace WildernessSurvival.Game
 
         public abstract int HuntingRate { get; }
 
-        public abstract bool IsSpecial { get; }
+        public abstract int ChangedRate { get; }
 
         public IRoute<IPlace> Route { get; set; }
-        private Route Owner => Route as Route;
+        protected Route Owner => Route as Route;
 
         public float HardnessFix(float raw) => Owner.HardnessFix(raw);
         protected int ExploreCount;
@@ -285,7 +282,7 @@ namespace WildernessSurvival.Game
 
         public override string Name { get; }
         public override int HuntingRate { get; }
-        public override bool IsSpecial => false;
+        public override int ChangedRate => Owner.ChangedRate;
         public override int AppearRate { get; }
 
 
@@ -353,8 +350,9 @@ namespace WildernessSurvival.Game
             }
         }
 
+        public override int ChangedRate => Owner.ChangedRate;
+
         public override int HuntingRate { get; }
-        public override bool IsSpecial => false;
         public override int AppearRate { get; }
 
         /// <summary>
@@ -429,7 +427,7 @@ namespace WildernessSurvival.Game
 
         public override string Name { get; }
         public override int HuntingRate { get; }
-        public override bool IsSpecial => true;
+        public override int ChangedRate => 100;
         public override int AppearRate { get; }
 
         public override ISet<ActionType> AvailableActions
@@ -440,6 +438,14 @@ namespace WildernessSurvival.Game
                 actions.Add(ActionType.CutDownTree);
                 return actions;
             }
+        }
+
+        public override async Task OnEnter(Player player)
+        {
+        }
+
+        public override async Task OnLeave(Player player)
+        {
         }
 
         /// <summary>
@@ -458,14 +464,14 @@ namespace WildernessSurvival.Game
         {
             player.Modify(-0.04f, AttrType.Water, HardnessFix);
             player.Modify(-0.08f, AttrType.Energy, HardnessFix);
-            const int oxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
+            const int OxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
             var exploreFix = ExploreCount == 0 ? 1 : 0;
 
             var gained = new List<IItem>();
 
             if (!player.HasOxe)
             {
-                if (Rand.Int(100) < oxeRate) gained.Add(new OldOxe());
+                if (Rand.Int(100) < OxeRate) gained.Add(new OldOxe());
             }
 
             if (!player.HasFishingTool)
@@ -515,7 +521,8 @@ namespace WildernessSurvival.Game
 
         public override string Name { get; }
         public override int HuntingRate { get; }
-        public override bool IsSpecial => false;
+        public override int ChangedRate => Owner.ChangedRate;
+
         public override int AppearRate { get; }
 
         public override ISet<ActionType> AvailableActions

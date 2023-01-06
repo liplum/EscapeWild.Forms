@@ -57,8 +57,12 @@ namespace WildernessSurvival.Localization
                 return 90;
             }
 
+            if (target.TwoLetterISOLanguageName.Equals(test.TwoLetterISOLanguageName)) {
+                // has the same parent
+                return 80;
+            }
             // not matched
-            return 0;
+            return 10;
         }
 
         public static string Get(string key)
