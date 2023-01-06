@@ -1,22 +1,17 @@
 ﻿namespace WildernessSurvival.game
 {
-    public abstract class ItemBase
+    public interface IItem
     {
-        protected abstract string Name { get; }
+        string Name { get; }
 
-        public abstract string Description { get; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
+        string Description { get; }
     }
 
-    public abstract class Tool : ItemBase
+    public interface IToolItem : IItem
     {
     }
 
-    public abstract class AvailableItem : ItemBase
+    public interface IUsableItem : IItem
     {
         public abstract void Use(Player player);
     }
@@ -25,39 +20,37 @@
     {
         string RawDescription { get; }
 
-        AvailableItem Cook();
+        IUsableItem Cook();
     }
 
-    public abstract class EdibleItem : AvailableItem
+    public interface IEdibleItem : IUsableItem
     {
     }
 
-    public abstract class Oxe : Tool
+    public interface IOxeItem : IToolItem
+    {
+    }
+    public enum ToolLevel
+    {
+        Low,
+        Normal,
+        High,
+        Max
+    }
+    public interface IFishToolItem : IToolItem
     {
     }
 
-    public abstract class FishRod : Tool
+    public interface IHuntingToolItem : IToolItem
+    {
+        public ToolLevel HuntingToolLevel { get; }
+    }
+
+    public interface IWoodItem : IItem
     {
     }
 
-    public abstract class Hunting : Tool
-    {
-        public enum Level
-        {
-            Low,
-            Normal,
-            High,
-            Max
-        }
-
-        public abstract Level HuntingLevel { get; }
-    }
-
-    public abstract class Wood : ItemBase
-    {
-    }
-
-    public abstract class MedicalSupplie : AvailableItem
+    public interface IMedicalSupplyItem : IUsableItem
     {
     }
 }

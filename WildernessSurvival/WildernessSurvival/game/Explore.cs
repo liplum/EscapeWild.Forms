@@ -20,12 +20,12 @@ namespace WildernessSurvival.game
             ExploreActions += ExploreRiverFront;
         }
 
-        private void DisplayAchievements(List<ItemBase> Achievements)
+        private void DisplayAchievements(List<IItem> achievements)
         {
-            if (Achievements.Count != 0)
+            if (achievements.Count != 0)
             {
                 var result = "";
-                foreach (var item in Achievements) result += $" {item} ";
+                foreach (var item in achievements) result += $" {item} ";
                 DependencyService.Get<IToast>().ShortAlert($"你获得了：{result}。");
             }
             else
@@ -41,13 +41,13 @@ namespace WildernessSurvival.game
         private void ExplorePlain()
         {
             const int 浆果概率 = 60, 脏水概率 = 60, 木头概率 = 20, 双倍概率 = 30;
-            if (POS == "平原")
+            if (LocationName == "平原")
             {
                 var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
                 var prop = proportion / 10f;
 
-                var 获得的物品 = new List<ItemBase>();
+                var 获得的物品 = new List<IItem>();
 
                 var 浆果 = Random.Next(100);
                 if (浆果 < 浆果概率 * prop)
@@ -79,13 +79,13 @@ namespace WildernessSurvival.game
         private void ExploreForest()
         {
             const int 浆果概率 = 30, 脏水概率 = 20, 木头概率 = 50, 坚果概率 = 60, 坚果双倍概率 = 40, 木头双倍概率 = 20;
-            if (POS == "森林")
+            if (LocationName == "森林")
             {
                 var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
                 var prop = proportion / 10f;
 
-                var 获得的物品 = new List<ItemBase>();
+                var 获得的物品 = new List<IItem>();
 
                 var 浆果 = Random.Next(100);
                 if (浆果 < 浆果概率 * prop)
@@ -124,13 +124,13 @@ namespace WildernessSurvival.game
         private void ExploreRiverFront()
         {
             const int 生鱼概率 = 20, 净水概率 = 70, 净水双倍概率 = 40;
-            if (POS == "河边")
+            if (LocationName == "河边")
             {
                 var proportion = 10 - _curPositionExploreCount;
                 proportion = proportion <= 0 ? 1 : proportion;
                 var prop = proportion / 10f;
 
-                var 获得的物品 = new List<ItemBase>();
+                var 获得的物品 = new List<IItem>();
 
                 var 生鱼 = Random.Next(100);
                 if (生鱼 < 生鱼概率 * prop)
@@ -159,11 +159,11 @@ namespace WildernessSurvival.game
         private void ExploreHut()
         {
             const int 斧子概率 = 50, 鱼竿概率 = 30, 陷阱概率 = 20, 猎枪概率 = 5;
-            if (POS == "小屋")
+            if (LocationName == "小屋")
             {
                 var prop = _curPositionExploreCount == 0 ? 1 : 0;
 
-                var 获得的物品 = new List<ItemBase>();
+                var 获得的物品 = new List<IItem>();
 
                 if (!HasOxe)
                 {

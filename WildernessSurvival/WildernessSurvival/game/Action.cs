@@ -2,7 +2,6 @@
 using WildernessSurvival.game.Items;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
-using static WildernessSurvival.game.Hunting;
 
 namespace WildernessSurvival.game
 {
@@ -18,7 +17,7 @@ namespace WildernessSurvival.game
             var 受伤 = Random.Next(100);
             if (受伤 < 受伤概率)
             {
-                Modify(失去的生命, ValueType.Hp);
+                Modify(失去的生命, AttrType.Hp);
                 return true;
             }
 
@@ -35,10 +34,10 @@ namespace WildernessSurvival.game
                 DependencyService.Get<IToast>().ShortAlert("你在路上遇到了野兽，你被抓伤了！");
             else
                 DependencyService.Get<IToast>().ShortAlert("你前进了一段路。");
-            Modify(-1, ValueType.Food);
-            Modify(-1, ValueType.Energy);
+            Modify(-1, AttrType.Food);
+            Modify(-1, AttrType.Energy);
             AddTrip();
-            SetLocation(_curRoute.NextPlace);
+            Location = _curRoute.NextPlace;
             HasFire = false;
             ++TurnCount;
         }
@@ -51,8 +50,8 @@ namespace WildernessSurvival.game
             if (IsDead) return;
             if (Injured(3))
                 DependencyService.Get<IToast>().ShortAlert("你在探索的时候遇到了野兽，你被咬伤了！");
-            Modify(-1, ValueType.Water);
-            Modify(-1, ValueType.Energy);
+            Modify(-1, AttrType.Water);
+            Modify(-1, AttrType.Energy);
             ExploreActions();
             ++_curPositionExploreCount;
             ++TurnCount;
@@ -64,10 +63,10 @@ namespace WildernessSurvival.game
         public void Rest()
         {
             if (IsDead) return;
-            Modify(-1, ValueType.Food);
-            Modify(-1, ValueType.Water);
-            Modify(2, ValueType.Hp);
-            Modify(4, ValueType.Energy);
+            Modify(-1, AttrType.Food);
+            Modify(-1, AttrType.Water);
+            Modify(2, AttrType.Hp);
+            Modify(4, AttrType.Energy);
             DependencyService.Get<IToast>().ShortAlert("你休息了一会，感觉充满了力量！");
             ++TurnCount;
         }
@@ -98,9 +97,9 @@ namespace WildernessSurvival.game
             if (IsDead) return;
             if (CanHunt)
             {
-                Modify(-1, ValueType.Food);
-                Modify(-1, ValueType.Water);
-                Modify(-3, ValueType.Energy);
+                Modify(-1, AttrType.Food);
+                Modify(-1, AttrType.Water);
+                Modify(-3, AttrType.Energy);
 
                 if (Injured(4))
                 {
@@ -109,25 +108,25 @@ namespace WildernessSurvival.game
                 else
                 {
                     var hunting = HuntingTools.First();
-                    var level = ((Hunting)hunting).HuntingLevel;
+                    var level = ((IHuntingToolItem)hunting).HuntingToolLevel;
                     var rate = 0;
                     var doubleRate = 0;
 
                     switch (level)
                     {
-                        case Level.Low:
+                        case ToolLevel.Low:
                             rate = 40;
                             doubleRate = 10;
                             break;
-                        case Level.Normal:
+                        case ToolLevel.Normal:
                             rate = 55;
                             doubleRate = 20;
                             break;
-                        case Level.High:
+                        case ToolLevel.High:
                             rate = 70;
                             doubleRate = 30;
                             break;
-                        case Level.Max:
+                        case ToolLevel.Max:
                             rate = 100;
                             doubleRate = 50;
                             break;
@@ -163,8 +162,8 @@ namespace WildernessSurvival.game
             if (IsDead) return;
             if (HasOxe)
             {
-                Modify(-2, ValueType.Food);
-                Modify(-2, ValueType.Energy);
+                Modify(-2, AttrType.Food);
+                Modify(-2, AttrType.Energy);
                 AddItem(new 木头());
                 var count = 1;
                 var rate = Random.Next(100);
@@ -174,7 +173,7 @@ namespace WildernessSurvival.game
                     ++count;
                 }
 
-                if (_location.HasALotOfLog)
+                if (_location.HasLog)
                 {
                     AddItem(new 木头());
                     ++count;
@@ -205,8 +204,8 @@ namespace WildernessSurvival.game
             if (CanFish)
                 if (_location.CanFish)
                 {
-                    Modify(-1, ValueType.Food);
-                    Modify(-1, ValueType.Water);
+                    Modify(-1, AttrType.Food);
+                    Modify(-1, AttrType.Water);
                     var r = Random.Next(100);
                     if (r < 80)
                     {

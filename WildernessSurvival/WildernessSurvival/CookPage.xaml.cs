@@ -19,7 +19,7 @@ namespace WildernessSurvival
             InitializeComponent();
 
             AllRawItems = player.RawItems;
-            foreach (ItemBase item in AllRawItems)
+            foreach (IItem item in AllRawItems)
                 RawItemsPicker.Items.Add(item.ToString());
         }
 
@@ -31,8 +31,8 @@ namespace WildernessSurvival
                 if (player.HasWood)
                 {
                     var rawItem = AllRawItems[index];
-                    ItemBase cooked = rawItem.Cook();
-                    player.Remove((ItemBase)rawItem);
+                    IItem cooked = rawItem.Cook();
+                    player.Remove((IItem)rawItem);
                     player.ConsumeWood(1);
                     player.AddItem(cooked);
                     DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked}");

@@ -12,7 +12,7 @@ namespace WildernessSurvival
     {
         private static readonly Player player = (Player)Application.Current.Resources["player"];
 
-        private static IList<ItemBase> AllItems;
+        private static IList<IItem> AllItems;
 
         public BackpackPage()
         {

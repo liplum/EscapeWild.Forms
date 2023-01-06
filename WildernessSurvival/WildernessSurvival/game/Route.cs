@@ -68,26 +68,20 @@ namespace WildernessSurvival.game
 
         public class Place
         {
-            public Place(string Name, bool HasALotOfLog, bool CanFish, int AppearRate, int HuntingRate, bool IsSpecial)
+            public Place(string name, bool hasLog, bool canFish, int appearRate, int huntingRate, bool isSpecial)
             {
-                this.Name = Name;
-                this.HasALotOfLog = HasALotOfLog;
-                this.CanFish = CanFish;
-                this.AppearRate = AppearRate;
-                this.HuntingRate = HuntingRate;
-                this.IsSpecial = IsSpecial;
+                Name = name;
+                HasLog = hasLog;
+                CanFish = canFish;
+                AppearRate = appearRate;
+                HuntingRate = huntingRate;
+                IsSpecial = isSpecial;
             }
 
             public string Name { get; }
 
-            /// <summary>
-            ///     是否有大量的木头
-            /// </summary>
-            public bool HasALotOfLog { get; }
 
-            /// <summary>
-            ///     能否捕鱼
-            /// </summary>
+            public bool HasLog { get; }
             public bool CanFish { get; }
 
             public int AppearRate { get; }

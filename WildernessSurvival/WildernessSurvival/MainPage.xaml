@@ -38,15 +38,15 @@
       <Label Text="{x:Static prop:AppResources.AttrEnergy}" Grid.Row="3" Grid.Column="0" />
       <Label Text="{x:Static prop:AppResources.AttrLocation}" Grid.Row="4" Grid.Column="0" />
 
-      <Label Text="{Binding HP,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <Label Text="{Binding Hp,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="0" />
-      <Label Text="{Binding FOOD,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <Label Text="{Binding Food,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="1" />
-      <Label Text="{Binding WATER,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <Label Text="{Binding Water,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="2" />
-      <Label Text="{Binding ENERGY,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <Label Text="{Binding Energy,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="3" />
-      <Label Text="{Binding POS,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+      <Label Text="{Binding LocationName,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="4" />
     </Grid>
 
