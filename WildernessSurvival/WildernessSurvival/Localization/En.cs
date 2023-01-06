@@ -55,6 +55,10 @@ namespace WildernessSurvival.Localization
             { "Dialog.Win.Content", "You escape from the wild after {0} turns!" },
             { "Dialog.Win.Accept", "Play Again" },
             { "Dialog.Win.Cancel", "Not Now" },
+            { "Dialog.DisplayGainedItems.Title", "Result" },
+            { "Dialog.DisplayGainedItems.Content", "You got {0}." },
+            { "Dialog.DisplayNoItemGained.Title", "Too Bad" },
+            { "Dialog.DisplayNoItemGained.Content", "You got nothing." },
             { "Place.Subtropics.Plain.Name", "Plain" },
             { "Place.Subtropics.Riverside.Name", "Riverside" },
             { "Place.Subtropics.Forest.Name", "Forest" },
@@ -68,7 +72,8 @@ namespace WildernessSurvival.Localization
             { "Action.Fish.Name", "Fish" },
             { "Subtropics.Common.Rest", "You took a break and feel better." },
             { "Subtropics.Common.Fire", "You start a fire." },
-            { "OK", "OK" }
+            { "OK", "OK" },
+            { "Alright", "Alright" }
         };
     }
 }

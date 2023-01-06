@@ -180,7 +180,7 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public bool CanFish => _backpack.HasFishRod;
+        public bool HasFishingTool => _backpack.HasFishingTool;
 
         public bool HasOxe => _backpack.HasOxe;
 

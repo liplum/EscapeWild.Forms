@@ -15,14 +15,9 @@ namespace WildernessSurvival.Core
     public interface IPlace
     {
         IRoute<IPlace> Route { get; }
+        string Name { get; }
         Task PerformAction(Player player, ActionType action);
         ISet<ActionType> AvailableActions { get; }
-        string Name { get; }
-
-        public bool HasLog { get; }
-        public bool CanFish { get; }
-
-        public int HuntingRate { get; }
     }
 
     public static class PlaceI18N

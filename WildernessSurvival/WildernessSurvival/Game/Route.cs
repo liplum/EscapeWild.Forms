@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
@@ -11,7 +10,6 @@ namespace WildernessSurvival.Game
     {
         public string Name { get; }
         private const int ChangedRate = 30;
-        private static readonly Random Random = new Random();
         private readonly List<Place> _allPlace;
 
         public Route(string name, params Place[] places)
@@ -61,9 +59,6 @@ namespace WildernessSurvival.Game
     public abstract class Place : IPlace
     {
         public abstract string Name { get; }
-
-        public abstract bool HasLog { get; }
-        public abstract bool CanFish { get; }
 
         public abstract int AppearRate { get; }
 
@@ -155,12 +150,73 @@ namespace WildernessSurvival.Game
         {
         }
 
+        /// <summary>
+        /// Hunt
+        /// Cost: Food[1], Water[-1], Energy[-3]
+        /// Prerequisites: Has any hunting tool
+        /// </summary>
         protected virtual async Task PerformHunt(Player player)
         {
+            player.Modify(-1, AttrType.Food);
+            player.Modify(-1, AttrType.Water);
+            player.Modify(-3, AttrType.Energy);
+
+
+            var huntingTool = player.GetBestHuntingTool();
+            var rate = 0;
+            var doubleRate = 0;
+
+            switch (huntingTool.Level)
+            {
+                case ToolLevel.Low:
+                    rate = 40;
+                    doubleRate = 10;
+                    break;
+                case ToolLevel.Normal:
+                    rate = 55;
+                    doubleRate = 20;
+                    break;
+                case ToolLevel.High:
+                    rate = 70;
+                    doubleRate = 30;
+                    break;
+                case ToolLevel.Max:
+                    rate = 100;
+                    doubleRate = 50;
+                    break;
+            }
+
+            var gained = new List<IItem>();
+            var r = Rand.Int(100);
+            if (r < rate)
+            {
+                gained.Add(new RawRabbit());
+                if (Rand.Int(100) < doubleRate)
+                    gained.Add(new RawRabbit());
+            }
+
+            player.AddItems(gained);
+            await player.DisplayGainedItems(gained);
         }
 
+        /// <summary>
+        /// Cost: Food[2], Energy[2]
+        /// Gain: Log x1 + x1(50%)
+        /// </summary>
         protected virtual async Task PerformCutDownTree(Player player)
         {
+            player.Modify(-2, AttrType.Food);
+            player.Modify(-2, AttrType.Energy);
+            var gained = new List<IItem>();
+            gained.Add(LogItem.One);
+            var rate = Rand.Int(100);
+            if (rate < 50)
+            {
+                gained.Add(LogItem.One);
+            }
+
+            player.AddItems(gained);
+            await player.DisplayGainedItems(gained);
         }
 
         protected abstract Task PerformExplore(Player player);
@@ -181,7 +237,7 @@ namespace WildernessSurvival.Game
             );
         }
 
-        public ISet<ActionType> AvailableActions
+        public virtual ISet<ActionType> AvailableActions
         {
             get
             {
@@ -193,8 +249,6 @@ namespace WildernessSurvival.Game
                     ActionType.Fire,
                     ActionType.Hunt,
                 };
-                if (HasLog) actions.Add(ActionType.CutDownTree);
-                if (CanFish) actions.Add(ActionType.Fish);
                 return actions;
             }
         }
@@ -210,8 +264,6 @@ namespace WildernessSurvival.Game
         }
 
         public override string Name { get; }
-        public override bool HasLog => false;
-        public override bool CanFish => false;
         public override int HuntingRate { get; }
         public override bool IsSpecial => false;
         public override int AppearRate { get; }
@@ -232,29 +284,29 @@ namespace WildernessSurvival.Game
             proportion = proportion <= 0 ? 1 : proportion;
             var prop = proportion / 10f;
 
-            var 获得的物品 = new List<IItem>();
+            var gained = new List<IItem>();
 
             var 浆果 = Rand.Int(100);
             if (浆果 < 浆果概率 * prop)
             {
-                获得的物品.Add(new Berry());
+                gained.Add(new Berry());
                 if (Rand.Int(100) < 双倍概率)
-                    获得的物品.Add(new Berry());
+                    gained.Add(new Berry());
             }
 
             var 脏水 = Rand.Int(100);
             if (脏水 < 脏水概率 * prop)
             {
-                获得的物品.Add(new DirtyWater());
+                gained.Add(new DirtyWater());
                 if (Rand.Int(100) < 双倍概率)
-                    获得的物品.Add(new DirtyWater());
+                    gained.Add(new DirtyWater());
             }
 
             var 木头 = Rand.Int(100);
-            if (木头 < 木头概率) 获得的物品.Add(new DirtyWater());
-            player.AddItems(获得的物品);
+            if (木头 < 木头概率) gained.Add(new DirtyWater());
+            player.AddItems(gained);
             ExploreCount++;
-            await player.DisplayAchievements(获得的物品);
+            await player.DisplayGainedItems(gained);
         }
     }
 
@@ -268,11 +320,46 @@ namespace WildernessSurvival.Game
         }
 
         public override string Name { get; }
-        public override bool HasLog => false;
-        public override bool CanFish => true;
+
+        public override ISet<ActionType> AvailableActions
+        {
+            get
+            {
+                var actions = base.AvailableActions;
+                actions.Add(ActionType.Fish);
+                return actions;
+            }
+        }
+
         public override int HuntingRate { get; }
         public override bool IsSpecial => false;
         public override int AppearRate { get; }
+
+        /// <summary>
+        /// Cost: Food[1], Water[1]
+        /// Gain: Raw Fish x1(80%) + x1(20%)
+        /// Prerequisites: Current location allows fishing.
+        /// </summary>
+        protected override async Task PerformFish(Player player)
+        {
+            player.Modify(-1, AttrType.Food);
+            player.Modify(-1, AttrType.Water);
+            var r = Rand.Int(100);
+            var gained = new List<IItem>();
+            if (r < 80)
+            {
+                var fishA = new RawFish();
+                gained.Add(fishA);
+                if (Rand.Int(100) < 20)
+                {
+                    var fishB = new RawFish();
+                    gained.Add(fishB);
+                }
+            }
+
+            player.AddItems(gained);
+            await player.DisplayGainedItems(gained);
+        }
 
         /// <summary>
         /// Raw Fish x1(20%)
@@ -304,7 +391,7 @@ namespace WildernessSurvival.Game
 
             player.AddItems(获得的物品);
             ExploreCount++;
-            await player.DisplayAchievements(获得的物品);
+            await player.DisplayGainedItems(获得的物品);
         }
     }
 
@@ -318,11 +405,19 @@ namespace WildernessSurvival.Game
         }
 
         public override string Name { get; }
-        public override bool HasLog => false;
-        public override bool CanFish => true;
         public override int HuntingRate { get; }
-        public override bool IsSpecial => false;
+        public override bool IsSpecial => true;
         public override int AppearRate { get; }
+
+        public override ISet<ActionType> AvailableActions
+        {
+            get
+            {
+                var actions = base.AvailableActions;
+                actions.Add(ActionType.CutDownTree);
+                return actions;
+            }
+        }
 
         /// <summary>
         /// Bottled Water x2
@@ -350,7 +445,7 @@ namespace WildernessSurvival.Game
                 if (斧子 < 斧子概率) 获得的物品.Add(new OldOxe());
             }
 
-            if (!CanFish)
+            if (!player.HasFishingTool)
             {
                 var 鱼竿 = Rand.Int(100);
                 if (鱼竿 < 鱼竿概率) 获得的物品.Add(new OldFishRod());
@@ -395,7 +490,7 @@ namespace WildernessSurvival.Game
 
             player.AddItems(获得的物品);
             ExploreCount++;
-            await player.DisplayAchievements(获得的物品);
+            await player.DisplayGainedItems(获得的物品);
         }
     }
 
@@ -409,11 +504,19 @@ namespace WildernessSurvival.Game
         }
 
         public override string Name { get; }
-        public override bool HasLog => false;
-        public override bool CanFish => true;
         public override int HuntingRate { get; }
         public override bool IsSpecial => false;
         public override int AppearRate { get; }
+
+        public override ISet<ActionType> AvailableActions
+        {
+            get
+            {
+                var actions = base.AvailableActions;
+                actions.Add(ActionType.CutDownTree);
+                return actions;
+            }
+        }
 
         /// <summary>
         /// Raw Fish x1(20%)
@@ -458,7 +561,7 @@ namespace WildernessSurvival.Game
 
             player.AddItems(获得的物品);
             ExploreCount++;
-            await player.DisplayAchievements(获得的物品);
+            await player.DisplayGainedItems(获得的物品);
         }
     }
 }

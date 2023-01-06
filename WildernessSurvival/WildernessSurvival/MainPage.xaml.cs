@@ -49,7 +49,7 @@ namespace WildernessSurvival
             UpdateUI();
         }
 
-        private async void Cut_Clicked(object sender, EventArgs e)
+        private async void CutDownTree_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
             await _player.PerformAction(ActionType.CutDownTree);
@@ -85,18 +85,28 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private async void UpdateUI()
         {
-            Fire.IsEnabled = _player.HasWood && !_player.HasFire;
-            Cut.IsEnabled = _player.HasOxe;
-            Hunt.IsEnabled = _player.HasHuntingTool;
-            Fish.IsEnabled = _player.CanFish & _player.Location.CanFish;
-            Cook.IsEnabled = _player.HasFire;
+            // Initialized by location actions
+            var actions = _player.Location.AvailableActions;
+            Move.IsEnabled = actions.Contains(ActionType.Move);
+            Explore.IsEnabled = actions.Contains(ActionType.Explore);
+            Rest.IsEnabled = actions.Contains(ActionType.Rest);
+            Fire.IsEnabled = actions.Contains(ActionType.Fire);
+            Hunt.IsEnabled = actions.Contains(ActionType.Hunt);
+            CutDownTree.IsEnabled = actions.Contains(ActionType.CutDownTree);
+            Fish.IsEnabled = actions.Contains(ActionType.Fish);
+            // Modified by player states
+            Fire.IsEnabled &= _player.HasWood && !_player.HasFire;
+            CutDownTree.IsEnabled &= _player.HasOxe;
+            Hunt.IsEnabled &= _player.HasHuntingTool;
+            Fish.IsEnabled &= _player.HasFishingTool;
+            Cook.IsEnabled &= _player.HasFire;
             await CheckDeadOrWin();
+            // Modified by win or failure
             Move.IsEnabled &= _player.CanPerformAnyAction;
             Hunt.IsEnabled &= _player.CanPerformAnyAction;
-            Cut.IsEnabled &= _player.CanPerformAnyAction;
+            CutDownTree.IsEnabled &= _player.CanPerformAnyAction;
             Fish.IsEnabled &= _player.CanPerformAnyAction;
             Explore.IsEnabled &= _player.CanPerformAnyAction;
-            Cut.IsEnabled &= _player.CanPerformAnyAction;
             Rest.IsEnabled &= _player.CanPerformAnyAction;
             Fire.IsEnabled &= _player.CanPerformAnyAction;
             Cook.IsEnabled &= _player.CanPerformAnyAction;

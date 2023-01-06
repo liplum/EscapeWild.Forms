@@ -18,7 +18,7 @@ namespace WildernessSurvival.Core
 
         public bool HasOxe => AllItems.OfType<IOxeItem>().Any();
 
-        public bool HasFishRod => AllItems.OfType<IFishToolItem>().Any();
+        public bool HasFishingTool => AllItems.OfType<IFishToolItem>().Any();
 
         public bool HasHuntingTool => AllItems.OfType<IHuntingToolItem>().Any();
 

@@ -71,7 +71,7 @@
         Grid.Column="0" />
       <Button x:Name="Hunt" Text="{x:Static prop:AppResources.Hunt}" Clicked="Hunt_Clicked" Grid.Row="0"
         Grid.Column="1" />
-      <Button x:Name="Cut" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="Cut_Clicked" Grid.Row="1"
+      <Button x:Name="CutDownTree" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="CutDownTree_Clicked" Grid.Row="1"
         Grid.Column="0" />
       <Button x:Name="Backpack" Text="{x:Static prop:AppResources.Backpack}" Clicked="Backpack_Clicked" Grid.Row="1"
         Grid.Column="1" />
