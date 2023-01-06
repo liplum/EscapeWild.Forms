@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace WildernessSurvival.Localization
 {
     public class LangEn : ILocalization
     {
+        public CultureInfo BoundCulture { get; } = new CultureInfo("en");
+
         public Dictionary<string, string> TranslationKey2Localized { get; } = new Dictionary<string, string>
         {
             { "Item.Log.Name", "Log" },

@@ -1,4 +1,6 @@
-﻿using Xamarin.Forms;
+﻿using System.Globalization;
+using WildernessSurvival.Localization;
+using Xamarin.Forms;
 
 namespace WildernessSurvival
 {
@@ -9,6 +11,9 @@ namespace WildernessSurvival
             InitializeComponent();
 
             MainPage = new MainPage();
+            I18N.RegisterLocalization(new LangEn(), isDefault: true);
+            I18N.RegisterLocalization(new LangZhCn());
+            I18N.SetCulture(CultureInfo.CurrentUICulture);
         }
 
         protected override void OnStart()

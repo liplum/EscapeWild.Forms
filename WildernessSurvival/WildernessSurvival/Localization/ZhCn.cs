@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace WildernessSurvival.Localization
 {
     public class LangZhCn : ILocalization
     {
+        public CultureInfo BoundCulture { get; } = new CultureInfo("zh-CN");
         public Dictionary<string, string> TranslationKey2Localized { get; } = new Dictionary<string, string>
         {
             { "Item.Log.Name", "木头" },

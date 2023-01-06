@@ -67,7 +67,7 @@
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <Button x:Name="Move" Text="{x:Static prop:AppResources.Move}" Clicked="Move_Cliked" Grid.Row="0" Grid.Column="0" />
+      <Button x:Name="Move" Text="{x:Static prop:AppResources.Move}" Clicked="Move_Clicked" Grid.Row="0" Grid.Column="0" />
       <Button x:Name="Hunt" Text="{x:Static prop:AppResources.Hunt}" Clicked="Hunt_Clicked" Grid.Row="0"
         Grid.Column="1" />
       <Button x:Name="Cut" Text="{x:Static prop:AppResources.CutDownTree}" Clicked="Cut_Clicked" Grid.Row="1"
@@ -76,14 +76,14 @@
         Grid.Column="1" />
       <Button x:Name="Fish" Text="{x:Static prop:AppResources.Fish}" Clicked="Fish_Clicked" Grid.Row="2"
         Grid.Column="0" />
-      <Button x:Name="Explore" Text="{x:Static prop:AppResources.Explore}" Clicked="Explore_Cliked" Grid.Row="2"
+      <Button x:Name="Explore" Text="{x:Static prop:AppResources.Explore}" Clicked="Explore_Clicked" Grid.Row="2"
         Grid.Column="1" />
-      <Button x:Name="Rest" Text="{x:Static prop:AppResources.Rest}" Clicked="Rest_Cliked" Grid.Row="3" Grid.Column="0" />
+      <Button x:Name="Rest" Text="{x:Static prop:AppResources.Rest}" Clicked="Rest_Clicked" Grid.Row="3" Grid.Column="0" />
       <Button x:Name="Fire" Text="{x:Static prop:AppResources.Fire}" Clicked="Fire_Clicked" Grid.Row="3"
         Grid.Column="1" />
       <Button x:Name="Cook" Text="{x:Static prop:AppResources.Cook}" Clicked="Cook_Clicked"
         IsEnabled="{Binding HasFire,Source={StaticResource player},Mode=OneWay}" Grid.Row="4" Grid.Column="0" />
-      <Button x:Name="Restart" Text="{x:Static prop:AppResources.Restart}" Clicked="RestartGame" Grid.Row="4"
+      <Button x:Name="Restart" Text="{x:Static prop:AppResources.Restart}" Clicked="Restart_OnClicked" Grid.Row="4"
         Grid.Column="1">
         <Button.IsVisible>false</Button.IsVisible>
       </Button>

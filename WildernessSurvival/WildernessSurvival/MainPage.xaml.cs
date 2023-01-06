@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using WildernessSurvival.Game;
 using Xamarin.Forms;
 using Player = WildernessSurvival.Core.Player;
 
@@ -18,29 +17,20 @@ namespace WildernessSurvival
             InitializeComponent();
         }
 
-        /// <summary>
-        ///     行动
-        /// </summary>
-        private void Move_Cliked(object sender, EventArgs e)
+        private void Move_Clicked(object sender, EventArgs e)
         {
             player.Move();
             Trip.ProgressTo(player.TripRatio, 300, Easing.Linear);
             CheckDeadOrWin();
         }
 
-        /// <summary>
-        ///     探索
-        /// </summary>
-        private void Explore_Cliked(object sender, EventArgs e)
+        private void Explore_Clicked(object sender, EventArgs e)
         {
             player.Explore();
             CheckDeadOrWin();
         }
 
-        /// <summary>
-        ///     休息
-        /// </summary>
-        private void Rest_Cliked(object sender, EventArgs e)
+        private void Rest_Clicked(object sender, EventArgs e)
         {
             player.Rest();
             CheckDeadOrWin();
@@ -66,11 +56,6 @@ namespace WildernessSurvival
             }
         }
 
-        private void RestartGame()
-        {
-            RestartGame(null, null);
-        }
-
         private void Hunt_Clicked(object sender, EventArgs e)
         {
             player.Hunt();
@@ -94,7 +79,7 @@ namespace WildernessSurvival
             Navigation.PushModalAsync(new CookPage(), true);
         }
 
-        private void RestartGame(object sender, EventArgs e)
+        private void RestartGame()
         {
             player.Reset();
             Restart.IsVisible = false;
@@ -109,6 +94,11 @@ namespace WildernessSurvival
         private void Fire_Clicked(object sender, EventArgs e)
         {
             player.Fire();
+        }
+
+        private void Restart_OnClicked(object sender, EventArgs e)
+        {
+            RestartGame();
         }
     }
 }
