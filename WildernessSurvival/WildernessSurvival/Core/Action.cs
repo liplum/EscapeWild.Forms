@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using WildernessSurvival.Game.Items;
+﻿using WildernessSurvival.Game;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 
@@ -14,7 +13,7 @@ namespace WildernessSurvival.Core
         {
             const int 受伤概率 = 10;
             var 失去的生命 = -damage;
-            var 受伤 = Player.Random.Next(100);
+            var 受伤 = Random.Next(100);
             if (受伤 < 受伤概率)
             {
                 Modify(失去的生命, AttrType.Hp);
@@ -25,7 +24,9 @@ namespace WildernessSurvival.Core
         }
 
         /// <summary>
-        ///     行动：消耗 食物1，行动距离1
+        /// Move:
+        /// Cost: Food[1]
+        /// Go to next place
         /// </summary>
         public void Move()
         {
@@ -43,7 +44,8 @@ namespace WildernessSurvival.Core
         }
 
         /// <summary>
-        ///     探索：消耗 食物1和体力1
+        /// Explore
+        /// Cost: Food[1], Energy[1]
         /// </summary>
         public void Explore()
         {
@@ -52,13 +54,15 @@ namespace WildernessSurvival.Core
                 DependencyService.Get<IToast>().ShortAlert("你在探索的时候遇到了野兽，你被咬伤了！");
             Modify(-1, AttrType.Water);
             Modify(-1, AttrType.Energy);
-            Player.ExploreActions();
+            ExploreActions();
             ++_curPositionExploreCount;
             ++TurnCount;
         }
 
         /// <summary>
-        ///     休息：消耗 食物1，水分1，回复生命2，能量4
+        /// Rest
+        /// Cost: Food[1], Water[1]
+        /// Restore: Health[2], Energy[4]
         /// </summary>
         public void Rest()
         {
@@ -72,125 +76,109 @@ namespace WildernessSurvival.Core
         }
 
         /// <summary>
-        ///     生火：消耗 木头x1
+        /// Fire
+        /// Cost: Log x1
         /// </summary>
         public void Fire()
         {
             if (IsDead) return;
-            if (HasWood)
-            {
-                ConsumeWood(1);
-                HasFire = true;
-                DependencyService.Get<IToast>().ShortAlert("你生起了火。");
-            }
-            else
-            {
-                DependencyService.Get<IToast>().ShortAlert("你没有木头，无法生火。");
-            }
+            if (!HasWood) return;
+            ConsumeWood(1);
+            HasFire = true;
+            DependencyService.Get<IToast>().ShortAlert("你生起了火。");
         }
 
         /// <summary>
-        ///     打猎：
+        /// Hunt
+        /// Prerequisites: Has any hunting tool
         /// </summary>
         public void Hunt()
         {
             if (IsDead) return;
-            if (CanHunt)
+            if (!HasHuntingTool) return;
+            Modify(-1, AttrType.Food);
+            Modify(-1, AttrType.Water);
+            Modify(-3, AttrType.Energy);
+
+            if (Injured(4))
             {
-                Modify(-1, AttrType.Food);
-                Modify(-1, AttrType.Water);
-                Modify(-3, AttrType.Energy);
-
-                if (Injured(4))
-                {
-                    DependencyService.Get<IToast>().ShortAlert("你的打猎的过程中遇上了野兽，经过一番搏斗后你逃脱了。");
-                }
-                else
-                {
-                    var hunting = Enumerable.First<IItem>(HuntingTools);
-                    var level = ((IHuntingToolItem)hunting).HuntingToolLevel;
-                    var rate = 0;
-                    var doubleRate = 0;
-
-                    switch (level)
-                    {
-                        case ToolLevel.Low:
-                            rate = 40;
-                            doubleRate = 10;
-                            break;
-                        case ToolLevel.Normal:
-                            rate = 55;
-                            doubleRate = 20;
-                            break;
-                        case ToolLevel.High:
-                            rate = 70;
-                            doubleRate = 30;
-                            break;
-                        case ToolLevel.Max:
-                            rate = 100;
-                            doubleRate = 50;
-                            break;
-                    }
-
-                    var r = Player.Random.Next(100);
-                    if (r < rate)
-                    {
-                        AddItem(new RawRabbit());
-                        if (Player.Random.Next(100) < doubleRate)
-                            AddItem(new RawRabbit());
-                        DependencyService.Get<IToast>().ShortAlert("你满载而归，获得了大量的兔肉！");
-                        return;
-                    }
-
-                    DependencyService.Get<IToast>().ShortAlert("眼前的猎物就这么溜走了，你感到很丧气。");
-                }
-
-                ++TurnCount;
+                DependencyService.Get<IToast>().ShortAlert("你的打猎的过程中遇上了野兽，经过一番搏斗后你逃脱了。");
             }
             else
             {
-                DependencyService.Get<IToast>().ShortAlert("你没狩猎的工具，不能打猎。");
+                var huntingTool = GetBestHuntingTool();
+                var rate = 0;
+                var doubleRate = 0;
+
+                switch (huntingTool.Level)
+                {
+                    case ToolLevel.Low:
+                        rate = 40;
+                        doubleRate = 10;
+                        break;
+                    case ToolLevel.Normal:
+                        rate = 55;
+                        doubleRate = 20;
+                        break;
+                    case ToolLevel.High:
+                        rate = 70;
+                        doubleRate = 30;
+                        break;
+                    case ToolLevel.Max:
+                        rate = 100;
+                        doubleRate = 50;
+                        break;
+                }
+
+                var r = Random.Next(100);
+                if (r < rate)
+                {
+                    AddItem(new RawRabbit());
+                    if (Random.Next(100) < doubleRate)
+                        AddItem(new RawRabbit());
+                    DependencyService.Get<IToast>().ShortAlert("你满载而归，获得了大量的兔肉！");
+                    return;
+                }
+
+                DependencyService.Get<IToast>().ShortAlert("眼前的猎物就这么溜走了，你感到很丧气。");
             }
+
+            ++TurnCount;
         }
 
         /// <summary>
-        ///     砍树：100% x1 ,消耗饱腹值2，能量值2
-        ///     如果当前的位置木头多，能多获得一根,并50%x2
+        /// Cut Down Tree
+        /// Cost: Food[2], Energy[2]
+        /// Gain: Log x1 + x1(50%)
         /// </summary>
         public void Cut()
         {
             if (IsDead) return;
-            if (HasOxe)
+            if (!HasOxe) return;
+            Modify(-2, AttrType.Food);
+            Modify(-2, AttrType.Energy);
+            AddItem(LogItem.One);
+            var count = 1;
+            var rate = Random.Next(100);
+            if (rate < 50)
             {
-                Modify(-2, AttrType.Food);
-                Modify(-2, AttrType.Energy);
                 AddItem(LogItem.One);
-                var count = 1;
-                var rate = Player.Random.Next(100);
-                if (rate < 50)
-                {
-                    AddItem(LogItem.One);
-                    ++count;
-                }
-
-                if (_location.HasLog)
-                {
-                    AddItem(LogItem.One);
-                    ++count;
-                    if (Player.Random.Next(100) < 50)
-                    {
-                        AddItem(LogItem.One);
-                        ++count;
-                    }
-                }
-
-                DependencyService.Get<IToast>().ShortAlert($"你获得了{count}根木头。");
-                ++TurnCount;
+                ++count;
             }
-            else
+
+            if (Location.HasLog)
             {
-                DependencyService.Get<IToast>().ShortAlert("你没斧子，不能砍树");
+                AddItem(LogItem.One);
+                ++count;
+                if (Random.Next(100) < 50)
+                {
+                    AddItem(LogItem.One);
+                    ++count;
+                }
             }
+
+            DependencyService.Get<IToast>().ShortAlert($"你获得了{count}根木头。");
+            ++TurnCount;
         }
 
         /// <summary>
@@ -201,26 +189,21 @@ namespace WildernessSurvival.Core
         public void Fish()
         {
             if (IsDead) return;
-            if (CanFish)
-                if (_location.CanFish)
-                {
-                    Modify(-1, AttrType.Food);
-                    Modify(-1, AttrType.Water);
-                    var r = Player.Random.Next(100);
-                    if (r < 80)
-                    {
-                        AddItem(new RawFish());
-                        if (Player.Random.Next(100) < 20)
-                            AddItem(new RawFish());
-                        DependencyService.Get<IToast>().ShortAlert("经过漫长地等待，你终于钓上了大鱼。");
-                        return;
-                    }
+            if (!CanFish || !Location.CanFish) return;
+            Modify(-1, AttrType.Food);
+            Modify(-1, AttrType.Water);
+            var r = Random.Next(100);
+            if (r < 80)
+            {
+                AddItem(new RawFish());
+                if (Random.Next(100) < 20)
+                    AddItem(new RawFish());
+                DependencyService.Get<IToast>().ShortAlert("经过漫长地等待，你终于钓上了大鱼。");
+                return;
+            }
 
-                    DependencyService.Get<IToast>().ShortAlert("很可惜，你没有钓上鱼。");
-                    ++TurnCount;
-                }
-
-            DependencyService.Get<IToast>().ShortAlert("这个地方不适合钓鱼。");
+            DependencyService.Get<IToast>().ShortAlert("很可惜，你没有钓上鱼。");
+            ++TurnCount;
         }
     }
 }

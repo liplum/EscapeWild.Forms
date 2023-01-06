@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using WildernessSurvival.Game;
+using System.Linq;
 using static WildernessSurvival.Core.Route;
 
 namespace WildernessSurvival.Core
@@ -28,11 +28,11 @@ namespace WildernessSurvival.Core
 
         private int _foodValue;
 
-        private bool _hasFireValue;
+        private bool _hasFire;
 
         private int _hpValue;
 
-        private Route.Place _location;
+        private Place _location;
 
         private float _tripRatio;
 
@@ -51,11 +51,16 @@ namespace WildernessSurvival.Core
 
         public IList<IRawItem> RawItems => _backpack.RawItems;
 
-        public IList<IItem> HuntingTools => _backpack.HuntingTools;
+        public IList<IHuntingToolItem> HuntingTools => _backpack.HuntingTools;
+
+        public IHuntingToolItem GetBestHuntingTool()
+        {
+            return HuntingTools.OrderByDescending(t => t.Level).FirstOrDefault();
+        }
 
         public bool HasWood => _backpack.HasWood;
 
-        public Route.Place Location
+        public Place Location
         {
             get => _location;
             private set
@@ -161,24 +166,24 @@ namespace WildernessSurvival.Core
         /// </summary>
         public bool HasFire
         {
-            get => _hasFireValue;
+            get => _hasFire;
             set
             {
-                if (_hasFireValue == value) return;
-                _hasFireValue = value;
+                if (_hasFire == value) return;
+                _hasFire = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasFire)));
             }
         }
 
-        private bool CanFish => _backpack.HasFishRod;
+        public bool CanFish => _backpack.HasFishRod;
 
-        private bool HasOxe => _backpack.HasOxe;
+        public bool HasOxe => _backpack.HasOxe;
 
-        private bool CanHunt => _backpack.HasHunting;
+        public bool HasHuntingTool => _backpack.HasHuntingTool;
 
         public bool IsDead => Hp <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
 
-        public bool IsWin => TripRatio >= 1;
+        public bool IsWon => TripRatio >= 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -219,12 +224,12 @@ namespace WildernessSurvival.Core
             _backpack = new Backpack(this);
         }
 
-        public bool Use(IItem item)
+        public void UseItem(IUsableItem item)
         {
-            return _backpack.Use(item);
+            _backpack.Use(item);
         }
 
-        public void Remove(IItem item)
+        public void RemoveItem(IItem item)
         {
             _backpack.Remove(item);
         }
@@ -234,11 +239,10 @@ namespace WildernessSurvival.Core
             _backpack.AddItem(item);
         }
 
-        private void AddItems(IList<IItem> items)
+        private void AddItems(IEnumerable<IItem> items)
         {
             _backpack.Append(items);
         }
-
 
         public void ConsumeWood(int Count)
         {

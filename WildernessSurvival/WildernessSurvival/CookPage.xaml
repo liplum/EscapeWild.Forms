@@ -13,7 +13,7 @@
       <Picker x:Name="RawItemsPicker" FontSize="Large" Title="{x:Static prop:AppResources.CookTip}"
         SelectedIndexChanged="RawItemsPicker_SelectedIndexChanged" />
       <Label x:Name="ItemDescription" FontSize="Large" />
-      <Button Text="{x:Static prop:AppResources.Cook}" x:Name="Heat" FontSize="30" Clicked="Heat_Clicked" />
+      <Button Text="{x:Static prop:AppResources.Cook}" x:Name="Cook" FontSize="30" Clicked="Heat_Clicked" />
     </StackLayout>
   </ContentPage.Content>
 </ContentPage>

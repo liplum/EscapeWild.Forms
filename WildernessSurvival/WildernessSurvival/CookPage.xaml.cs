@@ -1,61 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
 using WildernessSurvival.Core;
-using WildernessSurvival.Game;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Player = WildernessSurvival.Core.Player;
 
 namespace WildernessSurvival
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CookPage : ContentPage
     {
-        private static readonly Player player = (Player)Application.Current.Resources["player"];
+        private readonly Player _player;
 
-        private static IList<IRawItem> AllRawItems;
+        private readonly IList<IRawItem> _allRawItems;
 
         public CookPage()
         {
             InitializeComponent();
-
-            AllRawItems = player.RawItems;
-            foreach (IItem item in AllRawItems)
+            _player = (Player)Application.Current.Resources["player"];
+            _allRawItems = _player.RawItems;
+            foreach (var item in _allRawItems)
                 RawItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Heat_Clicked(object sender, EventArgs e)
         {
             var index = RawItemsPicker.SelectedIndex;
-            if (index != -1)
-            {
-                if (player.HasWood)
-                {
-                    var rawItem = AllRawItems[index];
-                    IItem cooked = rawItem.Cook();
-                    player.Remove((IItem)rawItem);
-                    player.ConsumeWood(1);
-                    player.AddItem(cooked);
-                    DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked.LocalizedName()}");
-
-                    await Navigation.PopModalAsync();
-                }
-                else
-                {
-                    await DisplayAlert("提示", "你没有足够的木头！", "退出");
-                    await Navigation.PopModalAsync();
-                }
-            }
-            else
-            {
-                await DisplayAlert("提示", "请选择物品！", "好的");
-            }
+            if (index < 0) return;
+            if (!_player.HasWood) return;
+            var rawItem = _allRawItems[index];
+            IItem cooked = rawItem.Cook();
+            _player.RemoveItem(rawItem);
+            _player.ConsumeWood(1);
+            _player.AddItem(cooked);
+            DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked.LocalizedName()}");
+            UpdateUI();
+            await Navigation.PopModalAsync();
         }
 
         private void RawItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ItemDescription.Text = AllRawItems[RawItemsPicker.SelectedIndex].RawDescription;
+            var selected = _allRawItems[RawItemsPicker.SelectedIndex];
+            ItemDescription.Text = selected.RawDescription;
+            UpdateUI();
+        }
+
+        // ReSharper disable once InconsistentNaming
+        private void UpdateUI()
+        {
+            Cook.IsEnabled = _player.HasWood;
         }
     }
 }

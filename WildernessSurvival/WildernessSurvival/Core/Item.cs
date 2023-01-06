@@ -15,14 +15,15 @@ namespace WildernessSurvival.Core
 
     public interface IToolItem : IItem
     {
+        public ToolLevel Level { get; }
     }
 
     public interface IUsableItem : IItem
     {
-        public abstract void Use(Core.Player player);
+        public abstract void Use(Player player);
     }
 
-    public interface IRawItem
+    public interface IRawItem : IItem
     {
         string RawDescription { get; }
 
@@ -51,7 +52,6 @@ namespace WildernessSurvival.Core
 
     public interface IHuntingToolItem : IToolItem
     {
-        public ToolLevel HuntingToolLevel { get; }
     }
 
     public class LogItem : IItem

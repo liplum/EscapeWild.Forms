@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using WildernessSurvival.Game;
-using WildernessSurvival.Game.Items;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 
@@ -200,7 +199,7 @@ namespace WildernessSurvival.Core
                     获得的物品.Add(LogItem.One);
                 }
 
-                if (!CanHunt)
+                if (!HasHuntingTool)
                 {
                     var s = Random.Next(2);
                     if (s == 0)

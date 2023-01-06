@@ -1,55 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using WildernessSurvival.Core;
-using WildernessSurvival.Game;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Player = WildernessSurvival.Core.Player;
 
 namespace WildernessSurvival
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BackpackPage : ContentPage
     {
-        private static readonly Player player = (Player)Application.Current.Resources["player"];
+        private readonly Player _player;
 
-        private static IList<IItem> AllItems;
+        private readonly IList<IItem> _allItems;
 
         public BackpackPage()
         {
             InitializeComponent();
-            AllItems = player.AllItems;
-            foreach (var item in AllItems)
+            _player = (Player)Application.Current.Resources["player"];
+            _allItems = _player.AllItems;
+            foreach (var item in _allItems)
                 ItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Use_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index != -1)
-            {
-                var item = AllItems[index];
-                if (player.Use(item))
-                {
-                    DependencyService.Get<IToast>().ShortAlert($"你成功使用了{item.LocalizedName()}");
-                    player.Remove(item);
-                    await Navigation.PopModalAsync();
-                }
-                else
-                {
-                    DependencyService.Get<IToast>().ShortAlert("该物品无法直接使用");
-                }
-            }
-            else
-            {
-                await DisplayAlert("提示", "请选择物品！", "好的");
-            }
+            if (index < 0) return;
+            var item = _allItems[index];
+            if (!(item is IUsableItem i)) return;
+            _player.UseItem(i);
+            DependencyService.Get<IToast>().ShortAlert($"你成功使用了{item.LocalizedName()}");
+            _player.RemoveItem(item);
+            await Navigation.PopModalAsync();
         }
 
         private void ItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ItemDescription.Text = AllItems[ItemsPicker.SelectedIndex].LocalizedDesc();
+            var selected = _allItems[ItemsPicker.SelectedIndex];
+            ItemDescription.Text = selected.LocalizedDesc();
+            Use.IsEnabled = selected is IUsableItem;
         }
     }
 }

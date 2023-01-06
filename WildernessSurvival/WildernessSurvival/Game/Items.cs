@@ -1,13 +1,13 @@
 ﻿using WildernessSurvival.Core;
 
-namespace WildernessSurvival.Game.Items
+namespace WildernessSurvival.Game
 {
     public class EnergyBar : IEdibleItem
     {
         private const int Restore = 3;
         public string Name => nameof(EnergyBar);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Food);
         }
@@ -16,6 +16,7 @@ namespace WildernessSurvival.Game.Items
     public class OldOxe : IOxeItem
     {
         public string Name => nameof(OldOxe);
+        public ToolLevel Level => ToolLevel.Normal;
     }
 
     public class BottledWater : IEdibleItem
@@ -23,7 +24,7 @@ namespace WildernessSurvival.Game.Items
         private const int Restore = 4;
         public string Name => nameof(BottledWater);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Water);
         }
@@ -40,7 +41,7 @@ namespace WildernessSurvival.Game.Items
             return new CookedRabbit();
         }
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Food);
         }
@@ -51,7 +52,7 @@ namespace WildernessSurvival.Game.Items
         private const int Restore = 10;
         public string Name => nameof(CookedRabbit);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Food);
         }
@@ -60,6 +61,7 @@ namespace WildernessSurvival.Game.Items
     public class OldFishRod : IFishToolItem
     {
         public string Name => nameof(OldFishRod);
+        public ToolLevel Level => ToolLevel.Normal;
     }
 
     public class Berry : IEdibleItem
@@ -68,7 +70,7 @@ namespace WildernessSurvival.Game.Items
         private const int WaterRestore = 1;
         public string Name => nameof(Berry);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(FoodRestore, AttrType.Food);
             player.Modify(WaterRestore, AttrType.Water);
@@ -86,7 +88,7 @@ namespace WildernessSurvival.Game.Items
             return new CleanWater();
         }
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Water);
         }
@@ -97,7 +99,7 @@ namespace WildernessSurvival.Game.Items
         private const int Restore = 3;
         public string Name => nameof(CleanWater);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Water);
         }
@@ -108,7 +110,7 @@ namespace WildernessSurvival.Game.Items
         private const int Restore = 2;
         public string Name => nameof(Nuts);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Food);
         }
@@ -119,7 +121,7 @@ namespace WildernessSurvival.Game.Items
         private const int Restore = 3;
         public string Name => nameof(Bandage);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Hp);
         }
@@ -131,7 +133,7 @@ namespace WildernessSurvival.Game.Items
         private const int EnergyRestore = 2;
         public string Name => nameof(FistAidKit);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(HpRestore, AttrType.Hp);
             player.Modify(EnergyRestore, AttrType.Energy);
@@ -144,7 +146,7 @@ namespace WildernessSurvival.Game.Items
         private const int EnergyRestore = 4;
         public string Name => nameof(EnergyDrink);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(WaterRestore, AttrType.Water);
             player.Modify(EnergyRestore, AttrType.Energy);
@@ -162,7 +164,7 @@ namespace WildernessSurvival.Game.Items
             return new CookedFish();
         }
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Food);
         }
@@ -173,7 +175,7 @@ namespace WildernessSurvival.Game.Items
         private const int Restore = 9;
         public string Name => nameof(CookedFish);
 
-        public void Use(Core.Player player)
+        public void Use(Player player)
         {
             player.Modify(Restore, AttrType.Food);
         }
@@ -181,13 +183,13 @@ namespace WildernessSurvival.Game.Items
 
     public class OldShotgun : IHuntingToolItem
     {
-        public ToolLevel HuntingToolLevel => ToolLevel.High;
+        public ToolLevel Level => ToolLevel.High;
         public string Name => nameof(OldShotgun);
     }
 
     public class Trap : IHuntingToolItem
     {
-        public ToolLevel HuntingToolLevel => ToolLevel.Low;
+        public ToolLevel Level => ToolLevel.Normal;
         public string Name => nameof(Trap);
     }
 }

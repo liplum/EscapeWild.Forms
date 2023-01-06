@@ -5,15 +5,14 @@ namespace WildernessSurvival.Core
 {
     public class Backpack
     {
-        public Backpack(Core.Player owner)
+        public Backpack(Player owner)
         {
-            AllItems = new List<IItem>();
             Owner = owner;
         }
 
-        private Core.Player Owner { get; }
+        private Player Owner { get; }
 
-        public IList<IItem> AllItems { get; private set; }
+        public readonly List<IItem> AllItems = new List<IItem>();
 
         public bool HasRaw => AllItems.OfType<IRawItem>().Any();
 
@@ -21,17 +20,10 @@ namespace WildernessSurvival.Core
 
         public bool HasFishRod => AllItems.OfType<IFishToolItem>().Any();
 
-        public bool HasHunting => AllItems.OfType<IHuntingToolItem>().Any();
+        public bool HasHuntingTool => AllItems.OfType<IHuntingToolItem>().Any();
 
         public bool HasWood => AllItems.OfType<LogItem>().Any();
 
-        /*public IList<ItemBase> AvailableItems
-        {
-            get
-            {
-                return (from item in AllItems where item is AvailableItem select item).ToList();
-            }
-        }*/
         public IList<IRawItem> RawItems
         {
             get
@@ -44,24 +36,18 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public IList<IItem> HuntingTools => (from item in AllItems where item is IHuntingToolItem select item).ToList();
+        public IList<IHuntingToolItem> HuntingTools => AllItems.OfType<IHuntingToolItem>().ToList();
 
-        private IList<IItem> Woods => (from item in AllItems where item is LogItem select item).ToList();
+        private IList<LogItem> Woods => AllItems.OfType<LogItem>().ToList();
 
         public void AddItem(IItem item)
         {
             AllItems.Add(item);
         }
 
-        public bool Use(IItem item)
+        public void Use(IUsableItem item)
         {
-            if (item is IUsableItem i)
-            {
-                i.Use(Owner);
-                return true;
-            }
-
-            return false;
+            item.Use(Owner);
         }
 
         public void Remove(IItem item)
@@ -70,19 +56,17 @@ namespace WildernessSurvival.Core
                 AllItems.Remove(item);
         }
 
-        public void Append(IList<IItem> items)
+        public void Append(IEnumerable<IItem> items)
         {
-            AllItems = AllItems.Concat(items).ToList();
+            AllItems.AddRange(items);
         }
 
         public void ConsumeWood(int count)
         {
-            if (count > 0)
-            {
-                var woods = Woods;
-                var c = count > woods.Count ? woods.Count : count;
-                for (var frequency = 0; frequency < c; ++frequency) AllItems.Remove(woods[frequency]);
-            }
+            if (count <= 0) return;
+            var woods = Woods;
+            var c = count > woods.Count ? woods.Count : count;
+            for (var frequency = 0; frequency < c; ++frequency) AllItems.Remove(woods[frequency]);
         }
     }
 }
