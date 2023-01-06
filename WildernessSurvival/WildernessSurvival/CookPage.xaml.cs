@@ -32,15 +32,17 @@ namespace WildernessSurvival
         private async void Cook_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0) return;
+            var allRawItems = AllRawItems;
+            if (index < 0 || index >= allRawItems.Count) return;
             if (!_player.HasWood) return;
-            var rawItem = AllRawItems[index];
+            var rawItem = allRawItems[index];
             IItem cooked = rawItem.Cook();
             _player.RemoveItem(rawItem);
             _player.ConsumeWood(1);
             _player.AddItem(cooked);
             if (AllRawItems.Count <= 0)
             {
+                UpdateUI();
                 await Task.Delay(500);
                 await Navigation.PopModalAsync();
                 return;
@@ -50,8 +52,9 @@ namespace WildernessSurvival
             if (ItemsPicker.Items.Count > 0)
             {
                 // Go to the next item automatically
-                ItemsPicker.SelectedIndex = (index + 1) % ItemsPicker.Items.Count;
+                ItemsPicker.SelectedIndex = index % ItemsPicker.Items.Count;
             }
+
             UpdateUI();
         }
 
@@ -64,7 +67,8 @@ namespace WildernessSurvival
         private void UpdateUI()
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0)
+            var allRawItems = AllRawItems;
+            if (index < 0 || index >= allRawItems.Count)
             {
                 Cook.Text = _i18n("Cook");
                 Cook.IsEnabled = false;
@@ -73,7 +77,7 @@ namespace WildernessSurvival
             else
             {
                 Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood;
-                var selected = AllRawItems[ItemsPicker.SelectedIndex];
+                var selected = allRawItems[index];
                 Cook.Text = _player.HasWood ? _i18n(selected.CookType.ToString()) : _i18n("NoWood");
 
                 ItemDescription.Text =

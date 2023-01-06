@@ -14,13 +14,12 @@ namespace WildernessSurvival
     {
         private readonly Player _player;
 
-        private readonly IList<IItem> _allItems;
+        private IList<IItem> AllItems => _player.AllItems;
 
         public BackpackPage()
         {
             InitializeComponent();
             _player = (Player)Application.Current.Resources["player"];
-            _allItems = _player.AllItems;
             Use.IsEnabled = _player.CanPerformAnyAction && ItemsPicker.SelectedIndex >= 0;
             RebuildPicker();
             HealthProgressBar.Progress = _player.Health;
@@ -32,30 +31,33 @@ namespace WildernessSurvival
         private void RebuildPicker()
         {
             ItemsPicker.Items.Clear();
-            foreach (var item in _allItems)
+            foreach (var item in AllItems)
                 ItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Use_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0) return;
-            var item = _allItems[index];
+            if (index < 0 || index >= AllItems.Count) return;
+            var item = AllItems[index];
             if (!(item is IUsableItem i)) return;
             _player.UseItem(i);
             _player.RemoveItem(item);
-            if (_allItems.Count <= 0)
+            if (AllItems.Count <= 0)
             {
+                UpdateUI();
                 await Task.Delay(500);
                 await Navigation.PopModalAsync();
                 return;
             }
+
             RebuildPicker();
             if (ItemsPicker.Items.Count > 0)
             {
                 // Go to the next item automatically
-                ItemsPicker.SelectedIndex = (index + 1) % ItemsPicker.Items.Count;
+                ItemsPicker.SelectedIndex = index % ItemsPicker.Items.Count;
             }
+
             UpdateUI();
         }
 
@@ -76,7 +78,7 @@ namespace WildernessSurvival
                 AfterUseLabel.Text = $"Backpack.After{UseType.Use}".Tr();
             }
 
-            if (index < 0)
+            if (index < 0 || index >= AllItems.Count)
             {
                 Clear();
                 Use.Text = $"Backpack.{UseType.Use}".Tr();
@@ -84,7 +86,7 @@ namespace WildernessSurvival
             }
             else
             {
-                var selected = _allItems[index];
+                var selected = AllItems[index];
                 ItemDescription.Text = selected.LocalizedDesc();
                 if (selected is IUsableItem item)
                 {
