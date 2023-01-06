@@ -161,9 +161,6 @@ namespace WildernessSurvival.Core
             }
         }
 
-        /// <summary>
-        ///     是否生火
-        /// </summary>
         public bool HasFire
         {
             get => _hasFire;
@@ -182,7 +179,8 @@ namespace WildernessSurvival.Core
         public bool HasHuntingTool => _backpack.HasHuntingTool;
 
         public bool IsDead => Hp <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
-
+        public bool IsAlive => !IsDead;
+        public bool CanPerformAnyAction => IsAlive && !IsWon;
         public bool IsWon => TripRatio >= 1;
 
         public event PropertyChangedEventHandler PropertyChanged;

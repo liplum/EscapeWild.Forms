@@ -19,6 +19,7 @@ namespace WildernessSurvival
             InitializeComponent();
             _player = (Player)Application.Current.Resources["player"];
             _allRawItems = _player.RawItems;
+            UpdateUI();
             foreach (var item in _allRawItems)
                 RawItemsPicker.Items.Add(item.LocalizedName());
         }
@@ -48,7 +49,7 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
-            Cook.IsEnabled = _player.HasWood;
+            Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood;
         }
     }
 }

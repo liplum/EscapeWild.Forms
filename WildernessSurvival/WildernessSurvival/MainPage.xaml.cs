@@ -63,6 +63,13 @@ namespace WildernessSurvival
             UpdateUI();
         }
 
+        private void Fire_Clicked(object sender, EventArgs e)
+        {
+            if (_player.IsDead) return;
+            _player.Fire();
+            UpdateUI();
+        }
+
         private void Cook_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
@@ -75,11 +82,6 @@ namespace WildernessSurvival
             Navigation.PushModalAsync(new BackpackPage(), true);
         }
 
-        private void Fire_Clicked(object sender, EventArgs e)
-        {
-            if (_player.IsDead) return;
-            _player.Fire();
-        }
 
         // ReSharper disable once InconsistentNaming
         private async void UpdateUI()
@@ -88,7 +90,18 @@ namespace WildernessSurvival
             Cut.IsEnabled = _player.HasOxe;
             Hunt.IsEnabled = _player.HasHuntingTool;
             Fish.IsEnabled = _player.CanFish & _player.Location.CanFish;
+            Cook.IsEnabled = _player.HasFire;
             await CheckDeadOrWin();
+            Move.IsEnabled &= _player.CanPerformAnyAction;
+            Hunt.IsEnabled &= _player.CanPerformAnyAction;
+            Cut.IsEnabled &= _player.CanPerformAnyAction;
+            Backpack.IsEnabled &= _player.IsAlive;
+            Fish.IsEnabled &= _player.CanPerformAnyAction;
+            Explore.IsEnabled &= _player.CanPerformAnyAction;
+            Cut.IsEnabled &= _player.CanPerformAnyAction;
+            Rest.IsEnabled &= _player.CanPerformAnyAction;
+            Fire.IsEnabled &= _player.CanPerformAnyAction;
+            Cook.IsEnabled &= _player.CanPerformAnyAction;
         }
 
         private async Task CheckDeadOrWin()
