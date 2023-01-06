@@ -1,4 +1,4 @@
-﻿namespace WildernessSurvival.game
+﻿namespace WildernessSurvival.Game
 {
     public interface IItem
     {

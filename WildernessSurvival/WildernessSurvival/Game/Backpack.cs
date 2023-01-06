@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WildernessSurvival.game.Items;
+using WildernessSurvival.Game.Items;
 
-namespace WildernessSurvival.game
+namespace WildernessSurvival.Game
 {
     public class Backpack
     {

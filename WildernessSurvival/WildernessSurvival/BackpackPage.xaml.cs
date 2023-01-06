@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using WildernessSurvival.game;
+using WildernessSurvival.Game;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;

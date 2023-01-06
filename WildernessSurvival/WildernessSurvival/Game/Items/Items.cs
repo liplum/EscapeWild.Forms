@@ -1,4 +1,4 @@
-﻿namespace WildernessSurvival.game.Items
+﻿namespace WildernessSurvival.Game.Items
 {
     public class 能量棒 : IEdibleItem
     {

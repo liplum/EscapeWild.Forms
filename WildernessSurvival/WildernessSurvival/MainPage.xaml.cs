@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using WildernessSurvival.game;
+using WildernessSurvival.Game;
 using Xamarin.Forms;
 
 namespace WildernessSurvival

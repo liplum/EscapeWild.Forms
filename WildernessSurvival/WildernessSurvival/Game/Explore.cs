@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using WildernessSurvival.game.Items;
+using WildernessSurvival.Game.Items;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 
-namespace WildernessSurvival.game
+namespace WildernessSurvival.Game
 {
     public partial class Player
     {

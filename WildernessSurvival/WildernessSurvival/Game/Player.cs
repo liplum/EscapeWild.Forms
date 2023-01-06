@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using static WildernessSurvival.game.Route;
+using static WildernessSurvival.Game.Route;
 
-namespace WildernessSurvival.game
+namespace WildernessSurvival.Game
 {
     public enum AttrType
     {
@@ -31,7 +31,7 @@ namespace WildernessSurvival.game
 
         private int _hpValue;
 
-        private Place _location;
+        private Route.Place _location;
 
         private float _tripRatio;
 
@@ -54,7 +54,7 @@ namespace WildernessSurvival.game
 
         public bool HasWood => _backpack.HasWood;
 
-        public Place Location
+        public Route.Place Location
         {
             get => _location;
             private set
