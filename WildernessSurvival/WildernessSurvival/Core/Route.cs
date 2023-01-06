@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Core
 {
     public class Route
     {

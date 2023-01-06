@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using WildernessSurvival.Core;
 using WildernessSurvival.Game;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Player = WildernessSurvival.Core.Player;
 
 namespace WildernessSurvival
 {

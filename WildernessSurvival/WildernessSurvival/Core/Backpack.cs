@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using WildernessSurvival.Game.Items;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Core
 {
     public class Backpack
     {
-        public Backpack(Player owner)
+        public Backpack(Core.Player owner)
         {
             AllItems = new List<IItem>();
             Owner = owner;
         }
 
-        private Player Owner { get; }
+        private Core.Player Owner { get; }
 
         public IList<IItem> AllItems { get; private set; }
 

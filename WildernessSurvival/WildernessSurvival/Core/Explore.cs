@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using WildernessSurvival.Game;
 using WildernessSurvival.Game.Items;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Core
 {
     public partial class Player
     {
@@ -52,21 +53,21 @@ namespace WildernessSurvival.Game
                 var 浆果 = Random.Next(100);
                 if (浆果 < 浆果概率 * prop)
                 {
-                    获得的物品.Add(new 浆果());
+                    获得的物品.Add(new Berry());
                     if (Random.Next(100) < 双倍概率)
-                        获得的物品.Add(new 浆果());
+                        获得的物品.Add(new Berry());
                 }
 
                 var 脏水 = Random.Next(100);
                 if (脏水 < 脏水概率 * prop)
                 {
-                    获得的物品.Add(new 脏水());
+                    获得的物品.Add(new DirtyWater());
                     if (Random.Next(100) < 双倍概率)
-                        获得的物品.Add(new 脏水());
+                        获得的物品.Add(new DirtyWater());
                 }
 
                 var 木头 = Random.Next(100);
-                if (木头 < 木头概率) 获得的物品.Add(new 脏水());
+                if (木头 < 木头概率) 获得的物品.Add(new DirtyWater());
                 DisplayAchievements(获得的物品);
                 AddItems(获得的物品);
             }
@@ -89,11 +90,11 @@ namespace WildernessSurvival.Game
 
                 var 浆果 = Random.Next(100);
                 if (浆果 < 浆果概率 * prop)
-                    获得的物品.Add(new 浆果());
+                    获得的物品.Add(new Berry());
 
                 var 脏水 = Random.Next(100);
                 if (脏水 < 脏水概率 * prop)
-                    获得的物品.Add(new 脏水());
+                    获得的物品.Add(new DirtyWater());
 
                 var 木头 = Random.Next(100);
                 if (木头 < 木头概率 * prop)
@@ -106,9 +107,9 @@ namespace WildernessSurvival.Game
                 var 坚果 = Random.Next(100);
                 if (坚果 < 坚果概率 * prop)
                 {
-                    获得的物品.Add(new 坚果());
+                    获得的物品.Add(new Nuts());
                     if (Random.Next(100) < 坚果双倍概率)
-                        获得的物品.Add(new 坚果());
+                        获得的物品.Add(new Nuts());
                 }
 
 
@@ -134,14 +135,14 @@ namespace WildernessSurvival.Game
 
                 var 生鱼 = Random.Next(100);
                 if (生鱼 < 生鱼概率 * prop)
-                    获得的物品.Add(new 生鱼());
+                    获得的物品.Add(new RawFish());
 
                 var 净水 = Random.Next(100);
                 if (净水 < 净水概率 * prop)
                 {
-                    获得的物品.Add(new 净水());
+                    获得的物品.Add(new CleanWater());
                     if (Random.Next(100) < 净水双倍概率)
-                        获得的物品.Add(new 净水());
+                        获得的物品.Add(new CleanWater());
                 }
 
                 DisplayAchievements(获得的物品);
@@ -168,28 +169,28 @@ namespace WildernessSurvival.Game
                 if (!HasOxe)
                 {
                     var 斧子 = Random.Next(100);
-                    if (斧子 < 斧子概率) 获得的物品.Add(new 老旧的斧头());
+                    if (斧子 < 斧子概率) 获得的物品.Add(new OldOxe());
                 }
 
                 if (!CanFish)
                 {
                     var 鱼竿 = Random.Next(100);
-                    if (鱼竿 < 鱼竿概率) 获得的物品.Add(new 老旧的钓鱼竿());
+                    if (鱼竿 < 鱼竿概率) 获得的物品.Add(new OldFishRod());
                 }
 
 
                 var 瓶装水 = Random.Next(100);
                 if (瓶装水 < 100 * prop)
                 {
-                    获得的物品.Add(new 瓶装水());
-                    获得的物品.Add(new 瓶装水());
+                    获得的物品.Add(new BottledWater());
+                    获得的物品.Add(new BottledWater());
                 }
 
                 var 能量棒 = Random.Next(100);
                 if (能量棒 < 100 * prop)
                 {
-                    获得的物品.Add(new 能量棒());
-                    获得的物品.Add(new 能量棒());
+                    获得的物品.Add(new EnergyBar());
+                    获得的物品.Add(new EnergyBar());
                 }
 
                 var 木头 = Random.Next(100);
@@ -205,12 +206,12 @@ namespace WildernessSurvival.Game
                     if (s == 0)
                     {
                         var 猎枪 = Random.Next(100);
-                        if (猎枪 < 猎枪概率) 获得的物品.Add(new 老旧的猎枪());
+                        if (猎枪 < 猎枪概率) 获得的物品.Add(new OldShotgun());
                     }
                     else if (s == 1)
                     {
                         var 陷阱 = Random.Next(100);
-                        if (陷阱 < 陷阱概率) 获得的物品.Add(new 捕兽陷阱());
+                        if (陷阱 < 陷阱概率) 获得的物品.Add(new Trap());
                     }
                 }
 

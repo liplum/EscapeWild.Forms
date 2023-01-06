@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-using static WildernessSurvival.Game.Route;
+using WildernessSurvival.Game;
+using static WildernessSurvival.Core.Route;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Core
 {
     public enum AttrType
     {

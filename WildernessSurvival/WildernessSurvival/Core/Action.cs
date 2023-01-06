@@ -3,7 +3,7 @@ using WildernessSurvival.Game.Items;
 using WildernessSurvival.UI;
 using Xamarin.Forms;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Core
 {
     public partial class Player
     {
@@ -14,7 +14,7 @@ namespace WildernessSurvival.Game
         {
             const int 受伤概率 = 10;
             var 失去的生命 = -damage;
-            var 受伤 = Random.Next(100);
+            var 受伤 = Player.Random.Next(100);
             if (受伤 < 受伤概率)
             {
                 Modify(失去的生命, AttrType.Hp);
@@ -52,7 +52,7 @@ namespace WildernessSurvival.Game
                 DependencyService.Get<IToast>().ShortAlert("你在探索的时候遇到了野兽，你被咬伤了！");
             Modify(-1, AttrType.Water);
             Modify(-1, AttrType.Energy);
-            ExploreActions();
+            Player.ExploreActions();
             ++_curPositionExploreCount;
             ++TurnCount;
         }
@@ -107,7 +107,7 @@ namespace WildernessSurvival.Game
                 }
                 else
                 {
-                    var hunting = HuntingTools.First();
+                    var hunting = Enumerable.First<IItem>(HuntingTools);
                     var level = ((IHuntingToolItem)hunting).HuntingToolLevel;
                     var rate = 0;
                     var doubleRate = 0;
@@ -132,12 +132,12 @@ namespace WildernessSurvival.Game
                             break;
                     }
 
-                    var r = Random.Next(100);
+                    var r = Player.Random.Next(100);
                     if (r < rate)
                     {
-                        AddItem(new 熟兔肉());
-                        if (Random.Next(100) < doubleRate)
-                            AddItem(new 熟兔肉());
+                        AddItem(new RawRabbit());
+                        if (Player.Random.Next(100) < doubleRate)
+                            AddItem(new RawRabbit());
                         DependencyService.Get<IToast>().ShortAlert("你满载而归，获得了大量的兔肉！");
                         return;
                     }
@@ -166,7 +166,7 @@ namespace WildernessSurvival.Game
                 Modify(-2, AttrType.Energy);
                 AddItem(LogItem.One);
                 var count = 1;
-                var rate = Random.Next(100);
+                var rate = Player.Random.Next(100);
                 if (rate < 50)
                 {
                     AddItem(LogItem.One);
@@ -177,7 +177,7 @@ namespace WildernessSurvival.Game
                 {
                     AddItem(LogItem.One);
                     ++count;
-                    if (Random.Next(100) < 50)
+                    if (Player.Random.Next(100) < 50)
                     {
                         AddItem(LogItem.One);
                         ++count;
@@ -206,12 +206,12 @@ namespace WildernessSurvival.Game
                 {
                     Modify(-1, AttrType.Food);
                     Modify(-1, AttrType.Water);
-                    var r = Random.Next(100);
+                    var r = Player.Random.Next(100);
                     if (r < 80)
                     {
-                        AddItem(new 生鱼());
-                        if (Random.Next(100) < 20)
-                            AddItem(new 生鱼());
+                        AddItem(new RawFish());
+                        if (Player.Random.Next(100) < 20)
+                            AddItem(new RawFish());
                         DependencyService.Get<IToast>().ShortAlert("经过漫长地等待，你终于钓上了大鱼。");
                         return;
                     }

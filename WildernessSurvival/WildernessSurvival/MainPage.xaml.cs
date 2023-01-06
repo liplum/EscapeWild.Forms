@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using WildernessSurvival.Game;
 using Xamarin.Forms;
+using Player = WildernessSurvival.Core.Player;
 
 namespace WildernessSurvival
 {

@@ -1,6 +1,6 @@
 ﻿using WildernessSurvival.Localization;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Core
 {
     public interface IItem
     {
@@ -19,7 +19,7 @@ namespace WildernessSurvival.Game
 
     public interface IUsableItem : IItem
     {
-        public abstract void Use(Player player);
+        public abstract void Use(Core.Player player);
     }
 
     public interface IRawItem

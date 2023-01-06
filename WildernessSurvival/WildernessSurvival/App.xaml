@@ -2,8 +2,9 @@
 
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:game="clr-namespace:WildernessSurvival.Game"
+  xmlns:core="clr-namespace:WildernessSurvival.Core;assembly=WildernessSurvival"
   x:Class="WildernessSurvival.App">
   <Application.Resources>
-    <game:Player x:Key="player" x:Name="player" />
+    <core:Player x:Key="player" x:Name="player" />
   </Application.Resources>
 </Application>

@@ -1,4 +1,4 @@
-﻿namespace WildernessSurvival.Game
+﻿namespace WildernessSurvival.Core
 {
     public abstract class Effect
     {
