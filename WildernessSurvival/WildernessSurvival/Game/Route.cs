@@ -282,7 +282,7 @@ namespace WildernessSurvival.Game
         {
             player.Modify(-0.04f, AttrType.Water);
             player.Modify(-0.08f, AttrType.Energy);
-            const int 浆果概率 = 60, 脏水概率 = 60, 木头概率 = 20, 双倍概率 = 30;
+            const int BerryRate = 60, DirtyWaterRate = 60, LogRate = 20, DoubleRate = 30;
 
             var proportion = 10 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
@@ -290,24 +290,25 @@ namespace WildernessSurvival.Game
 
             var gained = new List<IItem>();
 
-            var 浆果 = Rand.Int(100);
-            if (浆果 < 浆果概率 * prop)
+            if (Rand.Int(100) < BerryRate * prop)
             {
                 gained.Add(new Berry());
-                if (Rand.Int(100) < 双倍概率)
+                if (Rand.Int(100) < DoubleRate)
                     gained.Add(new Berry());
             }
 
-            var 脏水 = Rand.Int(100);
-            if (脏水 < 脏水概率 * prop)
+            if (Rand.Int(100) < DirtyWaterRate * prop)
             {
                 gained.Add(new DirtyWater());
-                if (Rand.Int(100) < 双倍概率)
+                if (Rand.Int(100) < DoubleRate)
                     gained.Add(new DirtyWater());
             }
 
-            var 木头 = Rand.Int(100);
-            if (木头 < 木头概率) gained.Add(new DirtyWater());
+            if (Rand.Int(100) < LogRate)
+            {
+                gained.Add(new DirtyWater());
+            }
+
             player.AddItems(gained);
             ExploreCount++;
             await player.DisplayGainedItems(gained);
@@ -374,29 +375,29 @@ namespace WildernessSurvival.Game
         {
             player.Modify(-0.04f, AttrType.Water);
             player.Modify(-0.08f, AttrType.Energy);
-            const int 生鱼概率 = 20, 净水概率 = 70, 净水双倍概率 = 40;
+            const int RawFishRate = 20, CleanWaterRate = 70, doubleRate = 40;
 
             var proportion = 10 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
             var prop = proportion / 10f;
 
-            var 获得的物品 = new List<IItem>();
+            var gained = new List<IItem>();
 
             var 生鱼 = Rand.Int(100);
-            if (生鱼 < 生鱼概率 * prop)
-                获得的物品.Add(new RawFish());
+            if (生鱼 < RawFishRate * prop)
+                gained.Add(new RawFish());
 
             var 净水 = Rand.Int(100);
-            if (净水 < 净水概率 * prop)
+            if (净水 < CleanWaterRate * prop)
             {
-                获得的物品.Add(new CleanWater());
-                if (Rand.Int(100) < 净水双倍概率)
-                    获得的物品.Add(new CleanWater());
+                gained.Add(new CleanWater());
+                if (Rand.Int(100) < doubleRate)
+                    gained.Add(new CleanWater());
             }
 
-            player.AddItems(获得的物品);
+            player.AddItems(gained);
             ExploreCount++;
-            await player.DisplayGainedItems(获得的物品);
+            await player.DisplayGainedItems(gained);
         }
     }
 
@@ -440,63 +441,49 @@ namespace WildernessSurvival.Game
         {
             player.Modify(-0.04f, AttrType.Water);
             player.Modify(-0.08f, AttrType.Energy);
-            const int 斧子概率 = 50, 鱼竿概率 = 30, 陷阱概率 = 20, 猎枪概率 = 5;
-            var prop = ExploreCount == 0 ? 1 : 0;
+            const int oxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
+            var exploreFix = ExploreCount == 0 ? 1 : 0;
 
-            var 获得的物品 = new List<IItem>();
+            var gained = new List<IItem>();
 
             if (!player.HasOxe)
             {
-                var 斧子 = Rand.Int(100);
-                if (斧子 < 斧子概率) 获得的物品.Add(new OldOxe());
+                if (Rand.Int(100) < oxeRate) gained.Add(new OldOxe());
             }
 
             if (!player.HasFishingTool)
             {
-                var 鱼竿 = Rand.Int(100);
-                if (鱼竿 < 鱼竿概率) 获得的物品.Add(new OldFishRod());
+                if (Rand.Int(100) < FishRodRate) gained.Add(new OldFishRod());
             }
 
 
-            var 瓶装水 = Rand.Int(100);
-            if (瓶装水 < 100 * prop)
+            if (Rand.Int(100) < 100 * exploreFix)
             {
-                获得的物品.Add(new BottledWater());
-                获得的物品.Add(new BottledWater());
+                gained.Add(new BottledWater());
+                gained.Add(new BottledWater());
+                gained.Add(new EnergyBar());
+                gained.Add(new EnergyBar());
+                gained.Add(LogItem.One);
+                gained.Add(LogItem.One);
             }
 
-            var 能量棒 = Rand.Int(100);
-            if (能量棒 < 100 * prop)
-            {
-                获得的物品.Add(new EnergyBar());
-                获得的物品.Add(new EnergyBar());
-            }
-
-            var 木头 = Rand.Int(100);
-            if (木头 < 100 * prop)
-            {
-                获得的物品.Add(LogItem.One);
-                获得的物品.Add(LogItem.One);
-            }
 
             if (!player.HasHuntingTool)
             {
                 var s = Rand.Int(2);
                 if (s == 0)
                 {
-                    var 猎枪 = Rand.Int(100);
-                    if (猎枪 < 猎枪概率) 获得的物品.Add(new OldShotgun());
+                    if (Rand.Int(100) < GunRate) gained.Add(new OldShotgun());
                 }
                 else if (s == 1)
                 {
-                    var 陷阱 = Rand.Int(100);
-                    if (陷阱 < 陷阱概率) 获得的物品.Add(new Trap());
+                    if (Rand.Int(100) < TrapRate) gained.Add(new Trap());
                 }
             }
 
-            player.AddItems(获得的物品);
+            player.AddItems(gained);
             ExploreCount++;
-            await player.DisplayGainedItems(获得的物品);
+            await player.DisplayGainedItems(gained);
         }
     }
 
@@ -533,42 +520,43 @@ namespace WildernessSurvival.Game
         {
             player.Modify(-0.04f, AttrType.Water);
             player.Modify(-0.08f, AttrType.Energy);
-            const int 浆果概率 = 30, 脏水概率 = 20, 木头概率 = 50, 坚果概率 = 60, 坚果双倍概率 = 40, 木头双倍概率 = 20;
+            const int BerryRate = 30,
+                DirtyWaterRate = 20,
+                LogRate = 50,
+                NutsRate = 60,
+                NutsDoubleRate = 40,
+                LogDoubleRate = 20;
 
             var proportion = 10 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
             var prop = proportion / 10f;
 
-            var 获得的物品 = new List<IItem>();
+            var gained = new List<IItem>();
 
-            var 浆果 = Rand.Int(100);
-            if (浆果 < 浆果概率 * prop)
-                获得的物品.Add(new Berry());
+            if (Rand.Int(100) < BerryRate * prop)
+                gained.Add(new Berry());
 
-            var 脏水 = Rand.Int(100);
-            if (脏水 < 脏水概率 * prop)
-                获得的物品.Add(new DirtyWater());
+            if (Rand.Int(100) < DirtyWaterRate * prop)
+                gained.Add(new DirtyWater());
 
-            var 木头 = Rand.Int(100);
-            if (木头 < 木头概率 * prop)
+            if (Rand.Int(100) < LogRate * prop)
             {
-                获得的物品.Add(LogItem.One);
-                if (Rand.Int(100) < 木头双倍概率)
-                    获得的物品.Add(LogItem.One);
+                gained.Add(LogItem.One);
+                if (Rand.Int(100) < LogDoubleRate)
+                    gained.Add(LogItem.One);
             }
 
-            var 坚果 = Rand.Int(100);
-            if (坚果 < 坚果概率 * prop)
+            if (Rand.Int(100) < NutsRate * prop)
             {
-                获得的物品.Add(new Nuts());
-                if (Rand.Int(100) < 坚果双倍概率)
-                    获得的物品.Add(new Nuts());
+                gained.Add(new Nuts());
+                if (Rand.Int(100) < NutsDoubleRate)
+                    gained.Add(new Nuts());
             }
 
 
-            player.AddItems(获得的物品);
+            player.AddItems(gained);
             ExploreCount++;
-            await player.DisplayGainedItems(获得的物品);
+            await player.DisplayGainedItems(gained);
         }
     }
 }
