@@ -133,7 +133,7 @@ namespace WildernessSurvival.Game
 
         public void Use(Player player)
         {
-            player.Modify(Restore, AttrType.Hp);
+            player.Modify(Restore, AttrType.Health);
         }
     }
 
@@ -146,7 +146,7 @@ namespace WildernessSurvival.Game
 
         public void Use(Player player)
         {
-            player.Modify(HpRestore, AttrType.Hp);
+            player.Modify(HpRestore, AttrType.Health);
             player.Modify(EnergyRestore, AttrType.Energy);
         }
     }

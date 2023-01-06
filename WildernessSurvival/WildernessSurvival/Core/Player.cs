@@ -8,11 +8,13 @@ namespace WildernessSurvival.Core
 {
     public enum AttrType
     {
-        Hp,
+        Health,
         Food,
         Water,
         Energy
     }
+
+    public delegate float ValueFixer(float raw);
 
     public partial class Player : INotifyPropertyChanged
     {
@@ -182,11 +184,16 @@ namespace WildernessSurvival.Core
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void Modify(float delta, AttrType type)
+        public void Modify(float delta, AttrType type, ValueFixer fixer = null)
         {
+            if (fixer != null)
+            {
+                delta = fixer(delta);
+            }
+
             switch (type)
             {
-                case AttrType.Hp:
+                case AttrType.Health:
                     Health += delta;
                     break;
                 case AttrType.Food:

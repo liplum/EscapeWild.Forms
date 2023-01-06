@@ -5,7 +5,7 @@ namespace WildernessSurvival.Game
     public static class Routes
     {
         public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new Route(
-            name: "Subtropics",
+            name: "Subtropics", hardness: Rand.Float(0f, 0.3f),
             new PlainPlace(name: "Plain", appearRate: 30, huntingRate: 50),
             new RiversidePlace(name: "Riverside", appearRate: 30, huntingRate: 30),
             new ForestPlace(name: "Forest", appearRate: 30, huntingRate: 60),
