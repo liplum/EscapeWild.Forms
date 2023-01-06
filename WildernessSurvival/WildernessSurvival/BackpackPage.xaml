@@ -13,7 +13,50 @@
       <Picker x:Name="ItemsPicker" FontSize="Large" Title="{ui:I18N Key=Backpack.UseTip}"
         SelectedIndexChanged="ItemsPicker_SelectedIndexChanged" />
       <Label x:Name="ItemDescription" FontSize="Large" />
-      <StackLayout VerticalOptions="CenterAndExpand"/>
+      <StackLayout x:Name="AfterUsedArea" VerticalOptions="CenterAndExpand">
+        <StackLayout.IsVisible>False</StackLayout.IsVisible>
+        <Label x:Name="AfterUsedLabel" Text="{ui:I18N Key=Backpack.AfterUsed}" FontSize="Title" HorizontalOptions="Center"></Label>
+        <Grid>
+          <Grid.Resources>
+            <Style TargetType="Label">
+              <Setter Property="FontSize" Value="Large" />
+            </Style>
+          </Grid.Resources>
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
+
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="HealthProgressBar"
+            Grid.Column="1"
+            Grid.Row="0" />
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="FoodProgressBar"
+            Grid.Column="1"
+            Grid.Row="1" />
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="WaterProgressBar"
+            Grid.Column="1"
+            Grid.Row="2" />
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="EnergyProgressBar"
+            Grid.Column="1"
+            Grid.Row="3" />
+        </Grid>
+      </StackLayout>
+      <StackLayout VerticalOptions="CenterAndExpand" />
       <Button Text="{ui:I18N Key=Backpack.Use}" x:Name="Use" FontSize="30" Clicked="Use_Clicked" />
     </StackLayout>
   </ContentPage.Content>

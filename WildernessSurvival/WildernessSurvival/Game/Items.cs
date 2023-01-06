@@ -2,15 +2,15 @@
 
 namespace WildernessSurvival.Game
 {
-    public class EnergyBar : IUsableItem
+    public class EnergyBar : UsableItem
     {
         private const float Restore = 0.3f;
-        public string Name => nameof(EnergyBar);
-        public UseType UseType => UseType.Eat;
+        public override string Name => nameof(EnergyBar);
+        public override UseType UseType => UseType.Eat;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Food);
+            builder.Add(AttrType.Food.WithEffect(Restore));
         }
     }
 
@@ -20,46 +20,47 @@ namespace WildernessSurvival.Game
         public ToolLevel Level => ToolLevel.Normal;
     }
 
-    public class BottledWater : IUsableItem
+    public class BottledWater : UsableItem
     {
         private const float Restore = 0.4f;
-        public string Name => nameof(BottledWater);
-        public UseType UseType => UseType.Drink;
+        public override string Name => nameof(BottledWater);
+        public override UseType UseType => UseType.Drink;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Water);
+            builder.Add(AttrType.Water.WithEffect(Restore));
         }
     }
 
-    public class RawRabbit : IUsableItem, IRawItem
+    public class RawRabbit : UsableItem, IRawItem
     {
         private const float Restore = 0.5f;
-        public string Name => nameof(RawRabbit);
+        public override string Name => nameof(RawRabbit);
 
         public CookType CookType => CookType.Cook;
-        public UseType UseType => UseType.Eat;
+        public override UseType UseType => UseType.Eat;
 
         public IUsableItem Cook()
         {
             return new CookedRabbit();
         }
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Food);
+            builder.Add(AttrType.Food.WithEffect(Restore));
         }
     }
 
-    public class CookedRabbit : IUsableItem
+    public class CookedRabbit : UsableItem
     {
         private const float Restore = 0.9f;
-        public string Name => nameof(CookedRabbit);
-        public UseType UseType => UseType.Eat;
+        public override string Name => nameof(CookedRabbit);
+        public override UseType UseType => UseType.Eat;
 
-        public void Use(Player player)
+
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Food);
+            builder.Add(AttrType.Food.WithEffect(Restore));
         }
     }
 
@@ -69,131 +70,131 @@ namespace WildernessSurvival.Game
         public ToolLevel Level => ToolLevel.Normal;
     }
 
-    public class Berry : IUsableItem
+    public class Berry : UsableItem
     {
         private const float FoodRestore = 0.2f;
         private const float WaterRestore = 0.1f;
-        public string Name => nameof(Berry);
-        public UseType UseType => UseType.Eat;
+        public override string Name => nameof(Berry);
+        public override UseType UseType => UseType.Eat;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(FoodRestore, AttrType.Food);
-            player.Modify(WaterRestore, AttrType.Water);
+            builder.Add(AttrType.Food.WithEffect(FoodRestore));
+            builder.Add(AttrType.Water.WithEffect(WaterRestore));
         }
     }
 
-    public class DirtyWater : IUsableItem, IRawItem
+    public class DirtyWater : UsableItem, IRawItem
     {
         private const float Restore = 0.1f;
-        public string Name => nameof(DirtyWater);
+        public override string Name => nameof(DirtyWater);
         public CookType CookType => CookType.Boil;
-        public UseType UseType => UseType.Drink;
+        public override UseType UseType => UseType.Drink;
 
         public IUsableItem Cook()
         {
             return new CleanWater();
         }
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Water);
+            builder.Add(AttrType.Water.WithEffect(Restore));
         }
     }
 
-    public class CleanWater : IUsableItem
+    public class CleanWater : UsableItem
     {
         private const float Restore = 0.3f;
-        public string Name => nameof(CleanWater);
-        public UseType UseType => UseType.Drink;
+        public override string Name => nameof(CleanWater);
+        public override UseType UseType => UseType.Drink;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Water);
+            builder.Add(AttrType.Water.WithEffect(Restore));
         }
     }
 
-    public class Nuts : IUsableItem
+    public class Nuts : UsableItem
     {
         private const float Restore = 0.2f;
-        public string Name => nameof(Nuts);
-        public UseType UseType => UseType.Eat;
+        public override string Name => nameof(Nuts);
+        public override UseType UseType => UseType.Eat;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Food);
+            builder.Add(AttrType.Food.WithEffect(Restore));
         }
     }
 
-    public class Bandage : IMedicalSupplyItem
+    public class Bandage : UsableItem
     {
         private const float Restore = 0.3f;
-        public string Name => nameof(Bandage);
-        public UseType UseType => UseType.Use;
+        public override string Name => nameof(Bandage);
+        public override UseType UseType => UseType.Use;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Health);
+            builder.Add(AttrType.Health.WithEffect(Restore));
         }
     }
 
-    public class FistAidKit : IMedicalSupplyItem
+    public class FistAidKit : UsableItem
     {
         private const float HpRestore = 0.3f;
         private const float EnergyRestore = 0.2f;
-        public string Name => nameof(FistAidKit);
-        public UseType UseType => UseType.Use;
+        public override string Name => nameof(FistAidKit);
+        public override UseType UseType => UseType.Use;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(HpRestore, AttrType.Health);
-            player.Modify(EnergyRestore, AttrType.Energy);
+            builder.Add(AttrType.Health.WithEffect(HpRestore));
+            builder.Add(AttrType.Energy.WithEffect(EnergyRestore));
         }
     }
 
-    public class EnergyDrink : IUsableItem
+    public class EnergyDrink : UsableItem
     {
         private const float WaterRestore = 0.3f;
         private const float EnergyRestore = 0.4f;
-        public string Name => nameof(EnergyDrink);
-        public UseType UseType => UseType.Drink;
+        public override string Name => nameof(EnergyDrink);
+        public override UseType UseType => UseType.Drink;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(WaterRestore, AttrType.Water);
-            player.Modify(EnergyRestore, AttrType.Energy);
+            builder.Add(AttrType.Water.WithEffect(WaterRestore));
+            builder.Add(AttrType.Energy.WithEffect(EnergyRestore));
         }
     }
 
-    public class RawFish : IUsableItem, IRawItem
+    public class RawFish : UsableItem, IRawItem
     {
         private const float FoodRestore = 0.4f;
         private const float WaterRestore = 0.2f;
-        public string Name => nameof(RawFish);
+        public override string Name => nameof(RawFish);
         public CookType CookType => CookType.Cook;
-        public UseType UseType => UseType.Eat;
+        public override UseType UseType => UseType.Eat;
 
         public IUsableItem Cook()
         {
             return new CookedFish();
         }
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(FoodRestore, AttrType.Food);
-            player.Modify(WaterRestore, AttrType.Food);
+            builder.Add(AttrType.Food.WithEffect(FoodRestore));
+            builder.Add(AttrType.Water.WithEffect(WaterRestore));
         }
     }
 
-    public class CookedFish : IUsableItem
+    public class CookedFish : UsableItem
     {
         private const float Restore = 0.6f;
-        public string Name => nameof(CookedFish);
-        public UseType UseType => UseType.Eat;
+        public override string Name => nameof(CookedFish);
+        public override UseType UseType => UseType.Eat;
 
-        public void Use(Player player)
+        public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            player.Modify(Restore, AttrType.Food);
+            builder.Add(AttrType.Food.WithEffect(Restore));
         }
     }
 
