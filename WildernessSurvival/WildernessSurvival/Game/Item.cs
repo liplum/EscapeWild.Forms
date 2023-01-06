@@ -1,10 +1,16 @@
-﻿namespace WildernessSurvival.Game
+﻿using WildernessSurvival.Localization;
+
+namespace WildernessSurvival.Game
 {
     public interface IItem
     {
         string Name { get; }
+    }
 
-        string Description { get; }
+    public static class ItemI18N
+    {
+        public static string LocalizedName(this IItem item) => I18N.Get($"Item.{item.Name}.Name");
+        public static string LocalizedDesc(this IItem item) => I18N.Get($"Item.{item.Name}.Desc");
     }
 
     public interface IToolItem : IItem
@@ -50,14 +56,12 @@
 
     public class LogItem : IItem
     {
+        public string Name => "Log";
         public static readonly LogItem One = new LogItem();
 
         private LogItem()
         {
-            
         }
-        public string Description => "一根没什么特点的木头。";
-        public string Name => "木头";
     }
 
     public interface IMedicalSupplyItem : IUsableItem

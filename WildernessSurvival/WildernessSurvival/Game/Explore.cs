@@ -25,7 +25,7 @@ namespace WildernessSurvival.Game
             if (achievements.Count != 0)
             {
                 var result = "";
-                foreach (var item in achievements) result += $" {item.Name} ";
+                foreach (var item in achievements) result += $" {item.LocalizedName()} ";
                 DependencyService.Get<IToast>().ShortAlert($"你获得了：{result}。");
             }
             else

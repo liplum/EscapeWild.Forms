@@ -19,7 +19,7 @@ namespace WildernessSurvival
             InitializeComponent();
             AllItems = player.AllItems;
             foreach (var item in AllItems)
-                ItemsPicker.Items.Add(item.ToString());
+                ItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Use_Clicked(object sender, EventArgs e)
@@ -30,7 +30,7 @@ namespace WildernessSurvival
                 var item = AllItems[index];
                 if (player.Use(item))
                 {
-                    DependencyService.Get<IToast>().ShortAlert($"你成功使用了{item}");
+                    DependencyService.Get<IToast>().ShortAlert($"你成功使用了{item.LocalizedName()}");
                     player.Remove(item);
                     await Navigation.PopModalAsync();
                 }
@@ -47,7 +47,7 @@ namespace WildernessSurvival
 
         private void ItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ItemDescription.Text = AllItems[ItemsPicker.SelectedIndex].Description;
+            ItemDescription.Text = AllItems[ItemsPicker.SelectedIndex].LocalizedDesc();
         }
     }
 }

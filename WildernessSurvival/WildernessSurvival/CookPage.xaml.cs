@@ -20,7 +20,7 @@ namespace WildernessSurvival
 
             AllRawItems = player.RawItems;
             foreach (IItem item in AllRawItems)
-                RawItemsPicker.Items.Add(item.ToString());
+                RawItemsPicker.Items.Add(item.LocalizedName());
         }
 
         private async void Heat_Clicked(object sender, EventArgs e)
@@ -35,7 +35,7 @@ namespace WildernessSurvival
                     player.Remove((IItem)rawItem);
                     player.ConsumeWood(1);
                     player.AddItem(cooked);
-                    DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked}");
+                    DependencyService.Get<IToast>().ShortAlert($"你获得了{cooked.LocalizedName()}");
 
                     await Navigation.PopModalAsync();
                 }
