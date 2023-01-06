@@ -22,21 +22,16 @@ namespace WildernessSurvival.Core
 
         private Backpack _backpack;
 
-        private IRoute<IPlace> CurRoute;
+        private IRoute<IPlace> _curRoute;
 
         private float _healthValue;
         private float _energyValue;
         private float _foodValue;
         private float _waterValue;
-
         private bool _hasFire;
-
         private IPlace _location;
-
         private float _tripRatio;
-
         private int _turnNumber;
-
 
         public Player()
         {
@@ -48,8 +43,8 @@ namespace WildernessSurvival.Core
             Health = Food = Water = Energy = MaxValue;
             HasFire = false;
             _tripRatio = 0;
-            CurRoute = Routes.SubtropicsRoute();
-            Location = CurRoute.InitialPlace;
+            _curRoute = Routes.SubtropicsRoute();
+            Location = _curRoute.InitialPlace;
             TurnCount = 0;
             _backpack = new Backpack(this);
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
+using WildernessSurvival.Localization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -41,7 +42,16 @@ namespace WildernessSurvival
         {
             var selected = _allItems[ItemsPicker.SelectedIndex];
             ItemDescription.Text = selected.LocalizedDesc();
-            Use.IsEnabled = _player.CanPerformAnyAction && selected is IUsableItem;
+            if (selected is IUsableItem item)
+            {
+                Use.IsEnabled = _player.CanPerformAnyAction;
+                Use.Text = $"Backpack.{item.UseType}".Tr();
+            }
+            else
+            {
+                Use.IsEnabled = false;
+                Use.Text = "Backpack.CannotUse".Tr();
+            }
         }
     }
 }

@@ -18,20 +18,29 @@ namespace WildernessSurvival.Core
         public ToolLevel Level { get; }
     }
 
+    public enum UseType
+    {
+        Use,
+        Drink,
+        Eat
+    }
+
     public interface IUsableItem : IItem
     {
         public abstract void Use(Player player);
+        public UseType UseType { get; }
+    }
+
+    public enum CookType
+    {
+        Cook,
+        Boil
     }
 
     public interface IRawItem : IItem
     {
-        string RawDescription { get; }
-
+        CookType CookType { get; }
         IUsableItem Cook();
-    }
-
-    public interface IEdibleItem : IUsableItem
-    {
     }
 
     public interface IOxeItem : IToolItem
@@ -66,5 +75,6 @@ namespace WildernessSurvival.Core
 
     public interface IMedicalSupplyItem : IUsableItem
     {
+        
     }
 }

@@ -2,10 +2,11 @@
 
 namespace WildernessSurvival.Game
 {
-    public class EnergyBar : IEdibleItem
+    public class EnergyBar : IUsableItem
     {
         private const int Restore = 3;
         public string Name => nameof(EnergyBar);
+        public UseType UseType => UseType.Eat;
 
         public void Use(Player player)
         {
@@ -19,10 +20,11 @@ namespace WildernessSurvival.Game
         public ToolLevel Level => ToolLevel.Normal;
     }
 
-    public class BottledWater : IEdibleItem
+    public class BottledWater : IUsableItem
     {
         private const int Restore = 4;
         public string Name => nameof(BottledWater);
+        public UseType UseType => UseType.Drink;
 
         public void Use(Player player)
         {
@@ -30,11 +32,13 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class RawRabbit : IEdibleItem, IRawItem
+    public class RawRabbit : IUsableItem, IRawItem
     {
         private const int Restore = 5;
         public string Name => nameof(RawRabbit);
-        public string RawDescription => $"烹饪后：{nameof(CookedRabbit)}";
+
+        public CookType CookType => CookType.Cook;
+        public UseType UseType => UseType.Eat;
 
         public IUsableItem Cook()
         {
@@ -47,10 +51,11 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class CookedRabbit : IEdibleItem
+    public class CookedRabbit : IUsableItem
     {
         private const int Restore = 10;
         public string Name => nameof(CookedRabbit);
+        public UseType UseType => UseType.Eat;
 
         public void Use(Player player)
         {
@@ -64,11 +69,12 @@ namespace WildernessSurvival.Game
         public ToolLevel Level => ToolLevel.Normal;
     }
 
-    public class Berry : IEdibleItem
+    public class Berry : IUsableItem
     {
         private const int FoodRestore = 2;
         private const int WaterRestore = 1;
         public string Name => nameof(Berry);
+        public UseType UseType => UseType.Eat;
 
         public void Use(Player player)
         {
@@ -77,11 +83,12 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class DirtyWater : IEdibleItem, IRawItem
+    public class DirtyWater : IUsableItem, IRawItem
     {
         private const int Restore = 1;
         public string Name => nameof(DirtyWater);
-        public string RawDescription => $"煮开后：{nameof(CleanWater)}";
+        public CookType CookType => CookType.Boil;
+        public UseType UseType => UseType.Drink;
 
         public IUsableItem Cook()
         {
@@ -94,10 +101,11 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class CleanWater : IEdibleItem
+    public class CleanWater : IUsableItem
     {
         private const int Restore = 3;
         public string Name => nameof(CleanWater);
+        public UseType UseType => UseType.Drink;
 
         public void Use(Player player)
         {
@@ -105,10 +113,11 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class Nuts : IEdibleItem
+    public class Nuts : IUsableItem
     {
         private const int Restore = 2;
         public string Name => nameof(Nuts);
+        public UseType UseType => UseType.Eat;
 
         public void Use(Player player)
         {
@@ -120,6 +129,7 @@ namespace WildernessSurvival.Game
     {
         private const int Restore = 3;
         public string Name => nameof(Bandage);
+        public UseType UseType => UseType.Use;
 
         public void Use(Player player)
         {
@@ -132,6 +142,7 @@ namespace WildernessSurvival.Game
         private const int HpRestore = 3;
         private const int EnergyRestore = 2;
         public string Name => nameof(FistAidKit);
+        public UseType UseType => UseType.Use;
 
         public void Use(Player player)
         {
@@ -140,11 +151,12 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class EnergyDrink : IEdibleItem
+    public class EnergyDrink : IUsableItem
     {
         private const int WaterRestore = 3;
         private const int EnergyRestore = 4;
         public string Name => nameof(EnergyDrink);
+        public UseType UseType => UseType.Drink;
 
         public void Use(Player player)
         {
@@ -153,11 +165,12 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class RawFish : IEdibleItem, IRawItem
+    public class RawFish : IUsableItem, IRawItem
     {
         private const int Restore = 6;
         public string Name => nameof(RawFish);
-        public string RawDescription => $"烹饪后：{nameof(CookedFish)}";
+        public CookType CookType => CookType.Cook;
+        public UseType UseType => UseType.Eat;
 
         public IUsableItem Cook()
         {
@@ -170,10 +183,11 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class CookedFish : IEdibleItem
+    public class CookedFish : IUsableItem
     {
         private const int Restore = 9;
         public string Name => nameof(CookedFish);
+        public UseType UseType => UseType.Eat;
 
         public void Use(Player player)
         {

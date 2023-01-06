@@ -44,7 +44,13 @@ namespace WildernessSurvival
         private void RawItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selected = _allRawItems[RawItemsPicker.SelectedIndex];
-            ItemDescription.Text = selected.RawDescription;
+            var key = "AfterCooked";
+            if (selected.CookType == CookType.Boil)
+            {
+                key = "AfterBoiled";
+            }
+
+            ItemDescription.Text = string.Format(_i18n(key), selected.Cook().LocalizedName());
             UpdateUI();
         }
 

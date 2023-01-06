@@ -79,6 +79,7 @@ namespace WildernessSurvival
         private async void Backpack_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushModalAsync(new BackpackPage(), true);
+            UpdateUI();
         }
 
 
@@ -94,12 +95,13 @@ namespace WildernessSurvival
             Hunt.IsEnabled = actions.Contains(ActionType.Hunt);
             CutDownTree.IsEnabled = actions.Contains(ActionType.CutDownTree);
             Fish.IsEnabled = actions.Contains(ActionType.Fish);
+            // Initialized by player states
+            Cook.IsEnabled = _player.HasFire;
             // Modified by player states
             Fire.IsEnabled &= _player.HasWood && !_player.HasFire;
             CutDownTree.IsEnabled &= _player.HasOxe;
             Hunt.IsEnabled &= _player.HasHuntingTool;
             Fish.IsEnabled &= _player.HasFishingTool;
-            Cook.IsEnabled &= _player.HasFire;
             // Modified by win or failure
             Move.IsEnabled &= _player.CanPerformAnyAction;
             Hunt.IsEnabled &= _player.CanPerformAnyAction;
@@ -161,9 +163,6 @@ namespace WildernessSurvival
         {
             _player.Reset();
             Restart.IsVisible = false;
-            Move.IsEnabled = true;
-            Explore.IsEnabled = true;
-            Rest.IsEnabled = true;
             UpdateUI();
         }
 
