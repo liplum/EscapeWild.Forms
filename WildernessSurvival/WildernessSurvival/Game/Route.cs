@@ -287,8 +287,7 @@ namespace WildernessSurvival.Game
             player.Modify(-0.3f, AttrType.Energy, HardnessFix);
             var gained = new List<IItem>();
             gained.Add(LogItem.One);
-            var rate = Rand.Int(100);
-            if (rate < 50)
+            if (Rand.Int(100) < 50)
             {
                 gained.Add(LogItem.One);
             }
@@ -515,6 +514,8 @@ namespace WildernessSurvival.Game
             await ShowRestDialog(restType: "Hut");
         }
 
+        private bool _gotOxe, _gotFishRod, _gotGun, _gotTrap;
+
         /// <summary>
         /// Cost: Food[0.02], Water[0.04], Energy[0.08]
         /// Bottled Water x2
@@ -536,16 +537,18 @@ namespace WildernessSurvival.Game
 
             var gained = new List<IItem>();
 
-            if (!player.HasToolOf(ToolType.Oxe))
+            if (!_gotOxe)
             {
+                _gotOxe = true;
                 if (Rand.Int(100) < OxeRate)
-                    gained.Add(OxeItems.OldOxe);
+                    gained.Add(OxeItems.OldOxe());
             }
 
-            if (!player.HasToolOf(ToolType.Fishing))
+            if (!_gotFishRod)
             {
+                _gotFishRod = true;
                 if (Rand.Int(100) < FishRodRate)
-                    gained.Add(FishToolItems.OldFishRod);
+                    gained.Add(FishToolItems.OldFishRod());
             }
 
 
@@ -572,17 +575,25 @@ namespace WildernessSurvival.Game
             }
 
 
-            if (!player.HasToolOf(ToolType.Hunting))
+            if (!_gotGun || !_gotTrap)
             {
                 if (Rand.Bool())
                 {
-                    if (Rand.Int(100) < GunRate)
-                        gained.Add(HuntingToolItems.OldShotgun);
+                    if (!_gotGun)
+                    {
+                        _gotGun = true;
+                        if (Rand.Int(100) < GunRate)
+                            gained.Add(HuntingToolItems.OldShotgun());
+                    }
                 }
                 else
                 {
-                    if (Rand.Int(100) < TrapRate)
-                        gained.Add(HuntingToolItems.Trap);
+                    if (_gotTrap)
+                    {
+                        _gotTrap = true;
+                        if (Rand.Int(100) < TrapRate)
+                            gained.Add(HuntingToolItems.Trap());
+                    }
                 }
             }
 

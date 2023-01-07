@@ -87,7 +87,7 @@ namespace WildernessSurvival.Game
             builder.Add(AttrType.Water.WithEffect(WaterRestore));
         }
 
-        public CookType CookType => CookType.Cook;
+        public CookType CookType => CookType.Roast;
 
         public IUsableItem Cook() => new RoastedBerry
         {
@@ -141,7 +141,7 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class Nuts : UsableItem
+    public class Nuts : UsableItem, ICookableItem
     {
         public const float DefaultRestore = 0.2f;
         public float Restore = DefaultRestore;
@@ -152,6 +152,27 @@ namespace WildernessSurvival.Game
         {
             builder.Add(AttrType.Food.WithEffect(Restore));
         }
+
+        public CookType CookType => CookType.Roast;
+
+        public IUsableItem Cook() => new ToastedNuts
+        {
+            Restore = ToastedNuts.DefaultRestore + Restore * 0.1f,
+        };
+    }
+
+    public class ToastedNuts : UsableItem
+    {
+        public const float DefaultRestore = 0.2f;
+        public float Restore = DefaultRestore;
+        public override string Name => nameof(ToastedNuts);
+
+        public override void BuildUseEffect(UseEffectBuilder builder)
+        {
+            builder.Add(AttrType.Food.WithEffect(Restore));
+        }
+
+        public override UseType UseType => UseType.Eat;
     }
 
     public class EnergyDrink : UsableItem

@@ -3,6 +3,8 @@ using WildernessSurvival.Localization;
 
 namespace WildernessSurvival.Core
 {
+    public delegate T ItemMaker<out T>() where T : IItem;
+
     public interface IItem
     {
         string Name { get; }
@@ -35,17 +37,25 @@ namespace WildernessSurvival.Core
         public static readonly ToolType
             Oxe = new ToolType("Oxe"),
             Hunting = new ToolType("Hunting"),
-            Fishing = new ToolType("Fishing");
+            Fishing = new ToolType("Fishing"),
+            FireMaking = new ToolType("FireMaking");
     }
 
     public interface IToolItem : IItem
     {
         public ToolLevel Level { get; }
         public ToolType ToolType { get; }
+        public int RemainingTimes { get; }
     }
 
     public class ToolItem : IToolItem
     {
+        public ToolItem(int durability)
+        {
+            RemainingTimes = durability;
+        }
+
+        public int RemainingTimes { get; }
         public string Name { get; set; }
         public ToolLevel Level { get; set; }
         public ToolType ToolType { get; set; }
@@ -171,7 +181,8 @@ namespace WildernessSurvival.Core
     public enum CookType
     {
         Cook,
-        Boil
+        Boil,
+        Roast,
     }
 
     public interface ICookableItem : IItem
