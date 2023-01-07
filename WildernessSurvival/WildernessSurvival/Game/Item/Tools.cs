@@ -7,8 +7,9 @@ namespace WildernessSurvival.Game
 {
     public static class OxeItems
     {
-        public static readonly ItemMaker<ToolItem> OldOxe = () => new ToolItem(durability: 10)
+        public static readonly ItemMaker<ToolItem> OldOxe = () => new ToolItem
         {
+            Durability = 15,
             Name = "OldOxe",
             Level = ToolLevel.Normal,
             ToolType = ToolType.Oxe,
@@ -17,8 +18,9 @@ namespace WildernessSurvival.Game
 
     public static class FishToolItems
     {
-        public static readonly ItemMaker<ToolItem> OldFishRod = () => new ToolItem(durability: 10)
+        public static readonly ItemMaker<ToolItem> OldFishRod = () => new ToolItem
         {
+            Durability = 15,
             Name = "OldFishRod",
             Level = ToolLevel.Normal,
             ToolType = ToolType.Fishing,
@@ -27,15 +29,17 @@ namespace WildernessSurvival.Game
 
     public static class HuntingToolItems
     {
-        public static readonly ItemMaker<ToolItem> OldShotgun = () => new ToolItem(durability: 10)
+        public static readonly ItemMaker<ToolItem> OldShotgun = () => new ToolItem
         {
+            Durability = 15,
             Name = "OldShotgun",
             Level = ToolLevel.High,
             ToolType = ToolType.Hunting,
         };
 
-        public static readonly ItemMaker<ToolItem> Trap = () => new ToolItem(durability: 2)
+        public static readonly ItemMaker<ToolItem> Trap = () => new ToolItem
         {
+            Durability = 6,
             Name = "Trap",
             Level = ToolLevel.Normal,
             ToolType = ToolType.Hunting,

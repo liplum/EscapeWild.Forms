@@ -65,7 +65,7 @@ namespace WildernessSurvival.Core
                         case AttrType.Water:
                         case AttrType.Energy:
                             SetAttr(attr, 0);
-                            _model.Health -= underflow * UnderflowPunishmentRadio;
+                            SetAttr(AttrType.Health,GetAttr(AttrType.Health) - underflow * UnderflowPunishmentRadio);
                             break;
                     }
                 }

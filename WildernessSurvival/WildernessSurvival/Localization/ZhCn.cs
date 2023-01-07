@@ -106,6 +106,7 @@ namespace WildernessSurvival.Localization
             { "Subtropics.Hut.Rest", "你在温暖的小屋里安安稳稳地睡了一觉，棒极了。" },
             { "Subtropics.Common.Fire", "你生起了火。" },
             { "OK", "好" },
+            { "Oops", "糟糕！" },
             { "Alright", "Alright" }
         };
     }

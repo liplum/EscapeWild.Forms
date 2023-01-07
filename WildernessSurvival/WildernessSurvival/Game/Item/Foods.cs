@@ -5,9 +5,9 @@ namespace WildernessSurvival.Game
 {
     public class EnergyBar : UsableItem
     {
-        public const float DefaultFoodRestore = 0.5f;
+        public const float DefaultFoodRestore = 0.32f;
         public float FoodRestore = DefaultFoodRestore;
-        public const float DefaultEnergyRestore = 0.2f;
+        public const float DefaultEnergyRestore = 0.1f;
         public float EnergyRestore = DefaultEnergyRestore;
         public override string Name => nameof(EnergyBar);
         public override UseType UseType => UseType.Eat;
@@ -22,7 +22,7 @@ namespace WildernessSurvival.Game
 
     public class BottledWater : UsableItem
     {
-        public const float DefaultRestore = 0.4f;
+        public const float DefaultRestore = 0.28f;
         public float Restore = DefaultRestore;
         public override string Name => nameof(BottledWater);
         public override UseType UseType => UseType.Drink;
@@ -36,8 +36,8 @@ namespace WildernessSurvival.Game
     public class RawRabbit : UsableItem, ICookableItem
     {
         public float FlueCost => 18;
-        public const float DefaultFoodRestore = 0.5f;
-        public const float DefaultWaterRestore = 0.1f;
+        public const float DefaultFoodRestore = 0.45f;
+        public const float DefaultWaterRestore = 0.05f;
         public float FoodRestore = DefaultFoodRestore;
         public float WaterRestore = DefaultWaterRestore;
         public override string Name => nameof(RawRabbit);
@@ -60,7 +60,7 @@ namespace WildernessSurvival.Game
 
     public class CookedRabbit : UsableItem
     {
-        public const float DefaultFoodRestore = 0.75f;
+        public const float DefaultFoodRestore = 0.5f;
         public float FoodRestore = DefaultFoodRestore;
         public override string Name => nameof(CookedRabbit);
         public override UseType UseType => UseType.Eat;
@@ -76,8 +76,8 @@ namespace WildernessSurvival.Game
     public class Berry : UsableItem, ICookableItem
     {
         public float FlueCost => 3;
-        public const float DefaultFoodRestore = 0.2f;
-        public const float DefaultWaterRestore = 0.1f;
+        public const float DefaultFoodRestore = 0.12f;
+        public const float DefaultWaterRestore = 0.08f;
         public float FoodRestore = DefaultFoodRestore;
         public float WaterRestore = DefaultWaterRestore;
         public override string Name => nameof(Berry);
@@ -100,7 +100,7 @@ namespace WildernessSurvival.Game
 
     public class RoastedBerry : UsableItem
     {
-        public const float DefaultFoodRestore = 0.35f;
+        public const float DefaultFoodRestore = 0.14f;
         public float FoodRestore = DefaultFoodRestore;
         public override string Name => nameof(RoastedBerry);
         public override UseType UseType => UseType.Eat;
@@ -114,21 +114,24 @@ namespace WildernessSurvival.Game
     public class DirtyWater : UsableItem, ICookableItem
     {
         public float FlueCost => 3;
-        public const float DefaultRestore = 0.1f;
-        public float Restore = DefaultRestore;
+        public const float DefaultWaterRestore = 0.1f;
+        public float WaterRestore = DefaultWaterRestore;
+        public const float DefaultHealthDelta = -0.08f;
+        public float HealthDelta = DefaultHealthDelta;
         public override string Name => nameof(DirtyWater);
         public CookType CookType => CookType.Boil;
         public override UseType UseType => UseType.Drink;
 
         public IItem Cook() => new CleanWater
         {
-            Restore = CleanWater.DefaultRestore + Restore * 0.1f,
+            Restore = CleanWater.DefaultRestore + WaterRestore * 0.1f,
         };
 
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            builder.Add(AttrType.Water.WithEffect(Restore));
+            builder.Add(AttrType.Water.WithEffect(WaterRestore));
+            builder.Add(AttrType.Health.WithEffect(HealthDelta));
         }
     }
 
@@ -148,7 +151,7 @@ namespace WildernessSurvival.Game
     public class Nuts : UsableItem, ICookableItem
     {
         public float FlueCost => 3;
-        public const float DefaultRestore = 0.2f;
+        public const float DefaultRestore = 0.08f;
         public float Restore = DefaultRestore;
         public override string Name => nameof(Nuts);
         public override UseType UseType => UseType.Eat;
@@ -162,13 +165,13 @@ namespace WildernessSurvival.Game
 
         public IItem Cook() => new ToastedNuts
         {
-            Restore = ToastedNuts.DefaultRestore + Restore * 0.1f,
+            Restore = ToastedNuts.DefaultRestore + Restore * 0.3f,
         };
     }
 
     public class ToastedNuts : UsableItem
     {
-        public const float DefaultRestore = 0.2f;
+        public const float DefaultRestore = 0.1f;
         public float Restore = DefaultRestore;
         public override string Name => nameof(ToastedNuts);
 
@@ -183,7 +186,7 @@ namespace WildernessSurvival.Game
     public class EnergyDrink : UsableItem
     {
         public float WaterRestore = 0.3f;
-        public float EnergyRestore = 0.4f;
+        public float EnergyRestore = 0.2f;
         public override string Name => nameof(EnergyDrink);
         public override UseType UseType => UseType.Drink;
 
@@ -197,9 +200,9 @@ namespace WildernessSurvival.Game
     public class RawFish : UsableItem, ICookableItem
     {
         public float FlueCost => 12;
-        public const float DefaultFoodRestore = 0.4f;
+        public const float DefaultFoodRestore = 0.35f;
         public float FoodRestore = DefaultFoodRestore;
-        public const float DefaultWaterRestore = 0.2f;
+        public const float DefaultWaterRestore = 0.1f;
         public float WaterRestore = DefaultWaterRestore;
         public override string Name => nameof(RawFish);
         public CookType CookType => CookType.Cook;
@@ -219,7 +222,7 @@ namespace WildernessSurvival.Game
 
     public class CookedFish : UsableItem
     {
-        public const float DefaultRestore = 0.8f;
+        public const float DefaultRestore = 0.35f;
         public float Restore = DefaultRestore;
         public override string Name => nameof(CookedFish);
         public override UseType UseType => UseType.Eat;

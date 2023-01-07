@@ -35,13 +35,5 @@ namespace WildernessSurvival.Core
         public bool RemoveItem(IItem item) => AllItems.Remove(item);
 
         public void AddItems(IEnumerable<IItem> items) => AllItems.AddRange(items);
-
-        public void ConsumeWood(int count)
-        {
-            if (count <= 0) return;
-            var woods = AllItems.OfType<Log>().ToList();
-            var c = count > woods.Count ? woods.Count : count;
-            for (var frequency = 0; frequency < c; ++frequency) AllItems.Remove(woods[frequency]);
-        }
     }
 }

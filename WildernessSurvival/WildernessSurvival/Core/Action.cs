@@ -48,7 +48,7 @@ namespace WildernessSurvival.Core
                 var result = string.Join(", ", from item in gained select item.LocalizedName());
                 await App.Current.MainPage.DisplayAlert(
                     title: $"{Head}.Title".Tr(),
-                    message: string.Format($"{Head}.Content".Tr(), result),
+                    message: $"{Head}.Content".Tr(result),
                     cancel: "OK".Tr()
                 );
             }
@@ -70,6 +70,23 @@ namespace WildernessSurvival.Core
                 message: message,
                 cancel: "OK".Tr()
             );
+        }
+
+        public async Task<bool> DamageTool(IToolItem tool, float damage, ValueFixer fixer = null)
+        {
+            if (fixer != null)
+            {
+                damage = fixer(damage);
+            }
+            tool.Durability -= damage;
+            if (tool.Durability > 0) return false;
+            Backpack.RemoveItem(tool);
+            await App.Current.MainPage.DisplayAlert(
+                title: "Oops".Tr(),
+                message: "Tool.Broken".Tr(tool.LocalizedName()),
+                cancel: "Alright".Tr()
+            );
+            return true;
         }
     }
 }

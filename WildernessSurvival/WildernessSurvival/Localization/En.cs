@@ -35,7 +35,9 @@ namespace WildernessSurvival.Localization
             { "Item.CleanWater.Name", "Clean Water" },
             { "Item.CleanWater.Desc", "Quenching your thirst." },
             { "Item.Nuts.Name", "Nuts" },
-            { "Item.Nuts.Desc", "Where is my nutcracker?" },
+            { "Item.Nuts.Desc", "Where is my nutcracker?" }, 
+            { "Item.ToastedNuts.Name", "Toasted Nuts" },
+            { "Item.ToastedNuts.Desc", "Now I don't need any nutcracker." },
             { "Item.Bandage.Name", "Bandage" },
             { "Item.Bandage.Desc", "No more wounds." },
             { "Item.FistAidKit.Name", "Fist Aid Kit" },
@@ -72,6 +74,7 @@ namespace WildernessSurvival.Localization
             { "Craft.Craft", "Craft" },
             { "Fire.Header", "Campfire" },
             { "Fire.Throw", "Throw" },
+            { "Fire.Tip", "Select to fill the fuel." },
             { "Fire.Fuel", "Fuel" },
             { "Fire.Success", "Cool! You started a fire!" },
             { "Fire.Failed.Wet", "It's too wet, you'd better find another place." },
@@ -115,7 +118,9 @@ namespace WildernessSurvival.Localization
             { "Action.Craft", "Craft" },
             { "Subtropics.Common.Rest", "You took a break and feel better." },
             { "Subtropics.Hut.Rest", "In a warm hut, you slept soundly." },
+            { "Tool.Broken", "{0} is completely broken, cannot be used any more." },
             { "OK", "OK" },
+            { "Oops", "Oops!" },
             { "Alright", "Alright" }
         };
     }

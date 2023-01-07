@@ -70,7 +70,8 @@ namespace WildernessSurvival.Localization
 
         public static string Get(string key)
         {
-            if (_curLocalization != null && _curLocalization.TranslationKey2Localized.TryGetValue(key, out var localized))
+            if (_curLocalization != null &&
+                _curLocalization.TranslationKey2Localized.TryGetValue(key, out var localized))
             {
                 return localized;
             }
@@ -86,5 +87,12 @@ namespace WildernessSurvival.Localization
         }
 
         public static string Tr(this string key) => Get(key);
+        public static string Tr(this string key, object arg0) => string.Format(Get(key), arg0);
+        public static string Tr(this string key, object arg0, object arg1) => string.Format(Get(key), arg0, arg1);
+
+        public static string Tr(this string key, object arg0, object arg1, object arg2) =>
+            string.Format(Get(key), arg0, arg1, arg2);
+
+        public static string Tr(this string key, params object[] args) => string.Format(null, Get(key), args);
     }
 }

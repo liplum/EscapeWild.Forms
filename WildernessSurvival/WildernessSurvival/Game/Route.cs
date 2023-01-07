@@ -237,6 +237,7 @@ namespace WildernessSurvival.Game
             var (rate, doubleRate) = tool.CalcRateByTool();
 
             var gained = new List<IItem>();
+            var broken = await player.DamageTool(tool, 3f);
             if (Rand.Int(100) < rate * HuntingRate / 100f)
             {
                 gained.Add(new RawRabbit
@@ -244,13 +245,14 @@ namespace WildernessSurvival.Game
                     FoodRestore = RawRabbit.DefaultFoodRestore * Rand.Float(1f, 1.2f),
                     WaterRestore = RawRabbit.DefaultWaterRestore * Rand.Float(1f, 1.2f),
                 });
-                if (Rand.Int(100) < doubleRate * HuntingRate / 100f)
+                if (!broken && Rand.Int(100) < doubleRate * HuntingRate / 100f)
                 {
                     gained.Add(new RawRabbit
                     {
                         FoodRestore = RawRabbit.DefaultFoodRestore * Rand.Float(1f, 1.5f),
                         WaterRestore = RawRabbit.DefaultWaterRestore * Rand.Float(1f, 1.5f),
                     });
+                    await player.DamageTool(tool, 2f);
                 }
             }
 
@@ -280,13 +282,15 @@ namespace WildernessSurvival.Game
                 gained.Add(new Sticks());
             }
 
-            if (Rand.Int(100) < rate)
+            var broken = await player.DamageTool(tool, 3f);
+            if (!broken && Rand.Int(100) < rate)
             {
                 gained.Add(new Log
                 {
                     Fuel = Log.DefaultFuel * Rand.Float(0.55f, 0.75f),
                 });
                 gained.Add(new Sticks());
+                await player.DamageTool(tool, 2f);
             }
 
             player.AddItems(gained);
@@ -351,13 +355,13 @@ namespace WildernessSurvival.Game
             {
                 gained.Add(new DirtyWater
                 {
-                    Restore = DirtyWater.DefaultRestore * Rand.Float(0.9f, 1.2f)
+                    WaterRestore = DirtyWater.DefaultWaterRestore * Rand.Float(0.9f, 1.2f)
                 });
                 if (Rand.Int(100) < DoubleRate)
                 {
                     gained.Add(new DirtyWater
                     {
-                        Restore = DirtyWater.DefaultRestore * Rand.Float(0.8f, 1.5f)
+                        WaterRestore = DirtyWater.DefaultWaterRestore * Rand.Float(0.8f, 1.5f)
                     });
                 }
             }
@@ -390,17 +394,19 @@ namespace WildernessSurvival.Game
         /// Cost: Food[0.08], Water[0.08], Energy[0.1]
         /// Cost based on tool level
         /// Gain: Raw Fish x1 or x2
+        /// Tool damage: 3f + 2f
         /// Prerequisites: Current location allows fishing.
         /// </summary>
         protected override async Task PerformFish(Player player)
         {
-            var tool = player.TryGetBestToolOf(ToolType.Hunting);
+            var tool = player.TryGetBestToolOf(ToolType.Fishing);
             player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
             player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
             player.Modify(AttrType.Energy, -(0.1f * tool.CalcExtraCostByTool()), HardnessFix);
             var (rate, doubleRate) = tool.CalcRateByTool();
 
             var gained = new List<IItem>();
+            var broken = await player.DamageTool(tool, 3f);
             if (Rand.Int(100) < rate)
             {
                 gained.Add(new RawFish
@@ -408,13 +414,14 @@ namespace WildernessSurvival.Game
                     FoodRestore = RawFish.DefaultFoodRestore * Rand.Float(0.9f, 1.1f),
                     WaterRestore = RawFish.DefaultWaterRestore * Rand.Float(0.8f, 1.4f),
                 });
-                if (Rand.Int(100) < doubleRate)
+                if (!broken && Rand.Int(100) < doubleRate)
                 {
                     gained.Add(new RawFish
                     {
                         FoodRestore = RawFish.DefaultFoodRestore * Rand.Float(0.9f, 1.1f),
                         WaterRestore = RawFish.DefaultWaterRestore * Rand.Float(0.8f, 1.4f),
                     });
+                    await player.DamageTool(tool, 2f);
                 }
             }
 
@@ -655,7 +662,7 @@ namespace WildernessSurvival.Game
             {
                 gained.Add(new DirtyWater
                 {
-                    Restore = DirtyWater.DefaultRestore * Rand.Float(0.5f, 1f)
+                    WaterRestore = DirtyWater.DefaultWaterRestore * Rand.Float(0.5f, 1f)
                 });
             }
 

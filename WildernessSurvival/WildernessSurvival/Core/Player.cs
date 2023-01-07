@@ -12,7 +12,7 @@ namespace WildernessSurvival.Core
 
     public partial class Player : IAttributeModel, INotifyPropertyChanged
     {
-        private const float MaxVisualFuel = 30f;
+        private const float MaxVisualFuel = 25f;
 
         public const float MoveStep = 0.02f;
 
@@ -182,7 +182,5 @@ namespace WildernessSurvival.Core
         public void AddItem(IItem item) => Backpack.AddItem(item);
 
         public void AddItems(IEnumerable<IItem> items) => Backpack.AddItems(items);
-
-        public void ConsumeWood(int Count) => Backpack.ConsumeWood(Count);
     }
 }

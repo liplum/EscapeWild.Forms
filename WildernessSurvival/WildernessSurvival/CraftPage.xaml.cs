@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
-using WildernessSurvival.Localization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 

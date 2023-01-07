@@ -28,8 +28,8 @@ namespace WildernessSurvival
         private void RebuildPicker()
         {
             ItemsPicker.Items.Clear();
-            foreach (var (_, cooked) in _raw2Cooked)
-                ItemsPicker.Items.Add(cooked.LocalizedName());
+            foreach (var (raw, _) in _raw2Cooked)
+                ItemsPicker.Items.Add(raw.LocalizedName());
         }
 
         private async void Cook_Clicked(object sender, EventArgs e)
@@ -38,8 +38,8 @@ namespace WildernessSurvival
             if (index < 0 || index >= _raw2Cooked.Count) return;
             var (raw, cooked) = _raw2Cooked[index];
             if (_player.FireFuel < raw.FlueCost) return;
+            _player.FireFuel -= raw.FlueCost;
             _player.RemoveItem(raw);
-            _player.ConsumeWood(1);
             _player.AddItem(cooked);
             _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
             if (_raw2Cooked.Count <= 0)
@@ -68,6 +68,7 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
+            FireFuelProgress.ProgressTo(_player.FireFuelProgress, 300, Easing.Linear);
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _raw2Cooked.Count)
             {

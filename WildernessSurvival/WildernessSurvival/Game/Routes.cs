@@ -22,6 +22,7 @@ namespace WildernessSurvival.Game
                 {
                     Name = "Riverside",
                     HuntingRate = 30,
+                    Wet = 0.4f,
                 },
                 Proportion = 30,
                 Inertia = 0.4f,

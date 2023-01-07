@@ -45,17 +45,12 @@ namespace WildernessSurvival.Core
     {
         public ToolLevel Level { get; }
         public ToolType ToolType { get; }
-        public int RemainingTimes { get; }
+        public float Durability { get; set; }
     }
 
     public class ToolItem : IToolItem
     {
-        public ToolItem(int durability)
-        {
-            RemainingTimes = durability;
-        }
-
-        public int RemainingTimes { get; }
+        public float Durability { get; set; }
         public string Name { get; set; }
         public ToolLevel Level { get; set; }
         public ToolType ToolType { get; set; }

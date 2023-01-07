@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
-using WildernessSurvival.Localization;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -66,6 +65,7 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
+            FireFuelProgress.ProgressTo(_player.FireFuelProgress, 300, Easing.Linear);
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _fuels.Count)
             {

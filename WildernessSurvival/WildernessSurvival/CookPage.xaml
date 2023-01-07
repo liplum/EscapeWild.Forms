@@ -15,7 +15,7 @@
       <Label x:Name="ItemDescription" FontSize="Large" />
       <StackLayout VerticalOptions="CenterAndExpand" Padding="10">
         <Label Text="{ui:I18N Key=Fire.Fuel}" FontSize="Large"></Label>
-        <ProgressBar Progress="{Binding FireFuelProgress, Source={StaticResource Player},Mode=OneWay}" />
+        <ProgressBar x:Name="FireFuelProgress" />
       </StackLayout>
       <StackLayout VerticalOptions="CenterAndExpand" />
       <Button Text="{ui:I18N Key=Cook.Cook}" x:Name="Cook"
