@@ -15,11 +15,11 @@ namespace WildernessSurvival.Core
 
         public readonly List<IItem> AllItems = new List<IItem>();
 
-        public bool HasWood => AllItems.OfType<LogItem>().Any();
+        public bool HasWood => AllItems.OfType<Log>().Any();
 
         public IList<ICookableItem> GetRawItems() => AllItems.OfType<ICookableItem>().ToList();
 
-        private IList<LogItem> Woods => AllItems.OfType<LogItem>().ToList();
+        private IList<Log> Woods => AllItems.OfType<Log>().ToList();
 
         public void AddItem(IItem item)
         {

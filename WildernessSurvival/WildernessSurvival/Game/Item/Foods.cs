@@ -191,16 +191,18 @@ namespace WildernessSurvival.Game
 
     public class RawFish : UsableItem, ICookableItem
     {
-        public float FoodRestore = 0.4f;
-        public float WaterRestore = 0.2f;
+        public const float DefaultFoodRestore = 0.4f;
+        public float FoodRestore = DefaultFoodRestore;
+        public const float DefaultWaterRestore = 0.2f;
+        public float WaterRestore = DefaultWaterRestore;
         public override string Name => nameof(RawFish);
         public CookType CookType => CookType.Cook;
         public override UseType UseType => UseType.Eat;
 
-        public IUsableItem Cook()
+        public IUsableItem Cook() => new CookedFish
         {
-            return new CookedFish();
-        }
+            Restore = CookedFish.DefaultRestore + FoodRestore * 0.2f,
+        };
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
@@ -211,7 +213,8 @@ namespace WildernessSurvival.Game
 
     public class CookedFish : UsableItem
     {
-        public float Restore = 0.6f;
+        public const float DefaultRestore = 0.8f;
+        public float Restore = DefaultRestore;
         public override string Name => nameof(CookedFish);
         public override UseType UseType => UseType.Eat;
 

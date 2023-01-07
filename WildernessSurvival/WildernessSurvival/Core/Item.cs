@@ -190,4 +190,9 @@ namespace WildernessSurvival.Core
         CookType CookType { get; }
         IUsableItem Cook();
     }
+
+    public interface IFuelItem : IItem
+    {
+        float Fuel { get; }
+    }
 }

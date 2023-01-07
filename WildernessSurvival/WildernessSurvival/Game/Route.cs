@@ -286,10 +286,16 @@ namespace WildernessSurvival.Game
             player.Modify(-0.02f, AttrType.Food, HardnessFix);
             player.Modify(-0.3f, AttrType.Energy, HardnessFix);
             var gained = new List<IItem>();
-            gained.Add(LogItem.One);
+            gained.Add(new Log
+            {
+                Fuel = Log.DefaultFuel * Rand.Float(0.55f, 0.75f),
+            });
             if (Rand.Int(100) < 50)
             {
-                gained.Add(LogItem.One);
+                gained.Add(new Log
+                {
+                    Fuel = Log.DefaultFuel * Rand.Float(0.55f, 0.75f),
+                });
             }
 
             player.AddItems(gained);
@@ -570,8 +576,14 @@ namespace WildernessSurvival.Game
                 {
                     FoodRestore = EnergyBar.DefaultFoodRestore * Rand.Float(0.75f, 1.2f)
                 });
-                gained.Add(LogItem.One);
-                gained.Add(LogItem.One);
+                gained.Add(new Log
+                {
+                    Fuel = Log.DefaultFuel * Rand.Float(0.95f, 1f),
+                });
+                gained.Add(new Log
+                {
+                    Fuel = Log.DefaultFuel * Rand.Float(0.95f, 1f),
+                });
             }
 
 
@@ -668,9 +680,17 @@ namespace WildernessSurvival.Game
 
             if (Rand.Int(100) < LogRate * prop)
             {
-                gained.Add(LogItem.One);
+                gained.Add(new Log
+                {
+                    Fuel = Log.DefaultFuel * Rand.Float(0.5f, 0.75f),
+                });
                 if (Rand.Int(100) < LogDoubleRate)
-                    gained.Add(LogItem.One);
+                {
+                    gained.Add(new Log
+                    {
+                        Fuel = Log.DefaultFuel * Rand.Float(0.6f, 0.8f),
+                    });
+                }
             }
 
             if (Rand.Int(100) < NutsRate * prop)
@@ -691,18 +711,18 @@ namespace WildernessSurvival.Game
             var stick = Rand.Int(100);
             if (stick < 60)
             {
-                gained.Add(Stick.One);
+                gained.Add(new Stick());
             }
             else if (stick < 90)
             {
-                gained.Add(Stick.One);
-                gained.Add(Stick.One);
+                gained.Add(new Stick());
+                gained.Add(new Stick());
             }
             else
             {
-                gained.Add(Stick.One);
-                gained.Add(Stick.One);
-                gained.Add(Stick.One);
+                gained.Add(new Stick());
+                gained.Add(new Stick());
+                gained.Add(new Stick());
             }
 
             player.AddItems(gained);
