@@ -43,9 +43,9 @@ namespace WildernessSurvival.Core
 
     public interface IToolItem : IItem
     {
-        public ToolLevel Level { get; }
-        public ToolType ToolType { get; }
-        public float Durability { get; set; }
+        ToolLevel Level { get; }
+        ToolType ToolType { get; }
+        float Durability { get; set; }
     }
 
     public class ToolItem : IToolItem
@@ -102,10 +102,11 @@ namespace WildernessSurvival.Core
 
     public interface IUsableItem : IItem
     {
-        public void BuildAttrModification(AttrModifierBuilder builder);
-        public bool CanUse(Player player);
-        public Task Use(Player player);
-        public UseType UseType { get; }
+        void BuildAttrModification(AttrModifierBuilder builder);
+        bool CanUse(Player player);
+        Task Use(Player player);
+        UseType UseType { get; }
+        bool DisplayPreview { get; }
     }
 
     public abstract class UsableItem : IUsableItem
@@ -115,6 +116,7 @@ namespace WildernessSurvival.Core
         public virtual bool CanUse(Player player) => true;
 
         public abstract UseType UseType { get; }
+        public bool DisplayPreview => true;
 
         public virtual async Task Use(Player player)
         {

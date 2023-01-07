@@ -43,6 +43,14 @@ namespace WildernessSurvival
             if (!(item is IUsableItem i) || !i.CanUse(_player)) return;
             await _player.UseItem(i);
             _player.RemoveItem(item);
+            // Player might die from poison.
+            if (_player.IsDead)
+            {
+                UpdateUI();
+                await Navigation.PopModalAsync();
+                return;
+            }
+
             if (AllItems.Count <= 0)
             {
                 UpdateUI();
@@ -64,6 +72,12 @@ namespace WildernessSurvival
         private void ItemsPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateUI();
+        }
+
+        private void UpdatePreview(bool display)
+        {
+            UnknownPreview.IsVisible = !display;
+            AfterUsePreview.IsVisible = display;
         }
 
         // ReSharper disable once InconsistentNaming
@@ -91,6 +105,7 @@ namespace WildernessSurvival
                 ItemDescription.Text = selected.LocalizedDesc();
                 if (selected is IUsableItem item && item.CanUse(_player))
                 {
+                    UpdatePreview(item.DisplayPreview);
                     Use.IsEnabled = _player.CanPerformAnyAction;
                     Use.Text = $"Backpack.{item.UseType}".Tr();
                     AfterUseLabel.Text = $"Backpack.After{item.UseType}".Tr();

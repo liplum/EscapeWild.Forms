@@ -40,8 +40,18 @@ namespace WildernessSurvival
             if (index < 0 || index >= _recipe2Output.Count) return;
             var (recipe, output) = _recipe2Output[index];
             recipe.ConsumeAndCraft(_player.Backpack);
+            var builder = new AttrModifierBuilder();
+            recipe.BuildCraftAttrRequirements(builder);
+            builder.PerformModification(_player.Attrs);
             _player.AddItem(output);
             _recipe2Output = Core.Craft.TestAvailableRecipes(_player.Backpack);
+            // Player might die from exhaustion.
+            if (_player.IsDead)
+            {
+                UpdateUI();
+                await Navigation.PopModalAsync();
+                return;
+            }
             if (_recipe2Output.Count <= 0)
             {
                 UpdateUI();

@@ -15,45 +15,50 @@
       <Label x:Name="ItemDescription" FontSize="Large" />
       <StackLayout x:Name="AfterUseArea" VerticalOptions="CenterAndExpand" Padding="15,0,15,0">
         <StackLayout.IsVisible>False</StackLayout.IsVisible>
-        <Label x:Name="AfterUseLabel" Text="{ui:I18N Key=Backpack.AfterUsed}" FontSize="Title" HorizontalOptions="Center"></Label>
+        <Label x:Name="AfterUseLabel" Text="{ui:I18N Key=Backpack.AfterUsed}" FontSize="Title"
+          HorizontalOptions="Center">
+        </Label>
         <Grid>
-          <Grid.Resources>
-            <Style TargetType="Label">
-              <Setter Property="FontSize" Value="Large" />
-            </Style>
-          </Grid.Resources>
-          <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-          </Grid.RowDefinitions>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-          </Grid.ColumnDefinitions>
+          <Label x:Name="UnknownPreview" Text="?" FontSize="120" HorizontalOptions="Center" VerticalOptions="Center"/>
+          <Grid x:Name="AfterUsePreview">
+            <Grid.Resources>
+              <Style TargetType="Label">
+                <Setter Property="FontSize" Value="Large" />
+              </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+              <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="*" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-          <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
-          <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
-          <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
-          <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
+            <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
+            <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
+            <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
+            <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
 
-          <ProgressBar HorizontalOptions="Fill"
-            x:Name="HealthProgressBar"
-            Grid.Column="1"
-            Grid.Row="0" />
-          <ProgressBar HorizontalOptions="Fill"
-            x:Name="FoodProgressBar"
-            Grid.Column="1"
-            Grid.Row="1" />
-          <ProgressBar HorizontalOptions="Fill"
-            x:Name="WaterProgressBar"
-            Grid.Column="1"
-            Grid.Row="2" />
-          <ProgressBar HorizontalOptions="Fill"
-            x:Name="EnergyProgressBar"
-            Grid.Column="1"
-            Grid.Row="3" />
+            <ProgressBar HorizontalOptions="Fill"
+              x:Name="HealthProgressBar"
+              Grid.Column="1"
+              Grid.Row="0" />
+            <ProgressBar HorizontalOptions="Fill"
+              x:Name="FoodProgressBar"
+              Grid.Column="1"
+              Grid.Row="1" />
+            <ProgressBar HorizontalOptions="Fill"
+              x:Name="WaterProgressBar"
+              Grid.Column="1"
+              Grid.Row="2" />
+            <ProgressBar HorizontalOptions="Fill"
+              x:Name="EnergyProgressBar"
+              Grid.Column="1"
+              Grid.Row="3" />
+          </Grid>
         </Grid>
       </StackLayout>
       <StackLayout VerticalOptions="CenterAndExpand" />
