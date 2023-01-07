@@ -36,7 +36,6 @@ namespace WildernessSurvival
         {
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _recipe2Output.Count) return;
-            if (!_player.HasWood) return;
             var (recipe, output) = _recipe2Output[index];
             recipe.ConsumeAndCraft(_player.Backpack);
             _player.AddItem(output);

@@ -156,6 +156,8 @@ namespace WildernessSurvival.Core
         /// Call this only once.
         /// </summary>
         IItem Cook();
+
+        float FlueCost { get; }
     }
 
     public interface IFuelItem : IItem

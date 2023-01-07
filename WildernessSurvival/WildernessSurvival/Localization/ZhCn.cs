@@ -61,7 +61,7 @@ namespace WildernessSurvival.Localization
             { "Cook.Roast", "炙烤" },
             { "Cook.Tip", "选择要加热的东西" },
             { "Cook.Header", "篝火" },
-            { "Cook.NoWood", "没有木头" },
+            { "Cook.LowFuel", "燃料不足" },
             { "Cook.AfterCook", "烹饪后: {0}" },
             { "Cook.AfterBoil", "煮沸后: {0}" },
             { "Cook.AfterRoast", "炙烤后: {0}" },

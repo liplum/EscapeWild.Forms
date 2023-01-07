@@ -16,44 +16,25 @@ namespace WildernessSurvival.Core
 
         public readonly List<IItem> AllItems = new List<IItem>();
 
-        public void AddItem(IItem item)
-        {
-            AllItems.Add(item);
-        }
+        public void AddItem(IItem item) => AllItems.Add(item);
 
-        public IItem GetItemByName(string name)
-        {
-            return AllItems.SingleOrDefault(e => e.Name.Equals(name));
-        }
-        public bool HasItemOfName(string name)
-        {
-            return AllItems.Any(e => e.Name.Equals(name));
-        }
+        public IItem GetItemByName(string name) => AllItems.FirstOrDefault(e => e.Name.Equals(name));
 
-        public bool RemoveItemByName(string name)
-        {
-            return AllItems.Remove(AllItems.SingleOrDefault(e => e.Name.Equals(name)));
-        }
+        public bool HasItemOfName(string name) => AllItems.Any(e => e.Name.Equals(name));
 
-        public int RemoveItemsWhere(Predicate<IItem> predicate)
-        {
-            return AllItems.RemoveAll(predicate);
-        }
+        public int CountItemOfName(string name) => AllItems.Count(e => e.Name.Equals(name));
 
-        public bool RemoveItemByType(Type type)
-        {
-            return AllItems.Remove(AllItems.SingleOrDefault(type.IsInstanceOfType));
-        }
+        public int CountItemWhere(Func<IItem, bool> predicate) => AllItems.Count(predicate);
 
-        public bool RemoveItem(IItem item)
-        {
-            return AllItems.Remove(item);
-        }
+        public bool RemoveItemByName(string name) => AllItems.Remove(AllItems.FirstOrDefault(e => e.Name.Equals(name)));
 
-        public void AddItems(IEnumerable<IItem> items)
-        {
-            AllItems.AddRange(items);
-        }
+        public int RemoveItemsWhere(Predicate<IItem> predicate) => AllItems.RemoveAll(predicate);
+
+        public bool RemoveItemByType(Type type) => AllItems.Remove(AllItems.FirstOrDefault(type.IsInstanceOfType));
+
+        public bool RemoveItem(IItem item) => AllItems.Remove(item);
+
+        public void AddItems(IEnumerable<IItem> items) => AllItems.AddRange(items);
 
         public void ConsumeWood(int count)
         {

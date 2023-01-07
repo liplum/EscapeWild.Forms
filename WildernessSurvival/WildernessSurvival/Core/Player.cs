@@ -20,6 +20,7 @@ namespace WildernessSurvival.Core
     public partial class Player : INotifyPropertyChanged
     {
         private const float MaxValue = 1f;
+        private const float MaxVisualFuel = 30f;
 
         public const float MoveStep = 0.02f;
 
@@ -29,7 +30,7 @@ namespace WildernessSurvival.Core
         private float _energyValue;
         private float _foodValue;
         private float _waterValue;
-        private bool _hasFire;
+        private float _fireFuel;
         private IPlace _location;
         private float _tripProgress;
         private int _actionNumber;
@@ -42,7 +43,6 @@ namespace WildernessSurvival.Core
         public void Reset()
         {
             Health = Food = Water = Energy = MaxValue;
-            HasFire = false;
             _tripProgress = 0;
             CurRoute = Routes.SubtropicsRoute();
             Location = CurRoute.InitialPlace;
@@ -53,6 +53,7 @@ namespace WildernessSurvival.Core
         public IList<IItem> AllItems => Backpack.AllItems;
 
         public IEnumerable<ICookableItem> GetCookableItems() => Backpack.AllItems.OfType<ICookableItem>();
+        public IEnumerable<IFuelItem> GetFuelItems() => Backpack.AllItems.OfType<IFuelItem>();
 
         public IEnumerable<IToolItem> GetToolsOf(ToolType type) =>
             Backpack.AllItems.OfType<IToolItem>().Where(e => e.ToolType == type);
@@ -63,8 +64,6 @@ namespace WildernessSurvival.Core
         public IToolItem TryGetBestToolOf(ToolType type) =>
             GetToolsOf(type).OrderByDescending(t => t.Level).FirstOrDefault();
 
-
-        public bool HasWood => Backpack.AllItems.OfType<Log>().Any();
 
         public IPlace Location
         {
@@ -125,6 +124,19 @@ namespace WildernessSurvival.Core
             }
         }
 
+        public float FireFuel
+        {
+            get => _fireFuel;
+            set
+            {
+                _fireFuel = Math.Max(0, value);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FireFuelProgress)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FireFuel)));
+            }
+        }
+
+        public float FireFuelProgress => FireFuel / MaxVisualFuel;
+
         public float TripProgress
         {
             get => _tripProgress;
@@ -139,16 +151,7 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public bool HasFire
-        {
-            get => _hasFire;
-            set
-            {
-                if (_hasFire == value) return;
-                _hasFire = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasFire)));
-            }
-        }
+        public bool HasFire => FireFuel > 0f;
 
         public bool IsDead => Health <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
         public bool IsAlive => !IsDead;

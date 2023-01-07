@@ -35,6 +35,7 @@ namespace WildernessSurvival.Game
 
     public class RawRabbit : UsableItem, ICookableItem
     {
+        public float FlueCost => 18;
         public const float DefaultFoodRestore = 0.5f;
         public const float DefaultWaterRestore = 0.1f;
         public float FoodRestore = DefaultFoodRestore;
@@ -74,6 +75,7 @@ namespace WildernessSurvival.Game
 
     public class Berry : UsableItem, ICookableItem
     {
+        public float FlueCost => 3;
         public const float DefaultFoodRestore = 0.2f;
         public const float DefaultWaterRestore = 0.1f;
         public float FoodRestore = DefaultFoodRestore;
@@ -111,6 +113,7 @@ namespace WildernessSurvival.Game
 
     public class DirtyWater : UsableItem, ICookableItem
     {
+        public float FlueCost => 3;
         public const float DefaultRestore = 0.1f;
         public float Restore = DefaultRestore;
         public override string Name => nameof(DirtyWater);
@@ -121,6 +124,7 @@ namespace WildernessSurvival.Game
         {
             Restore = CleanWater.DefaultRestore + Restore * 0.1f,
         };
+
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
@@ -143,6 +147,7 @@ namespace WildernessSurvival.Game
 
     public class Nuts : UsableItem, ICookableItem
     {
+        public float FlueCost => 3;
         public const float DefaultRestore = 0.2f;
         public float Restore = DefaultRestore;
         public override string Name => nameof(Nuts);
@@ -191,6 +196,7 @@ namespace WildernessSurvival.Game
 
     public class RawFish : UsableItem, ICookableItem
     {
+        public float FlueCost => 12;
         public const float DefaultFoodRestore = 0.4f;
         public float FoodRestore = DefaultFoodRestore;
         public const float DefaultWaterRestore = 0.2f;

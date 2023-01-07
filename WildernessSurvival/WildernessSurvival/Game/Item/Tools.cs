@@ -50,6 +50,7 @@ namespace WildernessSurvival.Game
         }
 
         public float FireRate { get; set; } = 1f;
+        public float InitialFireFuel { get; set; } = 20f;
         public override UseType UseType => UseType.Use;
         public override bool CanUse(Player player) => !player.HasFire;
 
@@ -64,12 +65,12 @@ namespace WildernessSurvival.Game
 
         public override async Task Use(Player player)
         {
-            await base.Use(player);
             if (IsUsed || player.HasFire) return;
+            await base.Use(player);
             var wet = player.Location.Wet;
             if (Rand.Float() < FireRate * (1f - wet))
             {
-                player.HasFire = true;
+                player.FireFuel = InitialFireFuel;
                 await player.DisplayMakingFireResult("Fire.Success".Tr());
             }
             else
@@ -78,5 +79,13 @@ namespace WildernessSurvival.Game
                 await player.DisplayMakingFireResult(reason.Tr());
             }
         }
+    }
+
+    public static class FireStarterItems
+    {
+        public static readonly ItemMaker<FireStarterItem> HandDrillKit = () => new FireStarterItem("HandDrillKit")
+        {
+            FireRate = 0.4f,
+        };
     }
 }

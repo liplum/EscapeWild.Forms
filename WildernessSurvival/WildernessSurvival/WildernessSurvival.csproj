@@ -22,5 +22,9 @@
     <Compile Update="CraftPage.xaml.cs">
       <DependentUpon>CraftPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="FirePage.xaml.cs">
+      <DependentUpon>FirePage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 </Project>

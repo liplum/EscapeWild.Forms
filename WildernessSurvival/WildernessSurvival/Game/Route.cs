@@ -159,10 +159,6 @@ namespace WildernessSurvival.Game
             {
                 await PerformRest(player);
             }
-            else if (action == ActionType.Fire)
-            {
-                await PerformFire(player);
-            }
             else if (action == ActionType.Hunt)
             {
                 await PerformHunt(player);
@@ -189,7 +185,7 @@ namespace WildernessSurvival.Game
             player.Modify(-0.135f, AttrType.Energy, HardnessFix);
             player.AdvanceTrip(HardnessFix(Player.MoveStep));
             player.Location = await Owner.GoNextPlace(player);
-            player.HasFire = false;
+            player.FireFuel = 0;
         }
 
         /// <summary>
@@ -288,25 +284,6 @@ namespace WildernessSurvival.Game
         }
 
         protected abstract Task PerformExplore(Player player);
-
-        /// <summary>
-        /// Fire
-        /// Cost: Water[0.01], Energy[0.05]
-        /// Cost: Log x1
-        /// </summary>
-        protected virtual async Task PerformFire(Player player)
-        {
-            if (!player.HasWood) return;
-            player.Modify(-0.01f, AttrType.Food, HardnessFix);
-            player.Modify(-0.05f, AttrType.Energy, HardnessFix);
-            player.ConsumeWood(1);
-            player.HasFire = true;
-            await App.Current.MainPage.DisplayAlert(
-                title: ActionType.Fire.LocalizedName(),
-                message: $"{Route.Name}.Common.Fire".Tr(),
-                cancel: "OK".Tr()
-            );
-        }
 
         public virtual ISet<ActionType> AvailableActions
         {

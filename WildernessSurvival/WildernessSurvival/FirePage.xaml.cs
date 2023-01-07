@@ -10,39 +10,37 @@ using Xamarin.Forms.Xaml;
 namespace WildernessSurvival
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CookPage : ContentPage
+    public partial class FirePage : ContentPage
     {
         private readonly Player _player;
 
-        public CookPage()
+        public FirePage()
         {
             InitializeComponent();
             _player = (Player)Application.Current.Resources["Player"];
-            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
+            _fuels = _player.GetFuelItems().ToList();
             RebuildPicker();
             UpdateUI();
         }
 
-        private IList<(ICookableItem raw, IItem cooked)> _raw2Cooked;
+        private IList<IFuelItem> _fuels;
 
         private void RebuildPicker()
         {
             ItemsPicker.Items.Clear();
-            foreach (var (_, cooked) in _raw2Cooked)
-                ItemsPicker.Items.Add(cooked.LocalizedName());
+            foreach (var fuel in _fuels)
+                ItemsPicker.Items.Add(fuel.LocalizedName());
         }
 
-        private async void Cook_Clicked(object sender, EventArgs e)
+        private async void Throw_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0 || index >= _raw2Cooked.Count) return;
-            var (raw, cooked) = _raw2Cooked[index];
-            if (_player.FireFuel < raw.FlueCost) return;
-            _player.RemoveItem(raw);
-            _player.ConsumeWood(1);
-            _player.AddItem(cooked);
-            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
-            if (_raw2Cooked.Count <= 0)
+            if (index < 0 || index >= _fuels.Count) return;
+            var fuel = _fuels[index];
+            _player.FireFuel += fuel.Fuel;
+            _player.RemoveItem(fuel);
+            _fuels = _player.GetFuelItems().ToList();
+            if (_fuels.Count <= 0)
             {
                 UpdateUI();
                 await Task.Delay(500);
@@ -69,27 +67,18 @@ namespace WildernessSurvival
         private void UpdateUI()
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0 || index >= _raw2Cooked.Count)
+            if (index < 0 || index >= _fuels.Count)
             {
-                Cook.Text = _i18n("Cook");
-                Cook.IsEnabled = false;
+                Throw.IsEnabled = false;
                 ItemsPicker.SelectedItem = null;
                 ItemDescription.Text = string.Empty;
             }
             else
             {
-                Cook.IsEnabled = _player.CanPerformAnyAction;
-                var (raw, cooked) = _raw2Cooked[index];
-                var hasEnoughFuel = _player.FireFuel >= raw.FlueCost;
-                Cook.IsEnabled &= hasEnoughFuel;
-                Cook.Text = hasEnoughFuel ? _i18n(raw.CookType.ToString()) : _i18n("LowFuel");
-                ItemDescription.Text = string.Format(_i18n($"After{raw.CookType}"), cooked.LocalizedName());
+                Throw.IsEnabled = _player.CanPerformAnyAction;
+                var fuel = _fuels[index];
+                ItemDescription.Text = fuel.LocalizedDesc();
             }
-        }
-
-        private static string _i18n(string key)
-        {
-            return I18N.Get($"Cook.{key}");
         }
     }
 }

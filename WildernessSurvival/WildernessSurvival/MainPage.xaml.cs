@@ -68,7 +68,7 @@ namespace WildernessSurvival
         private async void Fire_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.Fire);
+            await this.ShowModalSheetAndAwaitPop(new FirePage());
             UpdateUI();
         }
 
@@ -110,7 +110,7 @@ namespace WildernessSurvival
             Cook.IsEnabled = _player.HasFire;
             Craft.IsEnabled = true;
             // Modified by player states
-            Fire.IsEnabled &= _player.HasWood && !_player.HasFire;
+            Fire.IsEnabled &= _player.HasFire;
             CutDownTree.IsEnabled &= _player.HasToolOf(ToolType.Oxe);
             Hunt.IsEnabled &= _player.HasToolOf(ToolType.Hunting);
             Fish.IsEnabled &= _player.HasToolOf(ToolType.Fishing);

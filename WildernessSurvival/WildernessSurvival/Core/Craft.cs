@@ -39,24 +39,33 @@ namespace WildernessSurvival.Core
     public class NamedRecipe : IRecipe
     {
         private readonly ItemMaker<IItem> _output;
-        private readonly string[] _requirements;
+        private readonly Dictionary<string, int> _requirements = new Dictionary<string, int>();
 
-        public NamedRecipe(ItemMaker<IItem> output, params string[] requirements)
+        public NamedRecipe(ItemMaker<IItem> output, params string[] reqs)
         {
             _output = output;
-            _requirements = requirements;
+            foreach (var req in reqs)
+            {
+                if (_requirements.TryGetValue(req, out var number))
+                    _requirements[req] = number + 1;
+                else
+                    _requirements[req] = 1;
+            }
         }
 
         public IItem TryGetResult(Backpack backpack)
         {
-            return _requirements.Any(name => !backpack.HasItemOfName(name)) ? null : _output();
+            return _requirements.Any(p => backpack.CountItemOfName(p.Key) < p.Value) ? null : _output();
         }
 
         public IItem ConsumeAndCraft(Backpack backpack)
         {
-            foreach (var name in _requirements)
+            foreach (var p in _requirements)
             {
-                backpack.RemoveItemByName(name);
+                for (var i = 0; i < p.Value; i++)
+                {
+                    backpack.RemoveItemByName(p.Key);
+                }
             }
 
             return _output();
