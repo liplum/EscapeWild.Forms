@@ -29,11 +29,19 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class Stick : IFuelItem
+    public class Sticks : IFuelItem
     {
         public const float DefaultFuel = 1;
         public float Fuel { get; set; } = DefaultFuel;
-        public string Name => nameof(Stick);
+        public string Name => nameof(Sticks);
+    }
+
+
+    public class CutGrass : IFuelItem
+    {
+        public const float DefaultFuel = 1;
+        public float Fuel { get; set; } = DefaultFuel;
+        public string Name => nameof(CutGrass);
     }
 
 

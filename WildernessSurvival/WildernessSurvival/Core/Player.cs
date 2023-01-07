@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using WildernessSurvival.Game;
 
 namespace WildernessSurvival.Core
@@ -20,7 +21,7 @@ namespace WildernessSurvival.Core
     {
         private const float MaxValue = 1f;
 
-        public const float MoveStep = 0.05f;
+        public const float MoveStep = 0.02f;
 
         public Backpack Backpack { get; private set; }
         public IRoute<IPlace> CurRoute;
@@ -224,7 +225,7 @@ namespace WildernessSurvival.Core
 
         public void AdvanceTrip(float delta = MoveStep) => TripProgress += delta;
 
-        public void UseItem(IUsableItem item) => item.Use(this);
+        public async Task UseItem(IUsableItem item) => await item.Use(this);
 
         public void RemoveItem(IItem item) => Backpack.RemoveItem(item);
 

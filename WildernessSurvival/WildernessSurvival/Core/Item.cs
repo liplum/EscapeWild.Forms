@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WildernessSurvival.Localization;
 
 namespace WildernessSurvival.Core
@@ -112,7 +113,8 @@ namespace WildernessSurvival.Core
     public interface IUsableItem : IItem
     {
         public void BuildUseEffect(UseEffectBuilder builder);
-        public void Use(Player player);
+        public bool CanUse(Player player);
+        public Task Use(Player player);
         public UseType UseType { get; }
         public bool IsUsed { get; }
     }
@@ -121,10 +123,12 @@ namespace WildernessSurvival.Core
     {
         public abstract string Name { get; }
         public abstract void BuildUseEffect(UseEffectBuilder builder);
-        public abstract UseType UseType { get; }
-        public bool IsUsed { get; private set; }
+        public virtual bool CanUse(Player player) => true;
 
-        public virtual void Use(Player player)
+        public abstract UseType UseType { get; }
+        public bool IsUsed { get; protected set; }
+
+        public virtual async Task Use(Player player)
         {
             if (IsUsed) return;
             IsUsed = true;

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WildernessSurvival.Game;
 using WildernessSurvival.Localization;
+using Xamarin.Forms;
 
 namespace WildernessSurvival.Core
 {
@@ -61,6 +63,15 @@ namespace WildernessSurvival.Core
                     cancel: "Alright".Tr()
                 );
             }
+        }
+
+        public async Task DisplayMakingFireResult(string message)
+        {
+            await App.Current.MainPage.DisplayAlert(
+                title: ActionType.Fire.LocalizedName(),
+                message: message,
+                cancel: "OK".Tr()
+            );
         }
     }
 }

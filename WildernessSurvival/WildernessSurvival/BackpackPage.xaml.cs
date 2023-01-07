@@ -40,8 +40,8 @@ namespace WildernessSurvival
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= AllItems.Count) return;
             var item = AllItems[index];
-            if (!(item is IUsableItem i)) return;
-            _player.UseItem(i);
+            if (!(item is IUsableItem i) || !i.CanUse(_player)) return;
+            await _player.UseItem(i);
             _player.RemoveItem(item);
             if (AllItems.Count <= 0)
             {
@@ -89,7 +89,7 @@ namespace WildernessSurvival
             {
                 var selected = AllItems[index];
                 ItemDescription.Text = selected.LocalizedDesc();
-                if (selected is IUsableItem item)
+                if (selected is IUsableItem item && item.CanUse(_player))
                 {
                     Use.IsEnabled = _player.CanPerformAnyAction;
                     Use.Text = $"Backpack.{item.UseType}".Tr();

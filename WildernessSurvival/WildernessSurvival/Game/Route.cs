@@ -122,11 +122,13 @@ namespace WildernessSurvival.Game
 
     public abstract class Place : IPlace
     {
-        public abstract string Name { get; }
+        public string Name { get; set; }
 
-        public abstract int HuntingRate { get; }
+        public int HuntingRate { get; set; }
 
         public IRoute<IPlace> Route { get; set; }
+        public float Wet { get; set; }
+
         protected Route Owner => Route as Route;
 
         public float HardnessFix(float raw) => Owner.HardnessFix(raw);
@@ -234,14 +236,14 @@ namespace WildernessSurvival.Game
             var (rate, doubleRate) = tool.CalcRateByTool();
 
             var gained = new List<IItem>();
-            if (Rand.Int(100) < rate)
+            if (Rand.Int(100) < rate * HuntingRate / 100f)
             {
                 gained.Add(new RawRabbit
                 {
                     FoodRestore = RawRabbit.DefaultFoodRestore * Rand.Float(1f, 1.2f),
                     WaterRestore = RawRabbit.DefaultWaterRestore * Rand.Float(1f, 1.2f),
                 });
-                if (Rand.Int(100) < doubleRate)
+                if (Rand.Int(100) < doubleRate * HuntingRate / 100f)
                 {
                     gained.Add(new RawRabbit
                     {
@@ -272,7 +274,7 @@ namespace WildernessSurvival.Game
             {
                 Fuel = Log.DefaultFuel * Rand.Float(0.55f, 0.75f),
             });
-            
+
             if (Rand.Int(100) < rate)
             {
                 gained.Add(new Log
@@ -325,15 +327,6 @@ namespace WildernessSurvival.Game
 
     public class PlainPlace : Place
     {
-        public PlainPlace(string name, int huntingRate)
-        {
-            Name = name;
-            HuntingRate = huntingRate;
-        }
-
-        public override string Name { get; }
-        public override int HuntingRate { get; }
-
         /// <summary>
         /// Cost: Water[0.04], Energy[0.08]
         /// Berry x1(60%) + x1(30%)
@@ -384,7 +377,7 @@ namespace WildernessSurvival.Game
 
             if (Rand.Int(100) < StickRate)
             {
-                gained.Add(new Stick());
+                gained.Add(new Sticks());
             }
 
             player.AddItems(gained);
@@ -395,14 +388,6 @@ namespace WildernessSurvival.Game
 
     public class RiversidePlace : Place
     {
-        public RiversidePlace(string name, int huntingRate)
-        {
-            Name = name;
-            HuntingRate = huntingRate;
-        }
-
-        public override string Name { get; }
-
         public override ISet<ActionType> AvailableActions
         {
             get
@@ -413,7 +398,6 @@ namespace WildernessSurvival.Game
             }
         }
 
-        public override int HuntingRate { get; }
 
         /// <summary>
         /// Cost: Food[0.08], Water[0.08], Energy[0.1]
@@ -499,15 +483,6 @@ namespace WildernessSurvival.Game
 
     public class HutPlace : Place
     {
-        public HutPlace(string name, int huntingRate)
-        {
-            Name = name;
-            HuntingRate = huntingRate;
-        }
-
-        public override string Name { get; }
-        public override int HuntingRate { get; }
-
         public override ISet<ActionType> AvailableActions
         {
             get
@@ -638,15 +613,6 @@ namespace WildernessSurvival.Game
 
     public class ForestPlace : Place
     {
-        public ForestPlace(string name, int huntingRate)
-        {
-            Name = name;
-            HuntingRate = huntingRate;
-        }
-
-        public override string Name { get; }
-        public override int HuntingRate { get; }
-
         public override ISet<ActionType> AvailableActions
         {
             get
@@ -732,18 +698,18 @@ namespace WildernessSurvival.Game
             var stick = Rand.Int(100);
             if (stick < 60)
             {
-                gained.Add(new Stick());
+                gained.Add(new Sticks());
             }
             else if (stick < 90)
             {
-                gained.Add(new Stick());
-                gained.Add(new Stick());
+                gained.Add(new Sticks());
+                gained.Add(new Sticks());
             }
             else
             {
-                gained.Add(new Stick());
-                gained.Add(new Stick());
-                gained.Add(new Stick());
+                gained.Add(new Sticks());
+                gained.Add(new Sticks());
+                gained.Add(new Sticks());
             }
 
             player.AddItems(gained);

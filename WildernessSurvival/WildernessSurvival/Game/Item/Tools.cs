@@ -1,4 +1,6 @@
-﻿using WildernessSurvival.Core;
+﻿using System.Threading.Tasks;
+using WildernessSurvival.Core;
+using WildernessSurvival.Localization;
 
 // ReSharper disable CheckNamespace
 namespace WildernessSurvival.Game
@@ -38,5 +40,43 @@ namespace WildernessSurvival.Game
             Level = ToolLevel.Normal,
             ToolType = ToolType.Hunting,
         };
+    }
+
+    public class FireStarterItem : UsableItem
+    {
+        public FireStarterItem(string name)
+        {
+            Name = name;
+        }
+
+        public float FireRate { get; set; } = 1f;
+        public override UseType UseType => UseType.Use;
+        public override bool CanUse(Player player) => !player.HasFire;
+
+        public override string Name { get; }
+
+        public override void BuildUseEffect(UseEffectBuilder builder)
+        {
+            builder.Add(AttrType.Food.WithEffect(-0.03f));
+            builder.Add(AttrType.Water.WithEffect(-0.05f));
+            builder.Add(AttrType.Energy.WithEffect(-0.08f));
+        }
+
+        public override async Task Use(Player player)
+        {
+            await base.Use(player);
+            if (IsUsed || player.HasFire) return;
+            var wet = player.Location.Wet;
+            if (Rand.Float() < FireRate * (1f - wet))
+            {
+                player.HasFire = true;
+                await player.DisplayMakingFireResult("Fire.Success".Tr());
+            }
+            else
+            {
+                var reason = wet > 0.5f ? "Fire.Failed.Wet" : "Fire.Failed.FireRate";
+                await player.DisplayMakingFireResult(reason.Tr());
+            }
+        }
     }
 }

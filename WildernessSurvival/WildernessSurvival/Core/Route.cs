@@ -18,6 +18,11 @@ namespace WildernessSurvival.Core
         string Name { get; }
         Task PerformAction(Player player, ActionType action);
         ISet<ActionType> AvailableActions { get; }
+
+        /// <summary>
+        /// [0f,1f]
+        /// </summary>
+        float Wet { get; }
     }
 
     public static class RouteI18N
