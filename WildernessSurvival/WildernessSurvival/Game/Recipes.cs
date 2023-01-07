@@ -8,7 +8,7 @@ namespace WildernessSurvival.Game
         {
             Craft.RegisterRecipe(new NamedRecipe(
                 FireStarterItems.HandDrillKit,
-                nameof(Sticks), nameof(Log)
+                nameof(Sticks), nameof(Sticks)
             ));
         }
     }

@@ -86,6 +86,7 @@ namespace WildernessSurvival.Game
         public static readonly ItemMaker<FireStarterItem> HandDrillKit = () => new FireStarterItem("HandDrillKit")
         {
             FireRate = 0.4f,
+            InitialFireFuel = 3.5f,
         };
     }
 }

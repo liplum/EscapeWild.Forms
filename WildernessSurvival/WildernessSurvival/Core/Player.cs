@@ -7,19 +7,11 @@ using WildernessSurvival.Game;
 
 namespace WildernessSurvival.Core
 {
-    public enum AttrType
-    {
-        Health,
-        Food,
-        Water,
-        Energy
-    }
-
     public delegate float ValueFixer(float raw);
 
-    public partial class Player : INotifyPropertyChanged
+
+    public partial class Player : IAttributeModel, INotifyPropertyChanged
     {
-        private const float MaxValue = 1f;
         private const float MaxVisualFuel = 30f;
 
         public const float MoveStep = 0.02f;
@@ -34,15 +26,17 @@ namespace WildernessSurvival.Core
         private IPlace _location;
         private float _tripProgress;
         private int _actionNumber;
+        public readonly AttributeManager Attrs;
 
         public Player()
         {
+            Attrs = new AttributeManager(this);
             Reset();
         }
 
         public void Reset()
         {
-            Health = Food = Water = Energy = MaxValue;
+            Health = Food = Water = Energy = AttributeManager.MaxValue;
             _tripProgress = 0;
             CurRoute = Routes.SubtropicsRoute();
             Location = CurRoute.InitialPlace;
@@ -87,7 +81,7 @@ namespace WildernessSurvival.Core
         public float Health
         {
             get => _healthValue;
-            private set
+            set
             {
                 _healthValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Health)));
@@ -97,7 +91,7 @@ namespace WildernessSurvival.Core
         public float Food
         {
             get => _foodValue;
-            private set
+            set
             {
                 _foodValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Food)));
@@ -107,7 +101,7 @@ namespace WildernessSurvival.Core
         public float Water
         {
             get => _waterValue;
-            private set
+            set
             {
                 _waterValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Water)));
@@ -117,12 +111,14 @@ namespace WildernessSurvival.Core
         public float Energy
         {
             get => _energyValue;
-            private set
+            set
             {
                 _energyValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Energy)));
             }
         }
+
+        public bool HasEnergy => Energy > 0f;
 
         public float FireFuel
         {
@@ -153,7 +149,7 @@ namespace WildernessSurvival.Core
 
         public bool HasFire => FireFuel > 0f;
 
-        public bool IsDead => Health <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
+        public bool IsDead => Health <= 0;
         public bool IsAlive => !IsDead;
         public bool CanPerformAnyAction => IsAlive && !IsWon;
         public bool IsWon => TripProgress >= 1;
@@ -163,68 +159,19 @@ namespace WildernessSurvival.Core
         /// <summary>
         /// If the result should be is more than <see cref="MaxValue"/>, the <param name="delta"></param> will be attenuated based on overflow.
         /// </summary>
-        public void Modify(float delta, AttrType attr, ValueFixer fixer = null)
+        public void Modify(AttrType attr, float delta, ValueFixer fixer = null)
         {
             if (fixer != null)
             {
                 delta = fixer(delta);
             }
 
-            // [1] former = 0.8, delta = 0.5
-            // [2] former = 1.2, delta = 0.6
-            var former = GetAttr(attr);
-            // [1] after = 1.3
-            // [2] after = 1.8
-            var after = former + delta;
-            if (after > MaxValue)
-            {
-                // [1] restToMax = Max(0, 1 - 0.8) = 0.2
-                // [2] restToMax = Max(0, 1 - 1.2) = 0
-                var restToMax = Math.Max(MaxValue - former, 0f);
-                // [1] extra = 0.5 - 0.2 = 0.3
-                // [2] extra = 0.6 - 0.0 = 0.6
-                var extra = delta - restToMax;
-                // [1] after = 0.8 + 0.2 + 0.3 * 0.5^0.8 = 1.172
-                // [2] after = 1.2 + 0.0 + 0.6 * 0.5^1.2 = 1.461
-                after = (float)(former + restToMax + extra * Math.Pow(0.5f, former));
-
-                SetAttr(attr, after);
-            }
-            else
-            {
-                SetAttr(attr, after);
-            }
+            Attrs.Modify(attr, delta);
         }
 
-        public void SetAttr(AttrType attr, float value)
-        {
-            switch (attr)
-            {
-                case AttrType.Health:
-                    Health = value;
-                    break;
-                case AttrType.Food:
-                    Food = value;
-                    break;
-                case AttrType.Water:
-                    Water = value;
-                    break;
-                case AttrType.Energy:
-                    Energy = value;
-                    break;
-            }
-        }
+        public void SetAttr(AttrType attr, float value) => Attrs.SetAttr(attr, value);
 
-        public float GetAttr(AttrType attr)
-        {
-            return attr switch
-            {
-                AttrType.Health => Health,
-                AttrType.Food => Food,
-                AttrType.Water => Water,
-                _ => Energy
-            };
-        }
+        public float GetAttr(AttrType attr) => Attrs.GetAttr(attr);
 
         public void AdvanceTrip(float delta = MoveStep) => TripProgress += delta;
 

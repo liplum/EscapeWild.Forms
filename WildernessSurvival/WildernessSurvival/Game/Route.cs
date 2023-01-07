@@ -180,9 +180,9 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected virtual async Task PerformMove(Player player)
         {
-            player.Modify(-0.05f, AttrType.Food, HardnessFix);
-            player.Modify(-0.05f, AttrType.Water, HardnessFix);
-            player.Modify(-0.135f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -0.05f, HardnessFix);
+            player.Modify(AttrType.Water, -0.05f, HardnessFix);
+            player.Modify(AttrType.Energy, -0.135f, HardnessFix);
             player.AdvanceTrip(HardnessFix(Player.MoveStep));
             player.Location = await Owner.GoNextPlace(player);
             player.FireFuel = 0;
@@ -195,10 +195,17 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected virtual async Task PerformRest(Player player)
         {
-            player.Modify(-0.03f, AttrType.Food, HardnessFix);
-            player.Modify(-0.03f, AttrType.Water, HardnessFix);
-            player.Modify(0.1f, AttrType.Health, HardnessFix);
-            player.Modify(0.25f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -0.03f, HardnessFix);
+            player.Modify(AttrType.Water, -0.03f, HardnessFix);
+            if (player.Food > 0f && player.Water > 0f)
+            {
+                player.Modify(AttrType.Health, 0.1f, HardnessFix);
+                player.Modify(AttrType.Energy, 0.25f, HardnessFix);
+            }
+            else
+            {
+                player.Modify(AttrType.Energy, 0.05f, HardnessFix);
+            }
 
             await ShowRestDialog();
         }
@@ -225,9 +232,9 @@ namespace WildernessSurvival.Game
         protected virtual async Task PerformHunt(Player player)
         {
             var tool = player.TryGetBestToolOf(ToolType.Hunting);
-            player.Modify(-(0.08f * tool.CalcExtraCostByTool()), AttrType.Food, HardnessFix);
-            player.Modify(-(0.08f * tool.CalcExtraCostByTool()), AttrType.Water, HardnessFix);
-            player.Modify(-(0.15f * tool.CalcExtraCostByTool()), AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Energy, -(0.15f * tool.CalcExtraCostByTool()), HardnessFix);
 
             var (rate, doubleRate) = tool.CalcRateByTool();
 
@@ -261,9 +268,9 @@ namespace WildernessSurvival.Game
         protected virtual async Task PerformCutDownTree(Player player)
         {
             var tool = player.TryGetBestToolOf(ToolType.Oxe);
-            player.Modify(-(0.04f * tool.CalcExtraCostByTool()), AttrType.Food, HardnessFix);
-            player.Modify(-(0.03f * tool.CalcExtraCostByTool()), AttrType.Water, HardnessFix);
-            player.Modify(-(0.3f * tool.CalcExtraCostByTool()), AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -(0.04f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Water, -(0.03f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Energy, -(0.3f * tool.CalcExtraCostByTool()), HardnessFix);
             var (rate, _) = tool.CalcRateByTool();
             var gained = new List<IItem>();
             gained.Add(new Log
@@ -312,8 +319,8 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-0.04f, AttrType.Water, HardnessFix);
-            player.Modify(-0.08f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Water, -0.04f, HardnessFix);
+            player.Modify(AttrType.Energy, -0.08f, HardnessFix);
             const int BerryRate = 60, DirtyWaterRate = 60, StickRate = 20, DoubleRate = 30;
 
             var proportion = 10 - ExploreCount;
@@ -385,9 +392,9 @@ namespace WildernessSurvival.Game
         protected override async Task PerformFish(Player player)
         {
             var tool = player.TryGetBestToolOf(ToolType.Hunting);
-            player.Modify(-(0.08f * tool.CalcExtraCostByTool()), AttrType.Food, HardnessFix);
-            player.Modify(-(0.08f * tool.CalcExtraCostByTool()), AttrType.Water, HardnessFix);
-            player.Modify(-(0.1f * tool.CalcExtraCostByTool()), AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Energy, -(0.1f * tool.CalcExtraCostByTool()), HardnessFix);
             var (rate, doubleRate) = tool.CalcRateByTool();
 
             var gained = new List<IItem>();
@@ -419,9 +426,9 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-0.02f, AttrType.Food, HardnessFix);
-            player.Modify(-0.04f, AttrType.Water, HardnessFix);
-            player.Modify(-0.08f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -0.02f, HardnessFix);
+            player.Modify(AttrType.Water, -0.04f, HardnessFix);
+            player.Modify(AttrType.Energy, -0.08f, HardnessFix);
             const int RawFishRate = 10, CleanWaterRate = 70, DoubleRate = 40;
 
             var proportion = 10 - ExploreCount;
@@ -485,10 +492,17 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformRest(Player player)
         {
-            player.Modify(-0.03f, AttrType.Food, HardnessFix);
-            player.Modify(-0.03f, AttrType.Water, HardnessFix);
-            player.Modify(0.15f, AttrType.Health, HardnessFix);
-            player.Modify(0.4f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -0.03f, HardnessFix);
+            player.Modify(AttrType.Water, -0.03f, HardnessFix);
+            if (player.Food > 0f && player.Water > 0f)
+            {
+                player.Modify(AttrType.Health, 0.15f, HardnessFix);
+                player.Modify(AttrType.Energy, 0.4f, HardnessFix);
+            }
+            else
+            {
+                player.Modify(AttrType.Energy, 0.1f, HardnessFix);
+            }
 
             await ShowRestDialog(restType: "Hut");
         }
@@ -509,9 +523,9 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-0.02f, AttrType.Food, HardnessFix);
-            player.Modify(-0.04f, AttrType.Water, HardnessFix);
-            player.Modify(-0.08f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -0.02f, HardnessFix);
+            player.Modify(AttrType.Water, -0.04f, HardnessFix);
+            player.Modify(AttrType.Energy, -0.08f, HardnessFix);
             const int OxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
 
             var gained = new List<IItem>();
@@ -610,9 +624,9 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-0.02f, AttrType.Food, HardnessFix);
-            player.Modify(-0.05f, AttrType.Water, HardnessFix);
-            player.Modify(-0.10f, AttrType.Energy, HardnessFix);
+            player.Modify(AttrType.Food, -0.02f, HardnessFix);
+            player.Modify(AttrType.Water, -0.05f, HardnessFix);
+            player.Modify(AttrType.Energy, -0.10f, HardnessFix);
             const int BerryRate = 30,
                 DirtyWaterRate = 20,
                 LogRate = 50,

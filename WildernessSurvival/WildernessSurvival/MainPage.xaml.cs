@@ -124,6 +124,12 @@ namespace WildernessSurvival
             Fire.IsEnabled &= _player.CanPerformAnyAction;
             Cook.IsEnabled &= _player.CanPerformAnyAction;
             Craft.IsEnabled &= _player.CanPerformAnyAction;
+            // Modified by energy
+            Move.IsEnabled &= _player.HasEnergy;
+            Hunt.IsEnabled &= _player.HasEnergy;
+            CutDownTree.IsEnabled &= _player.HasEnergy;
+            Fish.IsEnabled &= _player.HasEnergy;
+            Explore.IsEnabled &= _player.HasEnergy;
             // Update Restart button
             if (updateProgressBarInSequence)
             {

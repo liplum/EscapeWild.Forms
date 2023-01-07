@@ -98,14 +98,14 @@ namespace WildernessSurvival
                     item.BuildUseEffect(builder);
                     if (builder.HasAnyEffect)
                     {
-                        var mock = new MockPlayerAcceptUseEffect
+                        var mock = new DefaultAttributeModel
                         {
                             Health = _player.Health,
                             Food = _player.Food,
                             Water = _player.Water,
                             Energy = _player.Energy,
                         };
-                        builder.PerformUseEffects(mock);
+                        builder.PerformUseEffects(new AttributeManager(mock));
                         AfterUseArea.IsVisible = true;
                         HealthProgressBar.ProgressTo(mock.Health, 300, Easing.Linear);
                         FoodProgressBar.ProgressTo(mock.Food, 300, Easing.Linear);
