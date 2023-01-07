@@ -230,7 +230,7 @@ namespace WildernessSurvival.Game
             player.Modify(-0.15f, AttrType.Energy, HardnessFix);
 
 
-            var huntingTool = player.GetBestToolOf(ToolType.Hunting);
+            var huntingTool = player.TryGetBestToolOf(ToolType.Hunting);
             var rate = 0;
             var doubleRate = 0;
 

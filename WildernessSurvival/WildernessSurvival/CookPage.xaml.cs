@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
@@ -19,25 +21,26 @@ namespace WildernessSurvival
             RebuildPicker();
         }
 
+        private IList<(ICookableItem raw, IItem cooked)> _raw2Cooked;
+
         private void RebuildPicker()
         {
+            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
             ItemsPicker.Items.Clear();
-            foreach (var item in _player.GetRawItems())
-                ItemsPicker.Items.Add(item.LocalizedName());
+            foreach (var (_, cooked) in _raw2Cooked)
+                ItemsPicker.Items.Add(cooked.LocalizedName());
         }
 
         private async void Cook_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            var allRawItems = _player.GetRawItems();
-            if (index < 0 || index >= allRawItems.Count) return;
+            if (index < 0 || index >= _raw2Cooked.Count) return;
             if (!_player.HasWood) return;
-            var rawItem = allRawItems[index];
-            IItem cooked = rawItem.Cook();
-            _player.RemoveItem(rawItem);
+            var (raw, cooked) = _raw2Cooked[index];
+            _player.RemoveItem(raw);
             _player.ConsumeWood(1);
             _player.AddItem(cooked);
-            if (_player.GetRawItems().Count <= 0)
+            if (!_player.GetCookableItems().Any())
             {
                 UpdateUI();
                 await Task.Delay(500);
@@ -64,8 +67,7 @@ namespace WildernessSurvival
         private void UpdateUI()
         {
             var index = ItemsPicker.SelectedIndex;
-            var allRawItems = _player.GetRawItems();
-            if (index < 0 || index >= allRawItems.Count)
+            if (index < 0 || index >= _raw2Cooked.Count)
             {
                 Cook.Text = _i18n("Cook");
                 Cook.IsEnabled = false;
@@ -75,11 +77,11 @@ namespace WildernessSurvival
             else
             {
                 Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood;
-                var selected = allRawItems[index];
-                Cook.Text = _player.HasWood ? _i18n(selected.CookType.ToString()) : _i18n("NoWood");
+                var (raw,cooked) = _raw2Cooked[index];
+                Cook.Text = _player.HasWood ? _i18n(raw.CookType.ToString()) : _i18n("NoWood");
 
                 ItemDescription.Text =
-                    string.Format(_i18n($"After{selected.CookType}"), selected.Cook().LocalizedName());
+                    string.Format(_i18n($"After{raw.CookType}"), cooked.LocalizedName());
             }
         }
 

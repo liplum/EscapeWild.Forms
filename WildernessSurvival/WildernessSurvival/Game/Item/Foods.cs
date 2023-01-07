@@ -44,7 +44,7 @@ namespace WildernessSurvival.Game
         public CookType CookType => CookType.Cook;
         public override UseType UseType => UseType.Eat;
 
-        public IUsableItem Cook() => new CookedRabbit
+        public IItem Cook() => new CookedRabbit
         {
             // add bounce from raw food
             FoodRestore = RoastedBerry.DefaultFoodRestore + FoodRestore * 0.15f,
@@ -89,7 +89,7 @@ namespace WildernessSurvival.Game
 
         public CookType CookType => CookType.Roast;
 
-        public IUsableItem Cook() => new RoastedBerry
+        public IItem Cook() => new RoastedBerry
         {
             // add bounce from raw food
             FoodRestore = RoastedBerry.DefaultFoodRestore + FoodRestore * 0.2f,
@@ -117,10 +117,10 @@ namespace WildernessSurvival.Game
         public CookType CookType => CookType.Boil;
         public override UseType UseType => UseType.Drink;
 
-        public IUsableItem Cook()
+        public IItem Cook() => new CleanWater
         {
-            return new CleanWater();
-        }
+            Restore = CleanWater.DefaultRestore + Restore * 0.1f,
+        };
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
@@ -155,7 +155,7 @@ namespace WildernessSurvival.Game
 
         public CookType CookType => CookType.Roast;
 
-        public IUsableItem Cook() => new ToastedNuts
+        public IItem Cook() => new ToastedNuts
         {
             Restore = ToastedNuts.DefaultRestore + Restore * 0.1f,
         };
@@ -199,7 +199,7 @@ namespace WildernessSurvival.Game
         public CookType CookType => CookType.Cook;
         public override UseType UseType => UseType.Eat;
 
-        public IUsableItem Cook() => new CookedFish
+        public IItem Cook() => new CookedFish
         {
             Restore = CookedFish.DefaultRestore + FoodRestore * 0.2f,
         };

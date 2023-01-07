@@ -52,7 +52,7 @@ namespace WildernessSurvival.Core
 
         public IList<IItem> AllItems => _backpack.AllItems;
 
-        public IList<ICookableItem> GetRawItems() => _backpack.GetRawItems();
+        public IEnumerable<ICookableItem> GetCookableItems() => _backpack.AllItems.OfType<ICookableItem>();
 
         public IEnumerable<IToolItem> GetToolsOf(ToolType type) =>
             _backpack.AllItems.OfType<IToolItem>().Where(e => e.ToolType == type);
@@ -60,11 +60,11 @@ namespace WildernessSurvival.Core
         public bool HasToolOf(ToolType type) =>
             _backpack.AllItems.OfType<IToolItem>().Any(e => e.ToolType == type);
 
-        public IToolItem GetBestToolOf(ToolType type) =>
+        public IToolItem TryGetBestToolOf(ToolType type) =>
             GetToolsOf(type).OrderByDescending(t => t.Level).FirstOrDefault();
 
 
-        public bool HasWood => _backpack.HasWood;
+        public bool HasWood => _backpack.AllItems.OfType<Log>().Any();
 
         public IPlace Location
         {
@@ -226,7 +226,7 @@ namespace WildernessSurvival.Core
 
         public void UseItem(IUsableItem item) => item.Use(this);
 
-        public void RemoveItem(IItem item) => _backpack.Remove(item);
+        public void RemoveItem(IItem item) => _backpack.RemoveItem(item);
 
         public void AddItem(IItem item) => _backpack.AddItem(item);
 

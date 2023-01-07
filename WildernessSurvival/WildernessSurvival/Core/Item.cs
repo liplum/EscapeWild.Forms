@@ -37,8 +37,7 @@ namespace WildernessSurvival.Core
         public static readonly ToolType
             Oxe = new ToolType("Oxe"),
             Hunting = new ToolType("Hunting"),
-            Fishing = new ToolType("Fishing"),
-            FireMaking = new ToolType("FireMaking");
+            Fishing = new ToolType("Fishing");
     }
 
     public interface IToolItem : IItem
@@ -159,6 +158,7 @@ namespace WildernessSurvival.Core
         public void BuildUseEffect(UseEffectBuilder builder);
         public void Use(Player player);
         public UseType UseType { get; }
+        public bool IsUsed { get; }
     }
 
     public abstract class UsableItem : IUsableItem
@@ -166,9 +166,12 @@ namespace WildernessSurvival.Core
         public abstract string Name { get; }
         public abstract void BuildUseEffect(UseEffectBuilder builder);
         public abstract UseType UseType { get; }
+        public bool IsUsed { get; private set; }
 
         public virtual void Use(Player player)
         {
+            if (IsUsed) return;
+            IsUsed = true;
             var builder = new UseEffectBuilder();
             BuildUseEffect(builder);
             foreach (var effect in builder.Effects)
@@ -188,7 +191,11 @@ namespace WildernessSurvival.Core
     public interface ICookableItem : IItem
     {
         CookType CookType { get; }
-        IUsableItem Cook();
+
+        /// <summary>
+        /// Call this only once.
+        /// </summary>
+        IItem Cook();
     }
 
     public interface IFuelItem : IItem

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WildernessSurvival.Game;
 
@@ -15,21 +16,38 @@ namespace WildernessSurvival.Core
 
         public readonly List<IItem> AllItems = new List<IItem>();
 
-        public bool HasWood => AllItems.OfType<Log>().Any();
-
-        public IList<ICookableItem> GetRawItems() => AllItems.OfType<ICookableItem>().ToList();
-
-        private IList<Log> Woods => AllItems.OfType<Log>().ToList();
-
         public void AddItem(IItem item)
         {
             AllItems.Add(item);
         }
 
-        public void Remove(IItem item)
+        public IItem GetItemByName(string name)
         {
-            if (AllItems.Contains(item))
-                AllItems.Remove(item);
+            return AllItems.SingleOrDefault(e => e.Name.Equals(name));
+        }
+        public bool HasItemOfName(string name)
+        {
+            return AllItems.Any(e => e.Name.Equals(name));
+        }
+
+        public bool RemoveItemByName(string name)
+        {
+            return AllItems.Remove(AllItems.SingleOrDefault(e => e.Name.Equals(name)));
+        }
+
+        public int RemoveItemsWhere(Predicate<IItem> predicate)
+        {
+            return AllItems.RemoveAll(predicate);
+        }
+
+        public bool RemoveItemByType(Type type)
+        {
+            return AllItems.Remove(AllItems.SingleOrDefault(type.IsInstanceOfType));
+        }
+
+        public bool RemoveItem(IItem item)
+        {
+            return AllItems.Remove(item);
         }
 
         public void AddItems(IEnumerable<IItem> items)
@@ -40,7 +58,7 @@ namespace WildernessSurvival.Core
         public void ConsumeWood(int count)
         {
             if (count <= 0) return;
-            var woods = Woods;
+            var woods = AllItems.OfType<Log>().ToList();
             var c = count > woods.Count ? woods.Count : count;
             for (var frequency = 0; frequency < c; ++frequency) AllItems.Remove(woods[frequency]);
         }
