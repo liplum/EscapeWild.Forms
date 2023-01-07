@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
+using WildernessSurvival.UI;
 using Xamarin.Forms;
 
 namespace WildernessSurvival
@@ -74,17 +75,20 @@ namespace WildernessSurvival
         private async void Cook_Clicked(object sender, EventArgs e)
         {
             if (_player.IsDead) return;
-            await Navigation.PushModalAsync(new CookPage(), true);
+            await this.ShowModalSheetAndAwaitPop(new CookPage());
+            UpdateUI();
+        }
+
+        private async void Craft_Clicked(object sender, EventArgs e)
+        {
+            if (_player.IsDead) return;
+            await this.ShowModalSheetAndAwaitPop(new CraftPage());
+            UpdateUI();
         }
 
         private async void Backpack_Clicked(object sender, EventArgs e)
         {
-            // Await the navigation pop
-            var waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
-            var backpackPage = new BackpackPage();
-            backpackPage.Disappearing += (sender2, e2) => { waitHandle.Set(); };
-            await Navigation.PushModalAsync(backpackPage, true);
-            await Task.Run(() => waitHandle.WaitOne());
+            await this.ShowModalSheetAndAwaitPop(new BackpackPage());
             UpdateUI();
         }
 
@@ -104,6 +108,7 @@ namespace WildernessSurvival
             Fish.IsEnabled = actions.Contains(ActionType.Fish);
             // Initialized by player states
             Cook.IsEnabled = _player.HasFire;
+            Craft.IsEnabled = true;
             // Modified by player states
             Fire.IsEnabled &= _player.HasWood && !_player.HasFire;
             CutDownTree.IsEnabled &= _player.HasToolOf(ToolType.Oxe);
@@ -118,10 +123,11 @@ namespace WildernessSurvival
             Rest.IsEnabled &= _player.CanPerformAnyAction;
             Fire.IsEnabled &= _player.CanPerformAnyAction;
             Cook.IsEnabled &= _player.CanPerformAnyAction;
+            Craft.IsEnabled &= _player.CanPerformAnyAction;
             // Update Restart button
             if (updateProgressBarInSequence)
             {
-                await TripProgressBar.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+                await TripProgressBar.ProgressTo(_player.TripProgress, 300, Easing.Linear);
                 await HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
                 await FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
                 await WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
@@ -129,7 +135,7 @@ namespace WildernessSurvival
             }
             else
             {
-                TripProgressBar.ProgressTo(_player.TripRatio, 300, Easing.Linear);
+                TripProgressBar.ProgressTo(_player.TripProgress, 300, Easing.Linear);
                 HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
                 FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
                 WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
@@ -142,7 +148,7 @@ namespace WildernessSurvival
         private async Task CheckDeadOrWin()
         {
             // Don't show the tip again if player can hit the restart button.
-            if(Restart.IsVisible) return;
+            if (Restart.IsVisible) return;
             Restart.IsVisible = !_player.CanPerformAnyAction;
             if (_player.IsDead)
             {

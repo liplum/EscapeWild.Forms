@@ -25,6 +25,7 @@ namespace WildernessSurvival
             FoodProgressBar.Progress = _player.Food;
             WaterProgressBar.Progress = _player.Water;
             EnergyProgressBar.Progress = _player.Energy;
+            UpdateUI();
         }
 
         private void RebuildPicker()

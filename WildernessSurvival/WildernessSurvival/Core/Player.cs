@@ -22,8 +22,7 @@ namespace WildernessSurvival.Core
 
         public const float MoveStep = 0.05f;
 
-        private Backpack _backpack;
-
+        public Backpack Backpack { get; private set; }
         public IRoute<IPlace> CurRoute;
         private float _healthValue;
         private float _energyValue;
@@ -31,7 +30,7 @@ namespace WildernessSurvival.Core
         private float _waterValue;
         private bool _hasFire;
         private IPlace _location;
-        private float _tripRatio;
+        private float _tripProgress;
         private int _actionNumber;
 
         public Player()
@@ -43,28 +42,28 @@ namespace WildernessSurvival.Core
         {
             Health = Food = Water = Energy = MaxValue;
             HasFire = false;
-            _tripRatio = 0;
+            _tripProgress = 0;
             CurRoute = Routes.SubtropicsRoute();
             Location = CurRoute.InitialPlace;
             ActionNumber = 0;
-            _backpack = new Backpack(this);
+            Backpack = new Backpack(this);
         }
 
-        public IList<IItem> AllItems => _backpack.AllItems;
+        public IList<IItem> AllItems => Backpack.AllItems;
 
-        public IEnumerable<ICookableItem> GetCookableItems() => _backpack.AllItems.OfType<ICookableItem>();
+        public IEnumerable<ICookableItem> GetCookableItems() => Backpack.AllItems.OfType<ICookableItem>();
 
         public IEnumerable<IToolItem> GetToolsOf(ToolType type) =>
-            _backpack.AllItems.OfType<IToolItem>().Where(e => e.ToolType == type);
+            Backpack.AllItems.OfType<IToolItem>().Where(e => e.ToolType == type);
 
         public bool HasToolOf(ToolType type) =>
-            _backpack.AllItems.OfType<IToolItem>().Any(e => e.ToolType == type);
+            Backpack.AllItems.OfType<IToolItem>().Any(e => e.ToolType == type);
 
         public IToolItem TryGetBestToolOf(ToolType type) =>
             GetToolsOf(type).OrderByDescending(t => t.Level).FirstOrDefault();
 
 
-        public bool HasWood => _backpack.AllItems.OfType<Log>().Any();
+        public bool HasWood => Backpack.AllItems.OfType<Log>().Any();
 
         public IPlace Location
         {
@@ -125,17 +124,17 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public float TripRatio
+        public float TripProgress
         {
-            get => _tripRatio;
+            get => _tripProgress;
             private set
             {
                 if (value < 0)
-                    _tripRatio = 0;
+                    _tripProgress = 0;
                 else if (value > 1)
-                    _tripRatio = 1;
+                    _tripProgress = 1;
                 else
-                    _tripRatio = value;
+                    _tripProgress = value;
             }
         }
 
@@ -149,10 +148,11 @@ namespace WildernessSurvival.Core
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasFire)));
             }
         }
+
         public bool IsDead => Health <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
         public bool IsAlive => !IsDead;
         public bool CanPerformAnyAction => IsAlive && !IsWon;
-        public bool IsWon => TripRatio >= 1;
+        public bool IsWon => TripProgress >= 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -222,16 +222,16 @@ namespace WildernessSurvival.Core
             };
         }
 
-        public void AdvanceTrip(float delta = MoveStep) => TripRatio += delta;
+        public void AdvanceTrip(float delta = MoveStep) => TripProgress += delta;
 
         public void UseItem(IUsableItem item) => item.Use(this);
 
-        public void RemoveItem(IItem item) => _backpack.RemoveItem(item);
+        public void RemoveItem(IItem item) => Backpack.RemoveItem(item);
 
-        public void AddItem(IItem item) => _backpack.AddItem(item);
+        public void AddItem(IItem item) => Backpack.AddItem(item);
 
-        public void AddItems(IEnumerable<IItem> items) => _backpack.AddItems(items);
+        public void AddItems(IEnumerable<IItem> items) => Backpack.AddItems(items);
 
-        public void ConsumeWood(int Count) => _backpack.ConsumeWood(Count);
+        public void ConsumeWood(int Count) => Backpack.ConsumeWood(Count);
     }
 }

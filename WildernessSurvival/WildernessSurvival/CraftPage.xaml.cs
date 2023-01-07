@@ -10,39 +10,38 @@ using Xamarin.Forms.Xaml;
 namespace WildernessSurvival
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class CookPage : ContentPage
+    public partial class CraftPage : ContentPage
     {
         private readonly Player _player;
 
-        public CookPage()
+        public CraftPage()
         {
             InitializeComponent();
             _player = (Player)Application.Current.Resources["Player"];
-            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
+            _recipe2Output = Core.Craft.TestAvailableRecipes(_player.Backpack);
             RebuildPicker();
             UpdateUI();
         }
 
-        private IList<(ICookableItem raw, IItem cooked)> _raw2Cooked;
+        private IList<(IRecipe recipe, IItem output)> _recipe2Output;
 
         private void RebuildPicker()
         {
             ItemsPicker.Items.Clear();
-            foreach (var (_, cooked) in _raw2Cooked)
-                ItemsPicker.Items.Add(cooked.LocalizedName());
+            foreach (var (_, output) in _recipe2Output)
+                ItemsPicker.Items.Add(output.LocalizedName());
         }
 
-        private async void Cook_Clicked(object sender, EventArgs e)
+        private async void Craft_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0 || index >= _raw2Cooked.Count) return;
+            if (index < 0 || index >= _recipe2Output.Count) return;
             if (!_player.HasWood) return;
-            var (raw, cooked) = _raw2Cooked[index];
-            _player.RemoveItem(raw);
-            _player.ConsumeWood(1);
-            _player.AddItem(cooked);
-            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
-            if (_raw2Cooked.Count <= 0)
+            var (recipe, output) = _recipe2Output[index];
+            recipe.ConsumeAndCraft(_player.Backpack);
+            _player.AddItem(output);
+            _recipe2Output = Core.Craft.TestAvailableRecipes(_player.Backpack);
+            if (_recipe2Output.Count <= 0)
             {
                 UpdateUI();
                 await Task.Delay(500);
@@ -69,27 +68,18 @@ namespace WildernessSurvival
         private void UpdateUI()
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0 || index >= _raw2Cooked.Count)
+            if (index < 0 || index >= _recipe2Output.Count)
             {
-                Cook.Text = _i18n("Cook");
-                Cook.IsEnabled = false;
+                Craft.IsEnabled = false;
                 ItemsPicker.SelectedItem = null;
                 ItemDescription.Text = string.Empty;
             }
             else
             {
-                Cook.IsEnabled = _player.CanPerformAnyAction && _player.HasWood;
-                var (raw,cooked) = _raw2Cooked[index];
-                Cook.Text = _player.HasWood ? _i18n(raw.CookType.ToString()) : _i18n("NoWood");
-
-                ItemDescription.Text =
-                    string.Format(_i18n($"After{raw.CookType}"), cooked.LocalizedName());
+                Craft.IsEnabled = _player.CanPerformAnyAction;
+                var (_, output) = _recipe2Output[index];
+                ItemDescription.Text = output.LocalizedDesc();
             }
-        }
-
-        private static string _i18n(string key)
-        {
-            return I18N.Get($"Cook.{key}");
         }
     }
 }

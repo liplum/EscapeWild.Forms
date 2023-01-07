@@ -22,48 +22,48 @@
   </ContentPage.Resources>
 
   <StackLayout Padding="15">
-        <mf:MaterialFrame>
+    <mf:MaterialFrame>
       <StackLayout>
-      <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
-      <Grid Padding="10">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="*" />
-          <RowDefinition Height="*" />
-          <RowDefinition Height="*" />
-          <RowDefinition Height="*" />
-          <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
+        <Grid Padding="10">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+          </Grid.RowDefinitions>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
 
-        <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
-        <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
-        <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
-        <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
-        <Label Text="{ui:I18N Key=Attr.Location}" Grid.Row="4" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
+          <Label Text="{ui:I18N Key=Attr.Location}" Grid.Row="4" Grid.Column="0" />
 
-        <ProgressBar HorizontalOptions="Fill"
-          x:Name="HealthProgressBar"
-          Grid.Column="1"
-          Grid.Row="0" />
-        <ProgressBar HorizontalOptions="Fill"
-          x:Name="FoodProgressBar"
-          Grid.Column="1"
-          Grid.Row="1" />
-        <ProgressBar HorizontalOptions="Fill"
-          x:Name="WaterProgressBar"
-          Grid.Column="1"
-          Grid.Row="2" />
-        <ProgressBar HorizontalOptions="Fill"
-          x:Name="EnergyProgressBar"
-          Grid.Column="1"
-          Grid.Row="3" />
-        <Label
-          Text="{Binding LocationName,Source={StaticResource Player},Mode=OneWay}" Grid.Column="1"
-          Grid.Row="4" />
-      </Grid>
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="HealthProgressBar"
+            Grid.Column="1"
+            Grid.Row="0" />
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="FoodProgressBar"
+            Grid.Column="1"
+            Grid.Row="1" />
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="WaterProgressBar"
+            Grid.Column="1"
+            Grid.Row="2" />
+          <ProgressBar HorizontalOptions="Fill"
+            x:Name="EnergyProgressBar"
+            Grid.Column="1"
+            Grid.Row="3" />
+          <Label
+            Text="{Binding LocationName,Source={StaticResource Player},Mode=OneWay}" Grid.Column="1"
+            Grid.Row="4" />
+        </Grid>
       </StackLayout>
     </mf:MaterialFrame>
     <ProgressBar x:Name="TripProgressBar" HorizontalOptions="Fill" />
@@ -82,30 +82,47 @@
         <ColumnDefinition Width="*" />
       </Grid.ColumnDefinitions>
 
-      <Button x:Name="Move" Text="{ui:I18N Key=Action.Move}" Clicked="Move_Clicked" Grid.Row="0"
+      <Button x:Name="Move" Text="{ui:I18N Key=Action.Move}" Clicked="Move_Clicked"
+        Grid.Row="0"
         Grid.Column="0" />
-      <Button x:Name="Hunt" Text="{ui:I18N Key=Action.Hunt}" Clicked="Hunt_Clicked" Grid.Row="0"
+      <Button x:Name="Explore" Text="{ui:I18N Key=Action.Explore}" Clicked="Explore_Clicked"
+        Grid.Row="0"
         Grid.Column="1" />
-      <Button x:Name="CutDownTree" Text="{ui:I18N Key=Action.CutDownTree}" Clicked="CutDownTree_Clicked"
+
+      <Button x:Name="Craft" Text="{ui:I18N Key=Action.Craft}" Clicked="Craft_Clicked"
         Grid.Row="1"
         Grid.Column="0" />
-      <Button x:Name="Backpack" Text="{ui:I18N Key=Action.Backpack}" Clicked="Backpack_Clicked" Grid.Row="1"
+      <Button x:Name="Backpack" Text="{ui:I18N Key=Action.Backpack}" Clicked="Backpack_Clicked"
+        Grid.Row="1"
         Grid.Column="1" />
-      <Button x:Name="Fish" Text="{ui:I18N Key=Action.Fish}" Clicked="Fish_Clicked" Grid.Row="2"
+
+      <Button x:Name="Rest" Text="{ui:I18N Key=Action.Rest}" Clicked="Rest_Clicked"
+        Grid.Row="2"
         Grid.Column="0" />
-      <Button x:Name="Explore" Text="{ui:I18N Key=Action.Explore}" Clicked="Explore_Clicked" Grid.Row="2"
+      <Button x:Name="Fire" Text="{ui:I18N Key=Action.Fire}" Clicked="Fire_Clicked"
+        Grid.Row="2"
         Grid.Column="1" />
-      <Button x:Name="Rest" Text="{ui:I18N Key=Action.Rest}" Clicked="Rest_Clicked" Grid.Row="3"
+
+      <Button x:Name="Cook" Text="{ui:I18N Key=Action.Cook}" Clicked="Cook_Clicked"
+        Grid.Row="3"
         Grid.Column="0" />
-      <Button x:Name="Fire" Text="{ui:I18N Key=Action.Fire}" Clicked="Fire_Clicked" Grid.Row="3"
+      <Button x:Name="Hunt" Text="{ui:I18N Key=Action.Hunt}" Clicked="Hunt_Clicked"
+        Grid.Row="3"
         Grid.Column="1" />
-      <Button x:Name="Cook" Text="{ui:I18N Key=Action.Cook}" Clicked="Cook_Clicked" Grid.Row="4"
+
+      <Button x:Name="Fish" Text="{ui:I18N Key=Action.Fish}" Clicked="Fish_Clicked"
+        Grid.Row="4"
         Grid.Column="0" />
-      <Button x:Name="Restart" Text="{ui:I18N Key=Action.Restart}" Clicked="Restart_OnClicked" Grid.Row="4"
-        Grid.Column="1">
+
+      <Button x:Name="CutDownTree" Text="{ui:I18N Key=Action.CutDownTree}" Clicked="CutDownTree_Clicked"
+        Grid.Row="4"
+        Grid.Column="1" />
+
+      <Button x:Name="Restart" Text="{ui:I18N Key=Action.Restart}" Clicked="Restart_OnClicked"
+        Grid.Row="5"
+        Grid.Column="0">
         <Button.IsVisible>false</Button.IsVisible>
       </Button>
-
     </Grid>
   </StackLayout>
 

@@ -89,50 +89,6 @@ namespace WildernessSurvival.Core
         public void Perform(AttrType attr, float delta);
     }
 
-    public class PlayerAcceptUseEffectWrapper : IAcceptUseEffect
-    {
-        private readonly Player _player;
-        private readonly ValueFixer _fixer;
-
-        public PlayerAcceptUseEffectWrapper(Player player, ValueFixer fixer = null)
-        {
-            _player = player;
-            _fixer = fixer;
-        }
-
-        public void Perform(AttrType attr, float delta)
-        {
-            _player.Modify(delta, attr, _fixer);
-        }
-    }
-
-    public class MockPlayerAcceptUseEffect : IAcceptUseEffect
-    {
-        public float Health;
-        public float Food;
-        public float Water;
-        public float Energy;
-
-        public void Perform(AttrType attr, float delta)
-        {
-            switch (attr)
-            {
-                case AttrType.Health:
-                    Health += delta;
-                    break;
-                case AttrType.Food:
-                    Food += delta;
-                    break;
-                case AttrType.Water:
-                    Water += delta;
-                    break;
-                case AttrType.Energy:
-                    Energy += delta;
-                    break;
-            }
-        }
-    }
-
     public class UseEffectBuilder
     {
         public readonly List<UseEffect> Effects = new List<UseEffect>();
@@ -201,5 +157,49 @@ namespace WildernessSurvival.Core
     public interface IFuelItem : IItem
     {
         float Fuel { get; }
+    }
+
+    public class PlayerAcceptUseEffectWrapper : IAcceptUseEffect
+    {
+        private readonly Player _player;
+        private readonly ValueFixer _fixer;
+
+        public PlayerAcceptUseEffectWrapper(Player player, ValueFixer fixer = null)
+        {
+            _player = player;
+            _fixer = fixer;
+        }
+
+        public void Perform(AttrType attr, float delta)
+        {
+            _player.Modify(delta, attr, _fixer);
+        }
+    }
+
+    public class MockPlayerAcceptUseEffect : IAcceptUseEffect
+    {
+        public float Health;
+        public float Food;
+        public float Water;
+        public float Energy;
+
+        public void Perform(AttrType attr, float delta)
+        {
+            switch (attr)
+            {
+                case AttrType.Health:
+                    Health += delta;
+                    break;
+                case AttrType.Food:
+                    Food += delta;
+                    break;
+                case AttrType.Water:
+                    Water += delta;
+                    break;
+                case AttrType.Energy:
+                    Energy += delta;
+                    break;
+            }
+        }
     }
 }
