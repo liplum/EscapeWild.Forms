@@ -18,7 +18,7 @@ namespace WildernessSurvival
         public MainPage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["player"];
+            _player = (Player)Application.Current.Resources["Player"];
             UpdateUI(updateProgressBarInSequence: true);
         }
 

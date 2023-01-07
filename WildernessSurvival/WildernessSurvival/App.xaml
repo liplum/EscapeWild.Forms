@@ -5,6 +5,9 @@
   xmlns:core="clr-namespace:WildernessSurvival.Core;assembly=WildernessSurvival"
   x:Class="WildernessSurvival.App">
   <Application.Resources>
-    <core:Player x:Key="player" x:Name="player" />
+    <core:Player x:Key="Player" x:Name="Player" />
+    <Style TargetType="Button">
+      <Setter Property="CornerRadius" Value="12" />
+    </Style>
   </Application.Resources>
 </Application>

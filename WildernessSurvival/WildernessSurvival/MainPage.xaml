@@ -57,7 +57,7 @@
         Grid.Column="1"
         Grid.Row="3" />
       <Label
-        Text="{Binding LocationName,Source={StaticResource player},Mode=OneWay}" Grid.Column="1"
+        Text="{Binding LocationName,Source={StaticResource Player},Mode=OneWay}" Grid.Column="1"
         Grid.Row="4" />
     </Grid>
 

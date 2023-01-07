@@ -19,7 +19,7 @@ namespace WildernessSurvival
         public BackpackPage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["player"];
+            _player = (Player)Application.Current.Resources["Player"];
             Use.IsEnabled = _player.CanPerformAnyAction && ItemsPicker.SelectedIndex >= 0;
             RebuildPicker();
             HealthProgressBar.Progress = _player.Health;
