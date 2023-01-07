@@ -1,28 +1,29 @@
 ﻿using WildernessSurvival.Core;
 
+// ReSharper disable CheckNamespace
 namespace WildernessSurvival.Game
 {
     public class EnergyBar : UsableItem
     {
-        private const float Restore = 0.3f;
+        public const float DefaultFoodRestore = 0.5f;
+        public float FoodRestore = DefaultFoodRestore;
+        public const float DefaultEnergyRestore = 0.2f;
+        public float EnergyRestore = DefaultEnergyRestore;
         public override string Name => nameof(EnergyBar);
         public override UseType UseType => UseType.Eat;
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            builder.Add(AttrType.Food.WithEffect(Restore));
+            builder.Add(AttrType.Food.WithEffect(FoodRestore));
+            builder.Add(AttrType.Energy.WithEffect(EnergyRestore));
         }
     }
 
-    public class OldOxe : IOxeItem
-    {
-        public string Name => nameof(OldOxe);
-        public ToolLevel Level => ToolLevel.Normal;
-    }
 
     public class BottledWater : UsableItem
     {
-        private const float Restore = 0.4f;
+        public const float DefaultRestore = 0.4f;
+        public float Restore = DefaultRestore;
         public override string Name => nameof(BottledWater);
         public override UseType UseType => UseType.Drink;
 
@@ -32,48 +33,51 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class RawRabbit : UsableItem, IRawItem
+    public class RawRabbit : UsableItem, ICookableItem
     {
-        private const float Restore = 0.5f;
+        public const float DefaultFoodRestore = 0.5f;
+        public const float DefaultWaterRestore = 0.1f;
+        public float FoodRestore = DefaultFoodRestore;
+        public float WaterRestore = DefaultWaterRestore;
         public override string Name => nameof(RawRabbit);
 
         public CookType CookType => CookType.Cook;
         public override UseType UseType => UseType.Eat;
 
-        public IUsableItem Cook()
+        public IUsableItem Cook() => new CookedRabbit
         {
-            return new CookedRabbit();
-        }
+            // add bounce from raw food
+            FoodRestore = RoastedBerry.DefaultFoodRestore + FoodRestore * 0.15f,
+        };
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            builder.Add(AttrType.Food.WithEffect(Restore));
+            builder.Add(AttrType.Food.WithEffect(FoodRestore));
+            builder.Add(AttrType.Food.WithEffect(WaterRestore));
         }
     }
 
     public class CookedRabbit : UsableItem
     {
-        private const float Restore = 0.9f;
+        public const float DefaultFoodRestore = 0.75f;
+        public float FoodRestore = DefaultFoodRestore;
         public override string Name => nameof(CookedRabbit);
         public override UseType UseType => UseType.Eat;
 
 
         public override void BuildUseEffect(UseEffectBuilder builder)
         {
-            builder.Add(AttrType.Food.WithEffect(Restore));
+            builder.Add(AttrType.Food.WithEffect(FoodRestore));
         }
     }
 
-    public class OldFishRod : IFishToolItem
-    {
-        public string Name => nameof(OldFishRod);
-        public ToolLevel Level => ToolLevel.Normal;
-    }
 
-    public class Berry : UsableItem
+    public class Berry : UsableItem, ICookableItem
     {
-        private const float FoodRestore = 0.2f;
-        private const float WaterRestore = 0.1f;
+        public const float DefaultFoodRestore = 0.2f;
+        public const float DefaultWaterRestore = 0.1f;
+        public float FoodRestore = DefaultFoodRestore;
+        public float WaterRestore = DefaultWaterRestore;
         public override string Name => nameof(Berry);
         public override UseType UseType => UseType.Eat;
 
@@ -82,11 +86,33 @@ namespace WildernessSurvival.Game
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
             builder.Add(AttrType.Water.WithEffect(WaterRestore));
         }
+
+        public CookType CookType => CookType.Cook;
+
+        public IUsableItem Cook() => new RoastedBerry
+        {
+            // add bounce from raw food
+            FoodRestore = RoastedBerry.DefaultFoodRestore + FoodRestore * 0.2f,
+        };
     }
 
-    public class DirtyWater : UsableItem, IRawItem
+    public class RoastedBerry : UsableItem
     {
-        private const float Restore = 0.1f;
+        public const float DefaultFoodRestore = 0.35f;
+        public float FoodRestore = DefaultFoodRestore;
+        public override string Name => nameof(RoastedBerry);
+        public override UseType UseType => UseType.Eat;
+
+        public override void BuildUseEffect(UseEffectBuilder builder)
+        {
+            builder.Add(AttrType.Food.WithEffect(FoodRestore));
+        }
+    }
+
+    public class DirtyWater : UsableItem, ICookableItem
+    {
+        public const float DefaultRestore = 0.1f;
+        public float Restore = DefaultRestore;
         public override string Name => nameof(DirtyWater);
         public CookType CookType => CookType.Boil;
         public override UseType UseType => UseType.Drink;
@@ -104,7 +130,8 @@ namespace WildernessSurvival.Game
 
     public class CleanWater : UsableItem
     {
-        private const float Restore = 0.3f;
+        public const float DefaultRestore = 0.3f;
+        public float Restore = DefaultRestore;
         public override string Name => nameof(CleanWater);
         public override UseType UseType => UseType.Drink;
 
@@ -116,7 +143,8 @@ namespace WildernessSurvival.Game
 
     public class Nuts : UsableItem
     {
-        private const float Restore = 0.2f;
+        public const float DefaultRestore = 0.2f;
+        public float Restore = DefaultRestore;
         public override string Name => nameof(Nuts);
         public override UseType UseType => UseType.Eat;
 
@@ -126,36 +154,10 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class Bandage : UsableItem
-    {
-        private const float Restore = 0.3f;
-        public override string Name => nameof(Bandage);
-        public override UseType UseType => UseType.Use;
-
-        public override void BuildUseEffect(UseEffectBuilder builder)
-        {
-            builder.Add(AttrType.Health.WithEffect(Restore));
-        }
-    }
-
-    public class FistAidKit : UsableItem
-    {
-        private const float HpRestore = 0.3f;
-        private const float EnergyRestore = 0.2f;
-        public override string Name => nameof(FistAidKit);
-        public override UseType UseType => UseType.Use;
-
-        public override void BuildUseEffect(UseEffectBuilder builder)
-        {
-            builder.Add(AttrType.Health.WithEffect(HpRestore));
-            builder.Add(AttrType.Energy.WithEffect(EnergyRestore));
-        }
-    }
-
     public class EnergyDrink : UsableItem
     {
-        private const float WaterRestore = 0.3f;
-        private const float EnergyRestore = 0.4f;
+        public float WaterRestore = 0.3f;
+        public float EnergyRestore = 0.4f;
         public override string Name => nameof(EnergyDrink);
         public override UseType UseType => UseType.Drink;
 
@@ -166,10 +168,10 @@ namespace WildernessSurvival.Game
         }
     }
 
-    public class RawFish : UsableItem, IRawItem
+    public class RawFish : UsableItem, ICookableItem
     {
-        private const float FoodRestore = 0.4f;
-        private const float WaterRestore = 0.2f;
+        public float FoodRestore = 0.4f;
+        public float WaterRestore = 0.2f;
         public override string Name => nameof(RawFish);
         public CookType CookType => CookType.Cook;
         public override UseType UseType => UseType.Eat;
@@ -188,7 +190,7 @@ namespace WildernessSurvival.Game
 
     public class CookedFish : UsableItem
     {
-        private const float Restore = 0.6f;
+        public float Restore = 0.6f;
         public override string Name => nameof(CookedFish);
         public override UseType UseType => UseType.Eat;
 
@@ -196,17 +198,5 @@ namespace WildernessSurvival.Game
         {
             builder.Add(AttrType.Food.WithEffect(Restore));
         }
-    }
-
-    public class OldShotgun : IHuntingToolItem
-    {
-        public ToolLevel Level => ToolLevel.High;
-        public string Name => nameof(OldShotgun);
-    }
-
-    public class Trap : IHuntingToolItem
-    {
-        public ToolLevel Level => ToolLevel.Normal;
-        public string Name => nameof(Trap);
     }
 }

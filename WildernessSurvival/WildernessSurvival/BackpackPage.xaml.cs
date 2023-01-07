@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
@@ -75,7 +74,6 @@ namespace WildernessSurvival
             {
                 AfterUseArea.IsVisible = false;
                 Use.IsEnabled = false;
-                ItemsPicker.SelectedItem = null;
                 AfterUseLabel.Text = $"Backpack.After{UseType.Use}".Tr();
             }
 
@@ -84,6 +82,7 @@ namespace WildernessSurvival
                 Clear();
                 Use.Text = $"Backpack.{UseType.Use}".Tr();
                 ItemDescription.Text = string.Empty;
+                ItemsPicker.SelectedItem = null;
             }
             else
             {

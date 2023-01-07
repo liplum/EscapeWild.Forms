@@ -5,6 +5,7 @@ namespace WildernessSurvival.Core
     public static class Rand
     {
         private static readonly Random Random = new Random();
+        public static bool Bool() => Random.Next(1) == 1;
         public static int Int() => Random.Next();
         public static int Int(int max) => Random.Next(max);
         public static int Int(int min, int max) => Random.Next(min, max);

@@ -12,11 +12,43 @@ namespace WildernessSurvival.Core
     {
         public static string LocalizedName(this IItem item) => I18N.Get($"Item.{item.Name}.Name");
         public static string LocalizedDesc(this IItem item) => I18N.Get($"Item.{item.Name}.Desc");
+        public static string LocalizedName(this ToolType type) => I18N.Get($"ToolType.{type.Name}");
+    }
+
+    public enum ToolLevel
+    {
+        Low,
+        Normal,
+        High,
+        Max
+    }
+
+    public class ToolType
+    {
+        public string Name;
+
+        private ToolType(string name)
+        {
+            Name = name;
+        }
+
+        public static readonly ToolType
+            Oxe = new ToolType("Oxe"),
+            Hunting = new ToolType("Hunting"),
+            Fishing = new ToolType("Fishing");
     }
 
     public interface IToolItem : IItem
     {
         public ToolLevel Level { get; }
+        public ToolType ToolType { get; }
+    }
+
+    public class ToolItem : IToolItem
+    {
+        public string Name { get; set; }
+        public ToolLevel Level { get; set; }
+        public ToolType ToolType { get; set; }
     }
 
     public enum UseType
@@ -142,39 +174,9 @@ namespace WildernessSurvival.Core
         Boil
     }
 
-    public interface IRawItem : IItem
+    public interface ICookableItem : IItem
     {
         CookType CookType { get; }
         IUsableItem Cook();
-    }
-
-    public interface IOxeItem : IToolItem
-    {
-    }
-
-    public enum ToolLevel
-    {
-        Low,
-        Normal,
-        High,
-        Max
-    }
-
-    public interface IFishToolItem : IToolItem
-    {
-    }
-
-    public interface IHuntingToolItem : IToolItem
-    {
-    }
-
-    public class LogItem : IItem
-    {
-        public string Name => "Log";
-        public static readonly LogItem One = new LogItem();
-
-        private LogItem()
-        {
-        }
     }
 }

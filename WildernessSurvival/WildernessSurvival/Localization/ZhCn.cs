@@ -50,6 +50,10 @@ namespace WildernessSurvival.Localization
             { "Item.OldShotgun.Desc", "还是双管的。" },
             { "Item.Trap.Name", "捕兽陷阱" },
             { "Item.Trap.Desc", "应该没有傻子会自己踩到它吧。" },
+            { "Item.RoastedBerry.Name", "热煨浆果" },
+            { "Item.RoastedBerry.Desc", "黏糊糊的。" },
+            { "Item.Stick.Name", "树枝" },
+            { "Item.Stick.Desc", "平平无奇的一根树枝。" },
             { "Cook.Cook", "烹饪" },
             { "Cook.Boil", "煮沸" },
             { "Cook.CookTip", "选择要加热的东西" },
@@ -94,6 +98,7 @@ namespace WildernessSurvival.Localization
             { "Action.Backpack", "背包" },
             { "Action.Cook", "烹饪" },
             { "Subtropics.Common.Rest", "你休息了一会，感觉又充满了力量。" },
+            { "Subtropics.Hut.Rest", "你在温暖的小屋里安安稳稳地睡了一觉，棒极了。" },
             { "Subtropics.Common.Fire", "你生起了火。" },
             { "OK", "好" },
             { "Alright", "Alright" }

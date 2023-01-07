@@ -106,9 +106,9 @@ namespace WildernessSurvival
             Cook.IsEnabled = _player.HasFire;
             // Modified by player states
             Fire.IsEnabled &= _player.HasWood && !_player.HasFire;
-            CutDownTree.IsEnabled &= _player.HasOxe;
-            Hunt.IsEnabled &= _player.HasHuntingTool;
-            Fish.IsEnabled &= _player.HasFishingTool;
+            CutDownTree.IsEnabled &= _player.HasToolOf(ToolType.Oxe);
+            Hunt.IsEnabled &= _player.HasToolOf(ToolType.Hunting);
+            Fish.IsEnabled &= _player.HasToolOf(ToolType.Fishing);
             // Modified by win or failure
             Move.IsEnabled &= _player.CanPerformAnyAction;
             Hunt.IsEnabled &= _player.CanPerformAnyAction;

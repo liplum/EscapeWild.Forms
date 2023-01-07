@@ -52,14 +52,17 @@ namespace WildernessSurvival.Core
 
         public IList<IItem> AllItems => _backpack.AllItems;
 
-        public IList<IRawItem> GetRawItems() => _backpack.GetRawItems();
+        public IList<ICookableItem> GetRawItems() => _backpack.GetRawItems();
 
-        public IList<IHuntingToolItem> GetHuntingTools() => _backpack.GetHuntingTools();
+        public IEnumerable<IToolItem> GetToolsOf(ToolType type) =>
+            _backpack.AllItems.OfType<IToolItem>().Where(e => e.ToolType == type);
 
-        public IHuntingToolItem GetBestHuntingTool()
-        {
-            return GetHuntingTools().OrderByDescending(t => t.Level).FirstOrDefault();
-        }
+        public bool HasToolOf(ToolType type) =>
+            _backpack.AllItems.OfType<IToolItem>().Any(e => e.ToolType == type);
+
+        public IToolItem GetBestToolOf(ToolType type) =>
+            GetToolsOf(type).OrderByDescending(t => t.Level).FirstOrDefault();
+
 
         public bool HasWood => _backpack.HasWood;
 
@@ -87,13 +90,7 @@ namespace WildernessSurvival.Core
             get => _healthValue;
             private set
             {
-                if (value > MaxValue)
-                    _healthValue = MaxValue;
-                else if (value < 0)
-                    _healthValue = 0;
-                else
-                    _healthValue = value;
-
+                _healthValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Health)));
             }
         }
@@ -103,13 +100,7 @@ namespace WildernessSurvival.Core
             get => _foodValue;
             private set
             {
-                if (value > MaxValue)
-                    _foodValue = MaxValue;
-                else if (value < 0)
-                    _foodValue = 0;
-                else
-                    _foodValue = value;
-
+                _foodValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Food)));
             }
         }
@@ -119,13 +110,7 @@ namespace WildernessSurvival.Core
             get => _waterValue;
             private set
             {
-                if (value > MaxValue)
-                    _waterValue = MaxValue;
-                else if (value < 0)
-                    _waterValue = 0;
-                else
-                    _waterValue = value;
-
+                _waterValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Water)));
             }
         }
@@ -135,13 +120,7 @@ namespace WildernessSurvival.Core
             get => _energyValue;
             private set
             {
-                if (value > MaxValue)
-                    _energyValue = MaxValue;
-                else if (value < 0)
-                    _energyValue = 0;
-                else
-                    _energyValue = value;
-
+                _energyValue = Math.Max(0, value);
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Energy)));
             }
         }
@@ -170,13 +149,6 @@ namespace WildernessSurvival.Core
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasFire)));
             }
         }
-
-        public bool HasFishingTool => _backpack.HasFishingTool;
-
-        public bool HasOxe => _backpack.HasOxe;
-
-        public bool HasHuntingTool => _backpack.HasHuntingTool;
-
         public bool IsDead => Health <= 0 || Food <= 0 || Water <= 0 || Energy <= 0;
         public bool IsAlive => !IsDead;
         public bool CanPerformAnyAction => IsAlive && !IsWon;
@@ -184,28 +156,70 @@ namespace WildernessSurvival.Core
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void Modify(float delta, AttrType type, ValueFixer fixer = null)
+        /// <summary>
+        /// If the result should be is more than <see cref="MaxValue"/>, the <param name="delta"></param> will be attenuated based on overflow.
+        /// </summary>
+        public void Modify(float delta, AttrType attr, ValueFixer fixer = null)
         {
             if (fixer != null)
             {
                 delta = fixer(delta);
             }
 
-            switch (type)
+            // [1] former = 0.8, delta = 0.5
+            // [2] former = 1.2, delta = 0.6
+            var former = GetAttr(attr);
+            // [1] after = 1.3
+            // [2] after = 1.8
+            var after = former + delta;
+            if (after > MaxValue)
+            {
+                // [1] restToMax = Max(0, 1 - 0.8) = 0.2
+                // [2] restToMax = Max(0, 1 - 1.2) = 0
+                var restToMax = Math.Max(MaxValue - former, 0f);
+                // [1] extra = 0.5 - 0.2 = 0.3
+                // [2] extra = 0.6 - 0.0 = 0.6
+                var extra = delta - restToMax;
+                // [1] after = 0.8 + 0.2 + 0.3 * 0.5^0.8 = 1.172
+                // [2] after = 1.2 + 0.0 + 0.6 * 0.5^1.2 = 1.461
+                after = (float)(former + restToMax + extra * Math.Pow(0.5f, former));
+
+                SetAttr(attr, after);
+            }
+            else
+            {
+                SetAttr(attr, after);
+            }
+        }
+
+        public void SetAttr(AttrType attr, float value)
+        {
+            switch (attr)
             {
                 case AttrType.Health:
-                    Health += delta;
+                    Health = value;
                     break;
                 case AttrType.Food:
-                    Food += delta;
+                    Food = value;
                     break;
                 case AttrType.Water:
-                    Water += delta;
+                    Water = value;
                     break;
                 case AttrType.Energy:
-                    Energy += delta;
+                    Energy = value;
                     break;
             }
+        }
+
+        public float GetAttr(AttrType attr)
+        {
+            return attr switch
+            {
+                AttrType.Health => Health,
+                AttrType.Food => Food,
+                AttrType.Water => Water,
+                _ => Energy
+            };
         }
 
         public void AdvanceTrip(float delta = MoveStep) => TripRatio += delta;

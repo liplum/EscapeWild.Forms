@@ -177,14 +177,14 @@ namespace WildernessSurvival.Game
 
         /// <summary>
         /// Move:
-        /// Cost: Food[0.05], Water[0.05], Energy[0.08]
+        /// Cost: Food[0.05], Water[0.05], Energy[0.135]
         /// Go to next place
         /// </summary>
         protected virtual async Task PerformMove(Player player)
         {
             player.Modify(-0.05f, AttrType.Food, HardnessFix);
             player.Modify(-0.05f, AttrType.Water, HardnessFix);
-            player.Modify(-0.08f, AttrType.Energy, HardnessFix);
+            player.Modify(-0.135f, AttrType.Energy, HardnessFix);
             player.AdvanceTrip(HardnessFix(Player.MoveStep));
             player.Location = await Owner.GoNextPlace(player);
             player.HasFire = false;
@@ -202,9 +202,14 @@ namespace WildernessSurvival.Game
             player.Modify(0.1f, AttrType.Health, HardnessFix);
             player.Modify(0.25f, AttrType.Energy, HardnessFix);
 
+            await ShowRestDialog();
+        }
+
+        protected async Task ShowRestDialog(string restType = "Common")
+        {
             await App.Current.MainPage.DisplayAlert(
                 title: ActionType.Rest.LocalizedName(),
-                message: $"{Route.Name}.Common.Rest".Tr(),
+                message: $"{Route.Name}.{restType}.Rest".Tr(),
                 cancel: "OK".Tr()
             );
         }
@@ -225,7 +230,7 @@ namespace WildernessSurvival.Game
             player.Modify(-0.15f, AttrType.Energy, HardnessFix);
 
 
-            var huntingTool = player.GetBestHuntingTool();
+            var huntingTool = player.GetBestToolOf(ToolType.Hunting);
             var rate = 0;
             var doubleRate = 0;
 
@@ -253,9 +258,19 @@ namespace WildernessSurvival.Game
             var r = Rand.Int(100);
             if (r < rate)
             {
-                gained.Add(new RawRabbit());
+                gained.Add(new RawRabbit
+                {
+                    FoodRestore = RawRabbit.DefaultFoodRestore * Rand.Float(1f, 1.2f),
+                    WaterRestore = RawRabbit.DefaultWaterRestore * Rand.Float(1f, 1.2f),
+                });
                 if (Rand.Int(100) < doubleRate)
-                    gained.Add(new RawRabbit());
+                {
+                    gained.Add(new RawRabbit
+                    {
+                        FoodRestore = RawRabbit.DefaultFoodRestore * Rand.Float(1f, 1.5f),
+                        WaterRestore = RawRabbit.DefaultWaterRestore * Rand.Float(1f, 1.5f),
+                    });
+                }
             }
 
             player.AddItems(gained);
@@ -423,15 +438,16 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
-        /// Cost: Water[0.04], Energy[0.08]
+        /// Cost: Food[0.02], Water[0.04], Energy[0.08]
         /// Raw Fish x1(20%)
         /// Clean Water x1(70%) + x1(40%) 
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
+            player.Modify(-0.02f, AttrType.Food, HardnessFix);
             player.Modify(-0.04f, AttrType.Water, HardnessFix);
             player.Modify(-0.08f, AttrType.Energy, HardnessFix);
-            const int RawFishRate = 20, CleanWaterRate = 70, doubleRate = 40;
+            const int RawFishRate = 20, CleanWaterRate = 70, DoubleRate = 40;
 
             var proportion = 10 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
@@ -439,15 +455,13 @@ namespace WildernessSurvival.Game
 
             var gained = new List<IItem>();
 
-            var 生鱼 = Rand.Int(100);
-            if (生鱼 < RawFishRate * prop)
+            if (Rand.Int(100) < RawFishRate * prop)
                 gained.Add(new RawFish());
 
-            var 净水 = Rand.Int(100);
-            if (净水 < CleanWaterRate * prop)
+            if (Rand.Int(100) < CleanWaterRate * prop)
             {
                 gained.Add(new CleanWater());
-                if (Rand.Int(100) < doubleRate)
+                if (Rand.Int(100) < DoubleRate)
                     gained.Add(new CleanWater());
             }
 
@@ -487,7 +501,22 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
-        /// Cost: Water[0.04], Energy[0.08]
+        /// Rest
+        /// Cost: Food[0.03], Water[0.03]
+        /// Restore: Health[0.15], Energy[0.4]
+        /// </summary>
+        protected override async Task PerformRest(Player player)
+        {
+            player.Modify(-0.03f, AttrType.Food, HardnessFix);
+            player.Modify(-0.03f, AttrType.Water, HardnessFix);
+            player.Modify(0.15f, AttrType.Health, HardnessFix);
+            player.Modify(0.4f, AttrType.Energy, HardnessFix);
+
+            await ShowRestDialog(restType: "Hut");
+        }
+
+        /// <summary>
+        /// Cost: Food[0.02], Water[0.04], Energy[0.08]
         /// Bottled Water x2
         /// Energy Bar x2
         /// Log x2
@@ -500,45 +529,60 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
+            player.Modify(-0.02f, AttrType.Food, HardnessFix);
             player.Modify(-0.04f, AttrType.Water, HardnessFix);
             player.Modify(-0.08f, AttrType.Energy, HardnessFix);
             const int OxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
-            var exploreFix = ExploreCount == 0 ? 1 : 0;
 
             var gained = new List<IItem>();
 
-            if (!player.HasOxe)
+            if (!player.HasToolOf(ToolType.Oxe))
             {
-                if (Rand.Int(100) < OxeRate) gained.Add(new OldOxe());
+                if (Rand.Int(100) < OxeRate)
+                    gained.Add(OxeItems.OldOxe);
             }
 
-            if (!player.HasFishingTool)
+            if (!player.HasToolOf(ToolType.Fishing))
             {
-                if (Rand.Int(100) < FishRodRate) gained.Add(new OldFishRod());
-            }
-
-
-            if (Rand.Int(100) < 100 * exploreFix)
-            {
-                gained.Add(new BottledWater());
-                gained.Add(new BottledWater());
-                gained.Add(new EnergyBar());
-                gained.Add(new EnergyBar());
-                gained.Add(LogItem.One);
-                gained.Add(LogItem.One);
+                if (Rand.Int(100) < FishRodRate)
+                    gained.Add(FishToolItems.OldFishRod);
             }
 
 
-            if (!player.HasHuntingTool)
+            if (ExploreCount < 1)
             {
-                var s = Rand.Int(2);
-                if (s == 0)
+                gained.Add(new BottledWater
                 {
-                    if (Rand.Int(100) < GunRate) gained.Add(new OldShotgun());
+                    Restore = BottledWater.DefaultRestore * Rand.Float(0.8f, 1.2f),
+                });
+                gained.Add(new BottledWater
+                {
+                    Restore = BottledWater.DefaultRestore * Rand.Float(0.7f, 1.15f),
+                });
+                gained.Add(new EnergyBar
+                {
+                    FoodRestore = EnergyBar.DefaultFoodRestore * Rand.Float(0.8f, 1.3f)
+                });
+                gained.Add(new EnergyBar
+                {
+                    FoodRestore = EnergyBar.DefaultFoodRestore * Rand.Float(0.75f, 1.2f)
+                });
+                gained.Add(LogItem.One);
+                gained.Add(LogItem.One);
+            }
+
+
+            if (!player.HasToolOf(ToolType.Hunting))
+            {
+                if (Rand.Bool())
+                {
+                    if (Rand.Int(100) < GunRate)
+                        gained.Add(HuntingToolItems.OldShotgun);
                 }
-                else if (s == 1)
+                else
                 {
-                    if (Rand.Int(100) < TrapRate) gained.Add(new Trap());
+                    if (Rand.Int(100) < TrapRate)
+                        gained.Add(HuntingToolItems.Trap);
                 }
             }
 
@@ -570,14 +614,18 @@ namespace WildernessSurvival.Game
         }
 
         /// <summary>
-        /// Cost: Water[0.04], Energy[0.08]
-        /// Raw Fish x1(20%)
-        /// Clean Water x1(70%) + x1(40%) 
+        /// Cost: Food[0.02], Water[0.05], Energy[0.10]
+        /// Berry x1(30%)
+        /// Dirty Water x1(20%)
+        /// Log x1(60%) + x1(20%)
+        /// Nuts x1(60%) + x1(40%)
+        /// Stick x1(60%) or x2(30%) || x3(10%)
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(-0.04f, AttrType.Water, HardnessFix);
-            player.Modify(-0.08f, AttrType.Energy, HardnessFix);
+            player.Modify(-0.02f, AttrType.Food, HardnessFix);
+            player.Modify(-0.05f, AttrType.Water, HardnessFix);
+            player.Modify(-0.10f, AttrType.Energy, HardnessFix);
             const int BerryRate = 30,
                 DirtyWaterRate = 20,
                 LogRate = 50,
@@ -592,10 +640,20 @@ namespace WildernessSurvival.Game
             var gained = new List<IItem>();
 
             if (Rand.Int(100) < BerryRate * prop)
-                gained.Add(new Berry());
+            {
+                gained.Add(new Berry
+                {
+                    FoodRestore = Berry.DefaultFoodRestore * Rand.Float(0.8f, 1.5f),
+                });
+            }
 
             if (Rand.Int(100) < DirtyWaterRate * prop)
-                gained.Add(new DirtyWater());
+            {
+                gained.Add(new DirtyWater
+                {
+                    Restore = DirtyWater.DefaultRestore * Rand.Float(0.5f, 1f)
+                });
+            }
 
             if (Rand.Int(100) < LogRate * prop)
             {
@@ -606,11 +664,35 @@ namespace WildernessSurvival.Game
 
             if (Rand.Int(100) < NutsRate * prop)
             {
-                gained.Add(new Nuts());
+                gained.Add(new Nuts
+                {
+                    Restore = Nuts.DefaultRestore * Rand.Float(0.8f, 1.1f)
+                });
                 if (Rand.Int(100) < NutsDoubleRate)
-                    gained.Add(new Nuts());
+                {
+                    gained.Add(new Nuts
+                    {
+                        Restore = Nuts.DefaultRestore * Rand.Float(0.6f, 1.1f)
+                    });
+                }
             }
 
+            var stick = Rand.Int(100);
+            if (stick < 60)
+            {
+                gained.Add(Stick.One);
+            }
+            else if (stick < 90)
+            {
+                gained.Add(Stick.One);
+                gained.Add(Stick.One);
+            }
+            else
+            {
+                gained.Add(Stick.One);
+                gained.Add(Stick.One);
+                gained.Add(Stick.One);
+            }
 
             player.AddItems(gained);
             ExploreCount++;

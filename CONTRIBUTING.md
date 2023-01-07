@@ -9,9 +9,16 @@ It's very appreciated if you could contribute code for other platforms.
 
 ## How to build
 
-To cut a long story short, see the [get started with Visual Studio ](https://learn.microsoft.com/en-us/xamarin/get-started/first-app/?pivots=windows-vs2022) from Microsoft
+First of all, you should install Visual Studio and `.NET Multi-platform App UI development` payload.
 
-If you want to release your own one, you should [specify the Android keystore with Visual Studio](https://learn.microsoft.com/en-us/xamarin/android/deploy-test/signing/?tabs=windows).
+![.NET Multi-platform App UI development payload](GFX/vs-installer-maui.png)
+
+To cut a long story short, please see
+the [get started with Visual Studio ](https://learn.microsoft.com/en-us/xamarin/get-started/first-app/?pivots=windows-vs2022)
+from Microsoft to get more information.
+
+If you want to release your own one, you
+should [specify the Android keystore with Visual Studio](https://learn.microsoft.com/en-us/xamarin/android/deploy-test/signing/?tabs=windows).
 
 ## Localization
 

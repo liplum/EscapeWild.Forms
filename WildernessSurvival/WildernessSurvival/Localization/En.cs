@@ -50,6 +50,10 @@ namespace WildernessSurvival.Localization
             { "Item.OldShotgun.Desc", "It still can work." },
             { "Item.Trap.Name", "Trap" },
             { "Item.Trap.Desc", "Wait and see." },
+            { "Item.RoastedBerry.Name", "Roasted Berry" },
+            { "Item.RoastedBerry.Desc", "Slimy." },
+            { "Item.Stick.Name", "Stick" },
+            { "Item.Stick.Desc", "A common stick." },
             { "Cook.Cook", "Cook" },
             { "Cook.Boil", "Boil" },
             { "Cook.CookTip", "Select one to cook" },
@@ -94,6 +98,7 @@ namespace WildernessSurvival.Localization
             { "Action.Backpack", "Backpack" },
             { "Action.Cook", "Cook" },
             { "Subtropics.Common.Rest", "You took a break and feel better." },
+            { "Subtropics.Hut.Rest", "In a warm hut, you slept soundly." },
             { "Subtropics.Common.Fire", "You start a fire." },
             { "OK", "OK" },
             { "Alright", "Alright" }
