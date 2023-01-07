@@ -16,9 +16,9 @@ namespace WildernessSurvival.Droid
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-
             Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
+            XF.Material.Droid.Material.Init(this, savedInstanceState);
             LoadApplication(new App());
         }
 

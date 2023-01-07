@@ -7,6 +7,7 @@
   x:DataType="core:Player"
   xmlns:ui="clr-namespace:WildernessSurvival.UI"
   xmlns:core="clr-namespace:WildernessSurvival.Core;assembly=WildernessSurvival"
+  xmlns:m2="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
   mc:Ignorable="d"
   x:Class="WildernessSurvival.MainPage">
   <ContentPage.Resources>
@@ -19,48 +20,51 @@
 
   </ContentPage.Resources>
 
-  <StackLayout Padding="15,30,15,15">
-    <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
-    <Grid Padding="10">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-        <RowDefinition Height="*" />
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
+  <StackLayout Padding="15">
+    <m2:MaterialCard>
+      <StackLayout>
+      <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
+      <Grid Padding="10">
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
 
-      <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
-      <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
-      <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
-      <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
-      <Label Text="{ui:I18N Key=Attr.Location}" Grid.Row="4" Grid.Column="0" />
+        <Label Text="{ui:I18N Key=Attr.Health}" Grid.Row="0" Grid.Column="0" />
+        <Label Text="{ui:I18N Key=Attr.Food}" Grid.Row="1" Grid.Column="0" />
+        <Label Text="{ui:I18N Key=Attr.Water}" Grid.Row="2" Grid.Column="0" />
+        <Label Text="{ui:I18N Key=Attr.Energy}" Grid.Row="3" Grid.Column="0" />
+        <Label Text="{ui:I18N Key=Attr.Location}" Grid.Row="4" Grid.Column="0" />
 
-      <ProgressBar HorizontalOptions="Fill"
-        x:Name="HealthProgressBar"
-        Grid.Column="1"
-        Grid.Row="0" />
-      <ProgressBar HorizontalOptions="Fill"
-        x:Name="FoodProgressBar"
-        Grid.Column="1"
-        Grid.Row="1" />
-      <ProgressBar HorizontalOptions="Fill"
-        x:Name="WaterProgressBar"
-        Grid.Column="1"
-        Grid.Row="2" />
-      <ProgressBar HorizontalOptions="Fill"
-        x:Name="EnergyProgressBar"
-        Grid.Column="1"
-        Grid.Row="3" />
-      <Label
-        Text="{Binding LocationName,Source={StaticResource Player},Mode=OneWay}" Grid.Column="1"
-        Grid.Row="4" />
-    </Grid>
-
+        <ProgressBar HorizontalOptions="Fill"
+          x:Name="HealthProgressBar"
+          Grid.Column="1"
+          Grid.Row="0" />
+        <ProgressBar HorizontalOptions="Fill"
+          x:Name="FoodProgressBar"
+          Grid.Column="1"
+          Grid.Row="1" />
+        <ProgressBar HorizontalOptions="Fill"
+          x:Name="WaterProgressBar"
+          Grid.Column="1"
+          Grid.Row="2" />
+        <ProgressBar HorizontalOptions="Fill"
+          x:Name="EnergyProgressBar"
+          Grid.Column="1"
+          Grid.Row="3" />
+        <Label
+          Text="{Binding LocationName,Source={StaticResource Player},Mode=OneWay}" Grid.Column="1"
+          Grid.Row="4" />
+      </Grid>
+      </StackLayout>
+    </m2:MaterialCard>
     <ProgressBar x:Name="TripProgressBar" HorizontalOptions="Fill" />
 
     <Grid>

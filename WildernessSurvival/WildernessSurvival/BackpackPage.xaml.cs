@@ -75,6 +75,7 @@ namespace WildernessSurvival
             {
                 AfterUseArea.IsVisible = false;
                 Use.IsEnabled = false;
+                ItemsPicker.SelectedItem = null;
                 AfterUseLabel.Text = $"Backpack.After{UseType.Use}".Tr();
             }
 

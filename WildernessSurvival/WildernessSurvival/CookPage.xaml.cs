@@ -69,6 +69,7 @@ namespace WildernessSurvival
             {
                 Cook.Text = _i18n("Cook");
                 Cook.IsEnabled = false;
+                ItemsPicker.SelectedItem = null;
                 ItemDescription.Text = string.Empty;
             }
             else

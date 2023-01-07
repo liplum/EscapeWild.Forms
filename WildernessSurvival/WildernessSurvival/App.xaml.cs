@@ -15,6 +15,7 @@ namespace WildernessSurvival
             // I18N.RegisterLocalization(new LangAnother());
             I18N.SetCulture(CultureInfo.CurrentUICulture);
             InitializeComponent();
+            XF.Material.Forms.Material.Init(this);
             MainPage = new MainPage();
         }
 
