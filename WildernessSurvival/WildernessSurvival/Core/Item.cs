@@ -89,6 +89,11 @@ namespace WildernessSurvival.Core
             Effects.Add(effect);
         }
 
+        public void Add(params AttrModifier[] effect)
+        {
+            Effects.AddRange(effect);
+        }
+
         public void PerformModification(AttributeManager attrs)
         {
             foreach (var effect in Effects)
@@ -116,7 +121,7 @@ namespace WildernessSurvival.Core
         public virtual bool CanUse(Player player) => true;
 
         public abstract UseType UseType { get; }
-        public bool DisplayPreview => true;
+        public virtual bool DisplayPreview => true;
 
         public virtual async Task Use(Player player)
         {

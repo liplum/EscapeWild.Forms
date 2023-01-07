@@ -1,4 +1,5 @@
-﻿using WildernessSurvival.Core;
+﻿using System;
+using WildernessSurvival.Core;
 
 // ReSharper disable CheckNamespace
 namespace WildernessSurvival.Game
@@ -231,5 +232,109 @@ namespace WildernessSurvival.Game
         {
             builder.Add(AttrType.Food.WithEffect(Restore));
         }
+    }
+
+    public class UnknownMushrooms : UsableItem, ICookableItem
+    {
+        public const float DefaultHpDelta = 0.45f;
+        public float HpDelta = DefaultHpDelta;
+        public const float DefaultFoodDelta = 0.15f;
+        public float FoodDelta = DefaultFoodDelta;
+        public const float DefaultEnergyDelta = 0.15f;
+        public float EnergyDelta = DefaultEnergyDelta;
+        public float FlueCost { get; set; } = 2f;
+
+        public static UnknownMushrooms Poisonous(float ratio) => new UnknownMushrooms
+        {
+            HpDelta = -DefaultHpDelta * ratio,
+            FoodDelta = -DefaultFoodDelta * ratio,
+            EnergyDelta = -DefaultEnergyDelta * ratio,
+            FlueCost = 2f * (1f + ratio),
+        };
+
+        public static UnknownMushrooms Safe(float ratio) => new UnknownMushrooms
+        {
+            FoodDelta = DefaultFoodDelta * ratio,
+            EnergyDelta = DefaultEnergyDelta * ratio,
+            FlueCost = 2f * (1f + ratio),
+        };
+
+        public static UnknownMushrooms Random() => new UnknownMushrooms
+        {
+            HpDelta = Rand.Float(-0.4f, 0.1f),
+            FoodDelta = Rand.Float(-0.2f, 0.15f),
+            EnergyDelta = Rand.Float(-0.15f, 0.05f),
+            FlueCost = Rand.Float(2f, 4f),
+        };
+
+        public override bool DisplayPreview => false;
+        public override string Name => nameof(UnknownMushrooms);
+        public override UseType UseType => UseType.Eat;
+
+        public override void BuildAttrModification(AttrModifierBuilder builder)
+        {
+            builder.Add(AttrType.Health.WithEffect(HpDelta));
+        }
+
+        public CookType CookType => CookType.Roast;
+
+        public IItem Cook() => new GrilledUnknownMushrooms
+        {
+            HpDelta = Math.Abs(HpDelta),
+            FoodDelta = Math.Abs(FoodDelta),
+            EnergyDelta = Math.Abs(EnergyDelta),
+        };
+    }
+
+    public class GrilledUnknownMushrooms : UsableItem
+    {
+        public float HpDelta;
+        public float FoodDelta;
+        public float EnergyDelta;
+
+        public override string Name => nameof(GrilledUnknownMushrooms);
+
+        public override UseType UseType => UseType.Eat;
+
+        public override void BuildAttrModification(AttrModifierBuilder builder)
+        {
+            builder.Add(AttrType.Health.WithEffect(HpDelta));
+            builder.Add(AttrType.Food.WithEffect(FoodDelta));
+            builder.Add(AttrType.Energy.WithEffect(EnergyDelta));
+        }
+    }
+
+    public class CookableItem : UsableItem, ICookableItem
+    {
+        public CookableItem(string name)
+        {
+            Name = name;
+        }
+
+        public ItemMaker<IItem> Cooked { get; set; }
+        public AttrModifier[] Modifiers { get; set; } = Array.Empty<AttrModifier>();
+        public override string Name { get; }
+        public override UseType UseType => UseType.Eat;
+
+        public float FlueCost { get; set; }
+
+        public override void BuildAttrModification(AttrModifierBuilder builder) => builder.Add(Modifiers);
+
+        public CookType CookType => CookType.Roast;
+        public IItem Cook() => Cooked();
+    }
+
+    public class CookedItem : UsableItem
+    {
+        public CookedItem(string name)
+        {
+            Name = name;
+        }
+
+        public AttrModifier[] Modifiers { get; set; } = Array.Empty<AttrModifier>();
+        public override string Name { get; }
+        public override UseType UseType => UseType.Eat;
+
+        public override void BuildAttrModification(AttrModifierBuilder builder) => builder.Add(Modifiers);
     }
 }

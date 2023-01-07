@@ -627,22 +627,20 @@ namespace WildernessSurvival.Game
         /// <summary>
         /// Cost: Food[0.02], Water[0.05], Energy[0.10]
         /// Berry x1(30%)
-        /// Dirty Water x1(20%)
-        /// Log x1(60%) + x1(20%)
+        /// Log x1(20%)
         /// Nuts x1(60%) + x1(40%)
-        /// Stick x1(60%) or x2(30%) || x3(10%)
+        /// Stick x1(60%) || x2(30%) || x3(10%)
+        /// Unknown Mushrooms (3%)
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
             player.Modify(AttrType.Food, -0.02f, HardnessFix);
             player.Modify(AttrType.Water, -0.05f, HardnessFix);
             player.Modify(AttrType.Energy, -0.10f, HardnessFix);
-            const int BerryRate = 30,
-                DirtyWaterRate = 20,
-                LogRate = 50,
-                NutsRate = 60,
-                NutsDoubleRate = 40,
-                LogDoubleRate = 20;
+            const float BerryRate = 0.3f,
+                LogRate = 0.2f,
+                NutsRate = 0.5f,
+                NutsDoubleRate = 0.4f;
 
             var proportion = 10 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
@@ -650,7 +648,7 @@ namespace WildernessSurvival.Game
 
             var gained = new List<IItem>();
 
-            if (Rand.Int(100) < BerryRate * prop)
+            if (Rand.Float() < BerryRate * prop)
             {
                 gained.Add(new Berry
                 {
@@ -658,30 +656,15 @@ namespace WildernessSurvival.Game
                 });
             }
 
-            if (Rand.Int(100) < DirtyWaterRate * prop)
-            {
-                gained.Add(new DirtyWater
-                {
-                    WaterRestore = DirtyWater.DefaultWaterRestore * Rand.Float(0.5f, 1f)
-                });
-            }
-
-            if (Rand.Int(100) < LogRate * prop)
+            if (Rand.Float() < LogRate * prop)
             {
                 gained.Add(new Log
                 {
                     Fuel = Log.DefaultFuel * Rand.Float(0.5f, 0.75f),
                 });
-                if (Rand.Int(100) < LogDoubleRate)
-                {
-                    gained.Add(new Log
-                    {
-                        Fuel = Log.DefaultFuel * Rand.Float(0.6f, 0.8f),
-                    });
-                }
             }
 
-            if (Rand.Int(100) < NutsRate * prop)
+            if (Rand.Float() < NutsRate * prop)
             {
                 gained.Add(new Nuts
                 {
@@ -696,12 +679,12 @@ namespace WildernessSurvival.Game
                 }
             }
 
-            var stick = Rand.Int(100);
-            if (stick < 60)
+            var stick = Rand.Float();
+            if (stick < 0.6f)
             {
                 gained.Add(new Sticks());
             }
-            else if (stick < 90)
+            else if (stick < 0.9f)
             {
                 gained.Add(new Sticks());
                 gained.Add(new Sticks());
@@ -711,6 +694,32 @@ namespace WildernessSurvival.Game
                 gained.Add(new Sticks());
                 gained.Add(new Sticks());
                 gained.Add(new Sticks());
+            }
+
+            if (Rand.Float() < 0.03f)
+            {
+                gained.Add(UnknownMushrooms.Random());
+            }
+
+            player.AddItems(gained);
+            ExploreCount++;
+            await player.DisplayGainedItems(gained);
+        }
+    }
+
+    public class CavePlace : Place
+    {
+        /// <summary>
+        /// Cost: Food[0.05], Water[0.06], Energy[0.12]
+        /// Unknown Mushrooms (5%)
+        /// </summary>
+        protected override async Task PerformExplore(Player player)
+        {
+            
+            var gained = new List<IItem>();
+            if (Rand.Float() < 0.05f)
+            {
+                gained.Add(UnknownMushrooms.Random());
             }
 
             player.AddItems(gained);

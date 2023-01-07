@@ -44,13 +44,7 @@ namespace WildernessSurvival.Core
         private readonly Dictionary<string, int> _requirements = new Dictionary<string, int>();
         public AttrModifier[] Modifiers { get; set; } = Array.Empty<AttrModifier>();
 
-        public void BuildCraftAttrRequirements(AttrModifierBuilder builder)
-        {
-            foreach (var modifier in Modifiers)
-            {
-                builder.Add(modifier);
-            }
-        }
+        public void BuildCraftAttrRequirements(AttrModifierBuilder builder) => builder.Add(Modifiers);
 
         public NamedRecipe(ItemMaker<IItem> output, params string[] reqs)
         {
