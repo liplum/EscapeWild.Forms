@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
@@ -8,31 +9,81 @@ namespace WildernessSurvival.Game
 {
     public class Route : IRoute<Place>
     {
+        public class Entry
+        {
+            public Place Place;
+
+            /// <summary>
+            /// The appear rate of all places.
+            /// Larger proportion will be more likely to appear.
+            /// </summary>
+            public int Proportion;
+
+            /// <summary>
+            /// [0f,1f]
+            /// Larger inertia will try to keep player stay the same location.
+            /// If it's zero, player will leave the place instantly. 
+            /// </summary>
+            public float Inertia;
+
+            private int _maxStayCount;
+
+            public int MaxStayCount
+            {
+                get => _maxStayCount;
+                set => _maxStayCount = Math.Max(value, 1);
+            }
+
+            public override string ToString() => Place.ToString();
+        }
+
+        private class EntryImpl
+        {
+            public Entry Meta;
+            public float AppearRate;
+            public int AppearCount;
+            public int Proportion => Meta.Proportion;
+            public float Inertia => Meta.Inertia;
+            public int MaxStayCount => Meta.MaxStayCount;
+            public Place Place => Meta.Place;
+            public override string ToString() => Meta.Place.ToString();
+        }
+
         public string Name { get; }
-        public int ChangedRate = 30;
-        private readonly List<Place> _allPlace;
+        private readonly List<EntryImpl> _entries;
 
         /// <summary>
         /// [0,1]
         /// </summary>
         private float Hardness { get; }
 
-        public Route(string name, float hardness, params Place[] places)
+        public Route(string name, float hardness, params Entry[] entries)
         {
             Name = name;
             Hardness = hardness;
-            _allPlace = places.ToList();
-            foreach (var place in places)
+            _entries = new List<EntryImpl>();
+            var sum = 0f;
+            foreach (var entry in entries)
             {
-                place.Route = this;
+                entry.Place.Route = this;
+                _entries.Add(new EntryImpl
+                {
+                    Meta = entry,
+                });
+                sum += entry.Proportion;
             }
 
-            _curPlace = _allPlace[0];
+            foreach (var entry in _entries)
+            {
+                entry.AppearRate = entry.Proportion / sum;
+            }
+
+            _cur = _entries[0];
         }
 
-        public Place InitialPlace => _allPlace[0];
+        public Place InitialPlace => _entries[0].Place;
 
-        private Place _curPlace;
+        private EntryImpl _cur;
 
         public float HardnessFix(float raw)
         {
@@ -44,26 +95,28 @@ namespace WildernessSurvival.Game
 
         public async Task<Place> GoNextPlace(Player player)
         {
-            if (Rand.Int(100) >= _curPlace.ChangedRate) return _curPlace;
-            var cur = _curPlace;
-            var range = 100 - _curPlace.AppearRate;
-            var next = Rand.Int(range);
-            var OtherPlace = (from p in _allPlace where p != cur select p).ToList();
-
-            for (int i = 0, sum = 0; i <= OtherPlace.Count; ++i)
+            // Stay the same place if player is "attracted".
+            var isStay = Rand.Float() < _cur.Inertia * (1f - (float)_cur.AppearCount / _cur.MaxStayCount);
+            if (isStay) return _cur.Place;
+            var cur = _cur;
+            var otherPlaces = (from p in _entries where p != cur select p).ToList();
+            var changeHit = Rand.Float();
+            var sum = 0f;
+            foreach (var test in otherPlaces)
             {
-                var p = OtherPlace[i];
-                sum += p.AppearRate;
-                if (next <= sum)
+                sum += test.AppearRate;
+                if (changeHit <= sum)
                 {
-                    await _curPlace.OnLeave(player);
-                    _curPlace = p;
-                    await p.OnEnter(player);
-                    return p;
+                    // Hit the place
+                    await _cur.Place.OnLeave(player);
+                    _cur = test;
+                    await test.Place.OnEnter(player);
+                    _cur.AppearCount++;
+                    return test.Place;
                 }
             }
 
-            return _curPlace;
+            return _cur.Place;
         }
     }
 
@@ -71,11 +124,7 @@ namespace WildernessSurvival.Game
     {
         public abstract string Name { get; }
 
-        public abstract int AppearRate { get; }
-
         public abstract int HuntingRate { get; }
-
-        public abstract int ChangedRate { get; }
 
         public IRoute<IPlace> Route { get; set; }
         protected Route Owner => Route as Route;
@@ -273,18 +322,14 @@ namespace WildernessSurvival.Game
 
     public class PlainPlace : Place
     {
-        public PlainPlace(string name, int appearRate, int huntingRate)
+        public PlainPlace(string name, int huntingRate)
         {
             Name = name;
-            AppearRate = appearRate;
             HuntingRate = huntingRate;
         }
 
         public override string Name { get; }
         public override int HuntingRate { get; }
-        public override int ChangedRate => Owner.ChangedRate;
-        public override int AppearRate { get; }
-
 
         /// <summary>
         /// Cost: Water[0.04], Energy[0.08]
@@ -331,10 +376,9 @@ namespace WildernessSurvival.Game
 
     public class RiversidePlace : Place
     {
-        public RiversidePlace(string name, int appearRate, int huntingRate)
+        public RiversidePlace(string name, int huntingRate)
         {
             Name = name;
-            AppearRate = appearRate;
             HuntingRate = huntingRate;
         }
 
@@ -350,10 +394,7 @@ namespace WildernessSurvival.Game
             }
         }
 
-        public override int ChangedRate => Owner.ChangedRate;
-
         public override int HuntingRate { get; }
-        public override int AppearRate { get; }
 
         /// <summary>
         /// Cost: Food[0.08], Water[0.08]
@@ -418,17 +459,14 @@ namespace WildernessSurvival.Game
 
     public class HutPlace : Place
     {
-        public HutPlace(string name, int appearRate, int huntingRate)
+        public HutPlace(string name, int huntingRate)
         {
             Name = name;
-            AppearRate = appearRate;
             HuntingRate = huntingRate;
         }
 
         public override string Name { get; }
         public override int HuntingRate { get; }
-        public override int ChangedRate => 100;
-        public override int AppearRate { get; }
 
         public override ISet<ActionType> AvailableActions
         {
@@ -512,18 +550,14 @@ namespace WildernessSurvival.Game
 
     public class ForestPlace : Place
     {
-        public ForestPlace(string name, int appearRate, int huntingRate)
+        public ForestPlace(string name, int huntingRate)
         {
             Name = name;
-            AppearRate = appearRate;
             HuntingRate = huntingRate;
         }
 
         public override string Name { get; }
         public override int HuntingRate { get; }
-        public override int ChangedRate => Owner.ChangedRate;
-
-        public override int AppearRate { get; }
 
         public override ISet<ActionType> AvailableActions
         {

@@ -19,7 +19,7 @@
 
   </ContentPage.Resources>
 
-  <StackLayout Padding="10">
+  <StackLayout Padding="15,30,15,15">
     <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
     <Grid Padding="10">
       <Grid.RowDefinitions>

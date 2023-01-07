@@ -56,7 +56,7 @@ you can follow this step-by-step guide.
    I18N.RegisterLocalization(new LangFr());
    ``` 
 
-#### Continue to an existed localization
+#### Continue an existed localization
 
 If your language has been added under [Localization folder](WildernessSurvival/WildernessSurvival/Localization),
 but it lacks further localization, you can follow this step-by-step guide.

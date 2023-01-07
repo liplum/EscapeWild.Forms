@@ -119,7 +119,6 @@ namespace WildernessSurvival
             Fire.IsEnabled &= _player.CanPerformAnyAction;
             Cook.IsEnabled &= _player.CanPerformAnyAction;
             // Update Restart button
-            Restart.IsVisible = !_player.CanPerformAnyAction;
             if (updateProgressBarInSequence)
             {
                 await TripProgressBar.ProgressTo(_player.TripRatio, 300, Easing.Linear);
@@ -142,6 +141,9 @@ namespace WildernessSurvival
 
         private async Task CheckDeadOrWin()
         {
+            // Don't show the tip again if player can hit the restart button.
+            if(Restart.IsVisible) return;
+            Restart.IsVisible = !_player.CanPerformAnyAction;
             if (_player.IsDead)
             {
                 await ShowDialog("Failed");
