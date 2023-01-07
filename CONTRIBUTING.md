@@ -4,6 +4,15 @@ EscapeWild.Forms is an Xamarin.Forms project and only works on Android,
 at least, UWP and iOS are not available during our development.
 It's very appreciated if you could contribute code for other platforms.
 
+- If you want to do localization, see [localization](#Localization)
+- If you want to build EscapeWild.Forms, see [building guide](#how-to-build)
+
+## How to build
+
+To cut a long story short, see the [get started with Visual Studio ](https://learn.microsoft.com/en-us/xamarin/get-started/first-app/?pivots=windows-vs2022) from Microsoft
+
+If you want to release your own one, you should [specify the Android keystore with Visual Studio](https://learn.microsoft.com/en-us/xamarin/android/deploy-test/signing/?tabs=windows).
+
 ## Localization
 
 ### Structure
