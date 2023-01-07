@@ -60,7 +60,7 @@ namespace WildernessSurvival.Game
 
         public override string Name { get; }
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(-0.03f));
             builder.Add(AttrType.Water.WithEffect(-0.05f));
@@ -69,7 +69,7 @@ namespace WildernessSurvival.Game
 
         public override async Task Use(Player player)
         {
-            if (IsUsed || player.HasFire) return;
+            if (player.HasFire) return;
             await base.Use(player);
             var wet = player.Location.Wet;
             if (Rand.Float() < FireRate * (1f - wet))

@@ -18,6 +18,10 @@ namespace WildernessSurvival
             _player = (Player)Application.Current.Resources["Player"];
             _recipe2Output = Core.Craft.TestAvailableRecipes(_player.Backpack);
             RebuildPicker();
+            HealthProgressBar.Progress = _player.Health;
+            FoodProgressBar.Progress = _player.Food;
+            WaterProgressBar.Progress = _player.Water;
+            EnergyProgressBar.Progress = _player.Energy;
             UpdateUI();
         }
 
@@ -70,12 +74,35 @@ namespace WildernessSurvival
                 Craft.IsEnabled = false;
                 ItemsPicker.SelectedItem = null;
                 ItemDescription.Text = string.Empty;
+                AfterCraftArea.IsVisible = false;
             }
             else
             {
                 Craft.IsEnabled = _player.CanPerformAnyAction;
-                var (_, output) = _recipe2Output[index];
+                var (recipe, output) = _recipe2Output[index];
                 ItemDescription.Text = output.LocalizedDesc();
+                var builder = new AttrModifierBuilder();
+                recipe.BuildCraftAttrRequirements(builder);
+                if (builder.HasAnyEffect)
+                {
+                    var mock = new DefaultAttributeModel
+                    {
+                        Health = _player.Health,
+                        Food = _player.Food,
+                        Water = _player.Water,
+                        Energy = _player.Energy,
+                    };
+                    builder.PerformModification(new AttributeManager(mock));
+                    AfterCraftArea.IsVisible = true;
+                    HealthProgressBar.ProgressTo(mock.Health, 300, Easing.Linear);
+                    FoodProgressBar.ProgressTo(mock.Food, 300, Easing.Linear);
+                    WaterProgressBar.ProgressTo(mock.Water, 300, Easing.Linear);
+                    EnergyProgressBar.ProgressTo(mock.Energy, 300, Easing.Linear);
+                }
+                else
+                {
+                    AfterCraftArea.IsVisible = false;
+                }
             }
         }
     }

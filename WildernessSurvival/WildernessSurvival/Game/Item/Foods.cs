@@ -12,7 +12,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(EnergyBar);
         public override UseType UseType => UseType.Eat;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
             builder.Add(AttrType.Energy.WithEffect(EnergyRestore));
@@ -27,7 +27,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(BottledWater);
         public override UseType UseType => UseType.Drink;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Water.WithEffect(Restore));
         }
@@ -51,7 +51,7 @@ namespace WildernessSurvival.Game
             FoodRestore = RoastedBerry.DefaultFoodRestore + FoodRestore * 0.15f,
         };
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
             builder.Add(AttrType.Food.WithEffect(WaterRestore));
@@ -66,7 +66,7 @@ namespace WildernessSurvival.Game
         public override UseType UseType => UseType.Eat;
 
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
         }
@@ -83,7 +83,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(Berry);
         public override UseType UseType => UseType.Eat;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
             builder.Add(AttrType.Water.WithEffect(WaterRestore));
@@ -105,7 +105,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(RoastedBerry);
         public override UseType UseType => UseType.Eat;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
         }
@@ -128,7 +128,7 @@ namespace WildernessSurvival.Game
         };
 
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Water.WithEffect(WaterRestore));
             builder.Add(AttrType.Health.WithEffect(HealthDelta));
@@ -142,7 +142,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(CleanWater);
         public override UseType UseType => UseType.Drink;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Water.WithEffect(Restore));
         }
@@ -156,7 +156,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(Nuts);
         public override UseType UseType => UseType.Eat;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(Restore));
         }
@@ -175,7 +175,7 @@ namespace WildernessSurvival.Game
         public float Restore = DefaultRestore;
         public override string Name => nameof(ToastedNuts);
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(Restore));
         }
@@ -190,7 +190,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(EnergyDrink);
         public override UseType UseType => UseType.Drink;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Water.WithEffect(WaterRestore));
             builder.Add(AttrType.Energy.WithEffect(EnergyRestore));
@@ -213,7 +213,7 @@ namespace WildernessSurvival.Game
             Restore = CookedFish.DefaultRestore + FoodRestore * 0.2f,
         };
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(FoodRestore));
             builder.Add(AttrType.Water.WithEffect(WaterRestore));
@@ -227,7 +227,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(CookedFish);
         public override UseType UseType => UseType.Eat;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Food.WithEffect(Restore));
         }

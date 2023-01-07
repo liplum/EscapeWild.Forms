@@ -9,7 +9,10 @@ namespace WildernessSurvival.Game
             Craft.RegisterRecipe(new NamedRecipe(
                 FireStarterItems.HandDrillKit,
                 nameof(Sticks), nameof(Sticks)
-            ));
+            )
+            {
+                Modifiers = new[] { AttrType.Energy.WithEffect(-0.05f) }
+            });
         }
     }
 }

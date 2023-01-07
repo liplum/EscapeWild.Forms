@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace WildernessSurvival.Core
@@ -11,6 +12,7 @@ namespace WildernessSurvival.Core
         IItem TryGetResult(Backpack backpack);
 
         IItem ConsumeAndCraft(Backpack backpack);
+        void BuildCraftAttrRequirements(AttrModifierBuilder builder);
     }
 
     public static class Craft
@@ -40,6 +42,15 @@ namespace WildernessSurvival.Core
     {
         private readonly ItemMaker<IItem> _output;
         private readonly Dictionary<string, int> _requirements = new Dictionary<string, int>();
+        public AttrModifier[] Modifiers { get; set; } = Array.Empty<AttrModifier>();
+
+        public void BuildCraftAttrRequirements(AttrModifierBuilder builder)
+        {
+            foreach (var modifier in Modifiers)
+            {
+                builder.Add(modifier);
+            }
+        }
 
         public NamedRecipe(ItemMaker<IItem> output, params string[] reqs)
         {

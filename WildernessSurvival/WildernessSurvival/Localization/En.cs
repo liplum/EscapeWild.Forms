@@ -72,6 +72,7 @@ namespace WildernessSurvival.Localization
             { "Craft.Header", "Crafting" },
             { "Craft.Tip", "Select one to craft" },
             { "Craft.Craft", "Craft" },
+            { "Craft.AfterCraft", "After Craft" },
             { "Fire.Header", "Campfire" },
             { "Fire.Throw", "Throw" },
             { "Fire.Tip", "Select to fill the fuel." },

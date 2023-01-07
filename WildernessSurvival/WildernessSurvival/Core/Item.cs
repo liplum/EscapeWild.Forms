@@ -63,33 +63,33 @@ namespace WildernessSurvival.Core
         Eat
     }
 
-    public class UseEffect
+    public class AttrModifier
     {
         public readonly AttrType AttrType;
         public readonly float Delta;
 
-        public UseEffect(AttrType attr, float delta)
+        public AttrModifier(AttrType attr, float delta)
         {
             AttrType = attr;
             Delta = delta;
         }
     }
 
-    public static class UseEffectHelper
+    public static class AttrModifierHelper
     {
-        public static UseEffect WithEffect(this AttrType attr, float delta) => new UseEffect(attr, delta);
+        public static AttrModifier WithEffect(this AttrType attr, float delta) => new AttrModifier(attr, delta);
     }
 
-    public class UseEffectBuilder
+    public class AttrModifierBuilder
     {
-        public readonly List<UseEffect> Effects = new List<UseEffect>();
+        public readonly List<AttrModifier> Effects = new List<AttrModifier>();
 
-        public void Add(UseEffect effect)
+        public void Add(AttrModifier effect)
         {
             Effects.Add(effect);
         }
 
-        public void PerformUseEffects(AttributeManager attrs)
+        public void PerformModification(AttributeManager attrs)
         {
             foreach (var effect in Effects)
             {
@@ -102,29 +102,25 @@ namespace WildernessSurvival.Core
 
     public interface IUsableItem : IItem
     {
-        public void BuildUseEffect(UseEffectBuilder builder);
+        public void BuildAttrModification(AttrModifierBuilder builder);
         public bool CanUse(Player player);
         public Task Use(Player player);
         public UseType UseType { get; }
-        public bool IsUsed { get; }
     }
 
     public abstract class UsableItem : IUsableItem
     {
         public abstract string Name { get; }
-        public abstract void BuildUseEffect(UseEffectBuilder builder);
+        public abstract void BuildAttrModification(AttrModifierBuilder builder);
         public virtual bool CanUse(Player player) => true;
 
         public abstract UseType UseType { get; }
-        public bool IsUsed { get; protected set; }
 
         public virtual async Task Use(Player player)
         {
-            if (IsUsed) return;
-            IsUsed = true;
-            var builder = new UseEffectBuilder();
-            BuildUseEffect(builder);
-            builder.PerformUseEffects(player.Attrs);
+            var builder = new AttrModifierBuilder();
+            BuildAttrModification(builder);
+            builder.PerformModification(player.Attrs);
         }
     }
 

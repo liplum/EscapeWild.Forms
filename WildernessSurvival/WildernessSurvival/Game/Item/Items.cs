@@ -9,7 +9,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(Bandage);
         public override UseType UseType => UseType.Use;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Health.WithEffect(Restore));
         }
@@ -22,7 +22,7 @@ namespace WildernessSurvival.Game
         public override string Name => nameof(FistAidKit);
         public override UseType UseType => UseType.Use;
 
-        public override void BuildUseEffect(UseEffectBuilder builder)
+        public override void BuildAttrModification(AttrModifierBuilder builder)
         {
             builder.Add(AttrType.Health.WithEffect(HpRestore));
             builder.Add(AttrType.Energy.WithEffect(EnergyRestore));

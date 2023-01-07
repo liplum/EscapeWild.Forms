@@ -94,8 +94,8 @@ namespace WildernessSurvival
                     Use.IsEnabled = _player.CanPerformAnyAction;
                     Use.Text = $"Backpack.{item.UseType}".Tr();
                     AfterUseLabel.Text = $"Backpack.After{item.UseType}".Tr();
-                    var builder = new UseEffectBuilder();
-                    item.BuildUseEffect(builder);
+                    var builder = new AttrModifierBuilder();
+                    item.BuildAttrModification(builder);
                     if (builder.HasAnyEffect)
                     {
                         var mock = new DefaultAttributeModel
@@ -105,7 +105,7 @@ namespace WildernessSurvival
                             Water = _player.Water,
                             Energy = _player.Energy,
                         };
-                        builder.PerformUseEffects(new AttributeManager(mock));
+                        builder.PerformModification(new AttributeManager(mock));
                         AfterUseArea.IsVisible = true;
                         HealthProgressBar.ProgressTo(mock.Health, 300, Easing.Linear);
                         FoodProgressBar.ProgressTo(mock.Food, 300, Easing.Linear);
