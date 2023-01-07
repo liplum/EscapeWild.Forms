@@ -16,6 +16,7 @@ namespace WildernessSurvival
             I18N.SetCulture(CultureInfo.CurrentUICulture);
             InitializeComponent();
             XF.Material.Forms.Material.Init(this);
+            Sharpnado.MaterialFrame.Initializer.Initialize(loggerEnable: false, debugLogEnable: false);
             MainPage = new MainPage();
         }
 

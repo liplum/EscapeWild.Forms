@@ -8,6 +8,7 @@
   xmlns:ui="clr-namespace:WildernessSurvival.UI"
   xmlns:core="clr-namespace:WildernessSurvival.Core;assembly=WildernessSurvival"
   xmlns:m2="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+  xmlns:mf="clr-namespace:Sharpnado.MaterialFrame;assembly=Sharpnado.MaterialFrame"
   mc:Ignorable="d"
   x:Class="WildernessSurvival.MainPage">
   <ContentPage.Resources>
@@ -21,7 +22,7 @@
   </ContentPage.Resources>
 
   <StackLayout Padding="15">
-    <m2:MaterialCard>
+        <mf:MaterialFrame>
       <StackLayout>
       <Label x:Name="RouteLabel" FontSize="Title" HorizontalOptions="Center" />
       <Grid Padding="10">
@@ -64,7 +65,7 @@
           Grid.Row="4" />
       </Grid>
       </StackLayout>
-    </m2:MaterialCard>
+    </mf:MaterialFrame>
     <ProgressBar x:Name="TripProgressBar" HorizontalOptions="Fill" />
 
     <Grid>

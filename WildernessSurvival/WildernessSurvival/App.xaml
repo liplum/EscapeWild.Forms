@@ -4,6 +4,7 @@
   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:game="clr-namespace:WildernessSurvival.Game"
   xmlns:core="clr-namespace:WildernessSurvival.Core;assembly=WildernessSurvival"
   xmlns:m2="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+  xmlns:mf="clr-namespace:Sharpnado.MaterialFrame;assembly=Sharpnado.MaterialFrame"
   x:Class="WildernessSurvival.App">
   <Application.Resources>
     <core:Player x:Key="Player" x:Name="Player" />
@@ -12,6 +13,10 @@
     </Style>
     <Style TargetType="m2:MaterialCard">
       <Setter Property="CornerRadius" Value="12" />
+    </Style>
+    <Style TargetType="mf:MaterialFrame">
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="LightThemeBackgroundColor" Value="#E0E0E0" />
     </Style>
   </Application.Resources>
 </Application>
