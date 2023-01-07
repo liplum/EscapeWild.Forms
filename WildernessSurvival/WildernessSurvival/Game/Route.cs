@@ -26,13 +26,9 @@ namespace WildernessSurvival.Game
             /// </summary>
             public float Inertia;
 
-            private int _maxStayCount;
+            public int MaxAppearCount;
 
-            public int MaxStayCount
-            {
-                get => _maxStayCount;
-                set => _maxStayCount = Math.Max(value, 1);
-            }
+            public int MaxStayCount;
 
             public override string ToString() => Place.ToString();
         }
@@ -43,6 +39,8 @@ namespace WildernessSurvival.Game
             public float AppearRate;
             public int AppearCount;
             public int Proportion => Meta.Proportion;
+            public bool CanAppear => MaxAppearCount <= 0 || AppearCount < MaxAppearCount;
+            public int MaxAppearCount => Meta.MaxAppearCount;
             public float Inertia => Meta.Inertia;
             public int MaxStayCount => Meta.MaxStayCount;
             public Place Place => Meta.Place;
@@ -98,25 +96,25 @@ namespace WildernessSurvival.Game
             // Stay the same place if player is "attracted".
             var isStay = Rand.Float() < _cur.Inertia * (1f - (float)_cur.AppearCount / _cur.MaxStayCount);
             if (isStay) return _cur.Place;
-            var cur = _cur;
-            var otherPlaces = (from p in _entries where p != cur select p).ToList();
-            var changeHit = Rand.Float();
+            var old = _cur;
+            var otherPlaces = (from p in _entries where p != old && p.CanAppear select p).ToList();
+            var changeHit = Rand.Float(0f, otherPlaces.Sum(e => e.AppearRate));
             var sum = 0f;
-            foreach (var test in otherPlaces)
+            foreach (var newPlace in otherPlaces)
             {
-                sum += test.AppearRate;
+                sum += newPlace.AppearRate;
                 if (changeHit <= sum)
                 {
                     // Hit the place
-                    await _cur.Place.OnLeave(player);
-                    _cur = test;
-                    await test.Place.OnEnter(player);
-                    _cur.AppearCount++;
-                    return test.Place;
+                    await old.Place.OnLeave(player);
+                    _cur = newPlace;
+                    await newPlace.Place.OnEnter(player);
+                    newPlace.AppearCount++;
+                    return newPlace.Place;
                 }
             }
 
-            return _cur.Place;
+            return old.Place;
         }
     }
 
@@ -263,7 +261,7 @@ namespace WildernessSurvival.Game
         /// <summary>
         /// Cost: Food[0.04], Water[0.03], Energy[0.3]
         /// Cost based on tool level
-        /// Gain: Log x1 or x2
+        /// Gain: Log x1 or x2, Sticks x2 or x3
         /// </summary>
         protected virtual async Task PerformCutDownTree(Player player)
         {
@@ -277,6 +275,10 @@ namespace WildernessSurvival.Game
             {
                 Fuel = Log.DefaultFuel * Rand.Float(0.55f, 0.75f),
             });
+            for (var i = 0; i < 2; i++)
+            {
+                gained.Add(new Sticks());
+            }
 
             if (Rand.Int(100) < rate)
             {
@@ -284,6 +286,7 @@ namespace WildernessSurvival.Game
                 {
                     Fuel = Log.DefaultFuel * Rand.Float(0.55f, 0.75f),
                 });
+                gained.Add(new Sticks());
             }
 
             player.AddItems(gained);
@@ -315,13 +318,13 @@ namespace WildernessSurvival.Game
         /// Cost: Water[0.04], Energy[0.08]
         /// Berry x1(60%) + x1(30%)
         /// Dirty Water x1(60%) + x1(30%)
-        /// Stick x1(20%)
+        /// Stick x1(30%)
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
             player.Modify(AttrType.Water, -0.04f, HardnessFix);
             player.Modify(AttrType.Energy, -0.08f, HardnessFix);
-            const int BerryRate = 60, DirtyWaterRate = 60, StickRate = 20, DoubleRate = 30;
+            const int BerryRate = 60, DirtyWaterRate = 60, StickRate = 30, DoubleRate = 30;
 
             var proportion = 10 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
@@ -510,7 +513,7 @@ namespace WildernessSurvival.Game
         private bool _gotOxe, _gotFishRod, _gotGun, _gotTrap;
 
         /// <summary>
-        /// Cost: Food[0.02], Water[0.04], Energy[0.08]
+        /// Cost: Food[0.01], Water[0.02], Energy[0.03]
         /// Bottled Water x2
         /// Energy Bar x2
         /// Log x2
@@ -523,9 +526,9 @@ namespace WildernessSurvival.Game
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(AttrType.Food, -0.02f, HardnessFix);
-            player.Modify(AttrType.Water, -0.04f, HardnessFix);
-            player.Modify(AttrType.Energy, -0.08f, HardnessFix);
+            player.Modify(AttrType.Food, -0.01f, HardnessFix);
+            player.Modify(AttrType.Water, -0.02f, HardnessFix);
+            player.Modify(AttrType.Energy, -0.03f, HardnessFix);
             const int OxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
 
             var gained = new List<IItem>();

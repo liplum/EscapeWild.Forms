@@ -81,7 +81,7 @@ namespace WildernessSurvival.Core
             switch (attr)
             {
                 case AttrType.Health:
-                    _model.Health = value;
+                    _model.Health = Math.Min(value, 1f);
                     break;
                 case AttrType.Food:
                     _model.Food = value;

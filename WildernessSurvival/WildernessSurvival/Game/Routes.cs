@@ -20,7 +20,7 @@ namespace WildernessSurvival.Game
             {
                 Place = new RiversidePlace
                 {
-                    Name = "Plain",
+                    Name = "Riverside",
                     HuntingRate = 30,
                 },
                 Proportion = 30,
@@ -30,7 +30,7 @@ namespace WildernessSurvival.Game
             {
                 Place = new ForestPlace
                 {
-                    Name = "Plain",
+                    Name = "Forest",
                     HuntingRate = 60,
                 },
                 Proportion = 30,
@@ -46,6 +46,7 @@ namespace WildernessSurvival.Game
                 Proportion = 10,
                 Inertia = 0f,
                 MaxStayCount = 1,
+                MaxAppearCount = 1,
             }
         );
     }
