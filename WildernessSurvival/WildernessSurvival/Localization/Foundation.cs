@@ -13,6 +13,7 @@ namespace WildernessSurvival.Localization
     {
         private static ILocalization _curLocalization;
         private static ILocalization _defaultLocalization;
+        public static bool EnableFallbackToDefault = false;
 
         private static readonly Dictionary<CultureInfo, ILocalization> Culture2Localization =
             new Dictionary<CultureInfo, ILocalization>();
@@ -57,18 +58,31 @@ namespace WildernessSurvival.Localization
                 return 90;
             }
 
-            if (target.TwoLetterISOLanguageName.Equals(test.TwoLetterISOLanguageName)) {
+            if (target.TwoLetterISOLanguageName.Equals(test.TwoLetterISOLanguageName))
+            {
                 // has the same parent
                 return 80;
             }
+
             // not matched
             return 10;
         }
 
         public static string Get(string key)
         {
-            if (_curLocalization is null) return key;
-            return _curLocalization.TranslationKey2Localized.TryGetValue(key, out var localized) ? localized : key;
+            if (_curLocalization != null && _curLocalization.TranslationKey2Localized.TryGetValue(key, out var localized))
+            {
+                return localized;
+            }
+
+            if (EnableFallbackToDefault && _defaultLocalization != null)
+            {
+                return _defaultLocalization.TranslationKey2Localized.TryGetValue(key, out localized)
+                    ? localized
+                    : key;
+            }
+
+            return key;
         }
 
         public static string Tr(this string key) => Get(key);

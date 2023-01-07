@@ -157,7 +157,7 @@ namespace WildernessSurvival
             string i(string key) => I18N.Get($"Dialog.{state}.{key}");
             if (await DisplayAlert(
                     title: i("Title"),
-                    message: string.Format(i("Content"), _player.TurnCount),
+                    message: string.Format(i("Content"), _player.ActionNumber),
                     accept: i("Accept"),
                     cancel: i("Cancel")
                 ))

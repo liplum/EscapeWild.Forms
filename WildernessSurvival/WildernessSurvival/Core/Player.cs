@@ -32,7 +32,7 @@ namespace WildernessSurvival.Core
         private bool _hasFire;
         private IPlace _location;
         private float _tripRatio;
-        private int _turnNumber;
+        private int _actionNumber;
 
         public Player()
         {
@@ -46,7 +46,7 @@ namespace WildernessSurvival.Core
             _tripRatio = 0;
             CurRoute = Routes.SubtropicsRoute();
             Location = CurRoute.InitialPlace;
-            TurnCount = 0;
+            ActionNumber = 0;
             _backpack = new Backpack(this);
         }
 
@@ -76,10 +76,10 @@ namespace WildernessSurvival.Core
 
         public string LocationName => Location.LocalizedName();
 
-        public int TurnCount
+        public int ActionNumber
         {
-            get => _turnNumber;
-            private set => _turnNumber = value < 0 ? 0 : value;
+            get => _actionNumber;
+            private set => _actionNumber = value < 0 ? 0 : value;
         }
 
         public float Health

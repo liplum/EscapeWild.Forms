@@ -37,7 +37,7 @@ namespace WildernessSurvival.Core
         {
             if (IsDead) return;
             await Location.PerformAction(this, action);
-            ++TurnCount;
+            ++ActionNumber;
         }
 
         public async Task DisplayGainedItems(List<IItem> gained)
