@@ -15,6 +15,7 @@ namespace WildernessSurvival.Droid
     {
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            RequestedOrientation = ScreenOrientation.Portrait;
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
             Forms.Init(this, savedInstanceState);
