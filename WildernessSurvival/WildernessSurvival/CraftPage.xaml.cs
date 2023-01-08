@@ -16,7 +16,7 @@ namespace WildernessSurvival
         {
             InitializeComponent();
             _player = (Player)Application.Current.Resources["Player"];
-            _recipe2Output = Core.Craft.TestAvailableRecipes(_player.Backpack);
+            _recipe2Preview = Core.Craft.TestAvailableRecipes(_player.Backpack);
             RebuildPicker();
             HealthProgressBar.Progress = _player.Health;
             FoodProgressBar.Progress = _player.Food;
@@ -25,26 +25,26 @@ namespace WildernessSurvival
             UpdateUI();
         }
 
-        private IList<(IRecipe recipe, IItem output)> _recipe2Output;
+        private IList<(IRecipe recipe, IItem preview)> _recipe2Preview;
 
         private void RebuildPicker()
         {
             ItemsPicker.Items.Clear();
-            foreach (var (_, output) in _recipe2Output)
+            foreach (var (_, output) in _recipe2Preview)
                 ItemsPicker.Items.Add(output.LocalizedName());
         }
 
         private async void Craft_Clicked(object sender, EventArgs e)
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0 || index >= _recipe2Output.Count) return;
-            var (recipe, output) = _recipe2Output[index];
-            recipe.ConsumeAndCraft(_player.Backpack);
+            if (index < 0 || index >= _recipe2Preview.Count) return;
+            var (recipe, _) = _recipe2Preview[index];
+            var output = recipe.ConsumeAndCraft(_player.Backpack);
             var builder = new AttrModifierBuilder();
             recipe.BuildCraftAttrRequirements(builder);
             builder.PerformModification(_player.Attrs);
             _player.AddItem(output);
-            _recipe2Output = Core.Craft.TestAvailableRecipes(_player.Backpack);
+            _recipe2Preview = Core.Craft.TestAvailableRecipes(_player.Backpack);
             // Player might die from exhaustion.
             if (_player.IsDead)
             {
@@ -52,7 +52,7 @@ namespace WildernessSurvival
                 await Navigation.PopModalAsync();
                 return;
             }
-            if (_recipe2Output.Count <= 0)
+            if (_recipe2Preview.Count <= 0)
             {
                 UpdateUI();
                 await Task.Delay(500);
@@ -79,7 +79,7 @@ namespace WildernessSurvival
         private void UpdateUI()
         {
             var index = ItemsPicker.SelectedIndex;
-            if (index < 0 || index >= _recipe2Output.Count)
+            if (index < 0 || index >= _recipe2Preview.Count)
             {
                 Craft.IsEnabled = false;
                 ItemsPicker.SelectedItem = null;
@@ -89,8 +89,8 @@ namespace WildernessSurvival
             else
             {
                 Craft.IsEnabled = _player.CanPerformAnyAction;
-                var (recipe, output) = _recipe2Output[index];
-                ItemDescription.Text = output.LocalizedDesc();
+                var (recipe, preview) = _recipe2Preview[index];
+                ItemDescription.Text = preview.LocalizedDesc();
                 var builder = new AttrModifierBuilder();
                 recipe.BuildCraftAttrRequirements(builder);
                 if (builder.HasAnyEffect)

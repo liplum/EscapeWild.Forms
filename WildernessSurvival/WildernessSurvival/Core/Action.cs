@@ -63,15 +63,6 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public async Task DisplayMakingFireResult(string message)
-        {
-            await App.Current.MainPage.DisplayAlert(
-                title: ActionType.Fire.LocalizedName(),
-                message: message,
-                cancel: "OK".Tr()
-            );
-        }
-
         public async Task<bool> DamageTool(IToolItem tool, float damage, ValueFixer fixer = null)
         {
             if (fixer != null)

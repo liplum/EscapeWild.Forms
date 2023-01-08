@@ -1,5 +1,4 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Game.Subtropics;
@@ -67,72 +66,66 @@ namespace WildernessSurvival.Game.Subtropics
             player.Modify(AttrType.Food, -0.01f, CostFix);
             player.Modify(AttrType.Water, -0.02f, CostFix);
             player.Modify(AttrType.Energy, -0.03f, CostFix);
-            const int OxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
-
             var gained = new List<IItem>();
 
-            if (!_gotOxe)
-            {
-                _gotOxe = true;
-                if (Rand.Int(100) < OxeRate)
-                    gained.Add(OxeItems.OldOxe());
-            }
-
-            if (!_gotFishRod)
-            {
-                _gotFishRod = true;
-                if (Rand.Int(100) < FishRodRate)
-                    gained.Add(FishToolItems.OldFishRod());
-            }
-
-
-            if (ExploreCount < 1)
+            if (ExploreCount == 0)
             {
                 gained.Add(new BottledWater
                 {
                     Restore = BottledWater.DefaultRestore * Rand.Float(0.8f, 1.2f),
                 });
-                gained.Add(new BottledWater
-                {
-                    Restore = BottledWater.DefaultRestore * Rand.Float(0.7f, 1.15f),
-                });
+
                 gained.Add(new EnergyBar
                 {
                     FoodRestore = EnergyBar.DefaultFoodRestore * Rand.Float(0.8f, 1.3f)
                 });
+                if (!_gotOxe)
+                {
+                    _gotOxe = true;
+                    if (Rand.Float() < 0.5)
+                        gained.Add(OxeItems.OldOxe());
+                }
+            }
+            else if (ExploreCount == 1)
+            {
+                gained.Add(new BottledWater
+                {
+                    Restore = BottledWater.DefaultRestore * Rand.Float(0.7f, 1.15f),
+                });
+                gained.Add(new Log
+                {
+                    Fuel = Log.DefaultFuel * Rand.Float(0.95f, 1f),
+                });
+                if (!_gotFishRod)
+                {
+                    _gotFishRod = true;
+                    if (Rand.Float() < 0.3f)
+                        gained.Add(FishToolItems.OldFishRod());
+                }
+            }
+            else if (ExploreCount == 2)
+            {
                 gained.Add(new EnergyBar
                 {
                     FoodRestore = EnergyBar.DefaultFoodRestore * Rand.Float(0.75f, 1.2f)
                 });
+
                 gained.Add(new Log
                 {
                     Fuel = Log.DefaultFuel * Rand.Float(0.95f, 1f),
                 });
-                gained.Add(new Log
+                if (!_gotGun || !_gotTrap)
                 {
-                    Fuel = Log.DefaultFuel * Rand.Float(0.95f, 1f),
-                });
-            }
-
-
-            if (!_gotGun || !_gotTrap)
-            {
-                if (Rand.Bool())
-                {
-                    if (!_gotGun)
+                    var choice = Rand.Float(0f, 0.05f + 0.2f);
+                    if (choice < 0.05f)
                     {
+                        gained.Add(HuntingToolItems.OldShotgun());
                         _gotGun = true;
-                        if (Rand.Int(100) < GunRate)
-                            gained.Add(HuntingToolItems.OldShotgun());
                     }
-                }
-                else
-                {
-                    if (_gotTrap)
+                    else if (choice < 0.25f)
                     {
+                        gained.Add(HuntingToolItems.Trap());
                         _gotTrap = true;
-                        if (Rand.Int(100) < TrapRate)
-                            gained.Add(HuntingToolItems.Trap());
                     }
                 }
             }

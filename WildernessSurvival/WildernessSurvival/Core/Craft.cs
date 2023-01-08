@@ -9,7 +9,7 @@ namespace WildernessSurvival.Core
         /// <summary>
         /// Return an Item for display purpose
         /// </summary>
-        IItem TryGetResult(Backpack backpack);
+        IItem TryBuildPreview(Backpack backpack);
 
         IItem ConsumeAndCraft(Backpack backpack);
         void BuildCraftAttrRequirements(AttrModifierBuilder builder);
@@ -29,10 +29,10 @@ namespace WildernessSurvival.Core
             Recipes.AddRange(recipes);
         }
 
-        public static IList<(IRecipe recipe, IItem output)> TestAvailableRecipes(Backpack backpack)
+        public static IList<(IRecipe recipe, IItem preview)> TestAvailableRecipes(Backpack backpack)
         {
             return (from recipe in Recipes
-                let output = recipe.TryGetResult(backpack)
+                let output = recipe.TryBuildPreview(backpack)
                 where output != null
                 select (recipe, output)).ToList();
         }
@@ -40,15 +40,15 @@ namespace WildernessSurvival.Core
 
     public class NamedRecipe : IRecipe
     {
-        private readonly ItemMaker<IItem> _output;
+        public Func<IList<IItem>, IItem> Output;
+        public Func<IItem> Preview;
         private readonly Dictionary<string, int> _requirements = new Dictionary<string, int>();
         public AttrModifier[] Modifiers { get; set; } = Array.Empty<AttrModifier>();
 
         public void BuildCraftAttrRequirements(AttrModifierBuilder builder) => builder.Add(Modifiers);
 
-        public NamedRecipe(ItemMaker<IItem> output, params string[] reqs)
+        public NamedRecipe(params string[] reqs)
         {
-            _output = output;
             foreach (var req in reqs)
             {
                 if (_requirements.TryGetValue(req, out var number))
@@ -58,22 +58,24 @@ namespace WildernessSurvival.Core
             }
         }
 
-        public IItem TryGetResult(Backpack backpack)
+        public IItem TryBuildPreview(Backpack backpack)
         {
-            return _requirements.Any(p => backpack.CountItemOfName(p.Key) < p.Value) ? null : _output();
+            return _requirements.Any(p => backpack.CountItemOfName(p.Key) < p.Value) ? null : Preview();
         }
 
         public IItem ConsumeAndCraft(Backpack backpack)
         {
+            var inputs = new List<IItem>();
             foreach (var p in _requirements)
             {
                 for (var i = 0; i < p.Value; i++)
                 {
-                    backpack.RemoveItemByName(p.Key);
+                    var input = backpack.PopItemByName(p.Key);
+                    inputs.Add(input);
                 }
             }
 
-            return _output();
+            return Output(inputs);
         }
     }
 }

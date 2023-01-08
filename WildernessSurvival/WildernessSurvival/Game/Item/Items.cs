@@ -31,7 +31,7 @@ namespace WildernessSurvival.Game
 
     public class Sticks : IFuelItem
     {
-        public const float DefaultFuel = 1;
+        public const float DefaultFuel = 2f;
         public float Fuel { get; set; } = DefaultFuel;
         public string Name => nameof(Sticks);
     }
@@ -39,7 +39,7 @@ namespace WildernessSurvival.Game
 
     public class CutGrass : IFuelItem
     {
-        public const float DefaultFuel = 1;
+        public const float DefaultFuel = 5f;
         public float Fuel { get; set; } = DefaultFuel;
         public string Name => nameof(CutGrass);
     }
@@ -47,7 +47,7 @@ namespace WildernessSurvival.Game
 
     public class Log : IFuelItem
     {
-        public const float DefaultFuel = 15;
+        public const float DefaultFuel = 20f;
         public float Fuel { get; set; } = DefaultFuel;
         public string Name => nameof(Log);
     }

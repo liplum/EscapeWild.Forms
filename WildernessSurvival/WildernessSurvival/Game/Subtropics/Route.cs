@@ -13,7 +13,21 @@ namespace WildernessSurvival.Game.Subtropics
         public string Name { get; set; }
         private readonly List<RouteEntry> _entries;
 
-        public float RouteProgress { get; set; }
+        public float _routeProgress;
+
+        public float GetRouteProgress()
+        {
+            return _routeProgress;
+        }
+
+        public async Task SetRouteProgress(Player player, float value)
+        {
+            var old = CurrentEntry;
+            await old.Place.OnLeave(player);
+            _routeProgress = value;
+            await CurrentEntry.Place.OnEnter(player);
+        }
+
         public Hardness Hardness;
 
         public Route(List<RouteEntry> entries)
@@ -27,10 +41,10 @@ namespace WildernessSurvival.Game.Subtropics
         /// <summary>
         /// [0f,1f]
         /// </summary>
-        public float JourneyProgress => RouteProgress / (_entries.Count - 1);
+        public float JourneyProgress => _routeProgress / (_entries.Count - 1);
 
-        public RouteEntry Current => _entries[((int)RouteProgress).CoerceIn(0, _entries.Count - 1)];
-        public Place CurrentPlace => _entries[((int)RouteProgress).CoerceIn(0, _entries.Count - 1)].Place;
+        public RouteEntry CurrentEntry => _entries[((int)_routeProgress).CoerceIn(0, _entries.Count - 1)];
+        public Place CurrentPlace => _entries[((int)_routeProgress).CoerceIn(0, _entries.Count - 1)].Place;
     }
 
     /// <summary>
@@ -111,13 +125,20 @@ namespace WildernessSurvival.Game.Subtropics
 
         public virtual async Task OnLeave(Player player)
         {
-            ExploreCount = 0;
+            if (player.HasFire)
+            {
+                await App.Current.MainPage.DisplayAlert(
+                    title: ActionType.Fire.LocalizedName(),
+                    message: "Fire.PutOut.Move".Tr(),
+                    cancel: "OK".Tr()
+                );
+                player.FireFuel = 0;
+            }
         }
 
 
         public virtual async Task OnEnter(Player player)
         {
-            ExploreCount = 0;
         }
 
         public async Task PerformAction(Player player, ActionType action)
@@ -158,10 +179,10 @@ namespace WildernessSurvival.Game.Subtropics
             player.Modify(AttrType.Food, -0.05f, CostFix);
             player.Modify(AttrType.Water, -0.05f, CostFix);
             player.Modify(AttrType.Energy, -0.135f, CostFix);
-            Owner.RouteProgress += 1f;
+            var routeProgress = Owner.GetRouteProgress();
+            await Owner.SetRouteProgress(player, routeProgress + 1f);
             player.JourneyProgress = Owner.JourneyProgress;
             player.Location = Owner.CurrentPlace;
-            player.FireFuel = 0;
         }
 
         /// <summary>

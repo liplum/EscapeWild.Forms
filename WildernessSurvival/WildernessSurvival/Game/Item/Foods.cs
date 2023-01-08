@@ -115,7 +115,7 @@ namespace WildernessSurvival.Game
     public class DirtyWater : UsableItem, ICookableItem
     {
         public float FlueCost => 3;
-        public const float DefaultWaterRestore = 0.1f;
+        public const float DefaultWaterRestore = 0.15f;
         public float WaterRestore = DefaultWaterRestore;
         public const float DefaultHealthDelta = -0.08f;
         public float HealthDelta = DefaultHealthDelta;

@@ -53,8 +53,8 @@ namespace WildernessSurvival.Game
             Name = name;
         }
 
-        public float FireRate { get; set; } = 1f;
-        public float InitialFireFuel { get; set; } = 20f;
+        public virtual float FireRate { get; set; } = 1f;
+        public virtual float InitialFireFuel { get; set; } = 20f;
         public override UseType UseType => UseType.Use;
         public override bool CanUse(Player player) => !player.HasFire;
 
@@ -72,25 +72,40 @@ namespace WildernessSurvival.Game
             if (player.HasFire) return;
             await base.Use(player);
             var wet = player.Location.Wet;
-            if (Rand.Float() < FireRate * (1f + wet))
+            int makingPromptNumber = player["Fire.MakingPrompt"] ?? 0;
+            if (Rand.Float() < FireRate * (1f + wet) *
+                (1f - (float)makingPromptNumber / player.Hardness.MaxFireMakingPrompt()))
             {
                 player.FireFuel = InitialFireFuel;
-                await player.DisplayMakingFireResult("Fire.Success".Tr());
+                player["Fire.MakingPrompt"] = 0;
+                await App.Current.MainPage.DisplayAlert(
+                    title: ActionType.Fire.LocalizedName(),
+                    message: "Fire.Success".Tr(),
+                    cancel: "OK".Tr()
+                );
             }
             else
             {
+                player["Fire.MakingPrompt"] = makingPromptNumber + 1;
                 var reason = wet > 0.5f ? "Fire.Failed.Wet" : "Fire.Failed.FireRate";
-                await player.DisplayMakingFireResult(reason.Tr());
+                await App.Current.MainPage.DisplayAlert(
+                    title: ActionType.Fire.LocalizedName(),
+                    message: reason.Tr(),
+                    cancel: "OK".Tr()
+                );
             }
         }
     }
 
-    public static class FireStarterItems
+    public class HandDrillKit : FireStarterItem
     {
-        public static readonly ItemMaker<FireStarterItem> HandDrillKit = () => new FireStarterItem("HandDrillKit")
+        public const float DefaultFireRate = 0.4f;
+        public override float FireRate { get; set; } = DefaultFireRate;
+        public const float DefaultInitialFireFuel = 1.5f;
+        public override float InitialFireFuel { get; set; } = DefaultInitialFireFuel;
+
+        public HandDrillKit() : base("HandDrillKit")
         {
-            FireRate = 0.4f,
-            InitialFireFuel = 3.5f,
-        };
+        }
     }
 }

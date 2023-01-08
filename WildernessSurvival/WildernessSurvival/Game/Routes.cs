@@ -23,6 +23,7 @@ namespace WildernessSurvival.Game
                         {
                             Name = "Plain",
                             HuntingRate = 50,
+                            Wet = -0.2f,
                         },
                         BlockSize = 30f,
                     },

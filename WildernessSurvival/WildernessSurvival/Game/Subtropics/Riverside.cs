@@ -68,9 +68,9 @@ namespace WildernessSurvival.Game.Subtropics
             player.Modify(AttrType.Energy, -0.08f, CostFix);
             const int RawFishRate = 10, CleanWaterRate = 70, DoubleRate = 40;
 
-            var proportion = 10 - ExploreCount;
+            var proportion = 3 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
-            var prop = proportion / 10f;
+            var prop = proportion / 3f;
 
             var gained = new List<IItem>();
 

@@ -34,9 +34,9 @@ namespace WildernessSurvival.Game.Subtropics
                 NutsRate = 0.5f,
                 NutsDoubleRate = 0.4f;
 
-            var proportion = 10 - ExploreCount;
+            var proportion = 3 - ExploreCount;
             proportion = proportion <= 0 ? 1 : proportion;
-            var prop = proportion / 10f;
+            var prop = proportion / 3f;
 
             var gained = new List<IItem>();
 

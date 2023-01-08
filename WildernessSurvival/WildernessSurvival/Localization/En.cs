@@ -84,6 +84,7 @@ namespace WildernessSurvival.Localization
             { "Fire.Success", "Cool! You started a fire!" },
             { "Fire.Failed.Wet", "It's too wet, you'd better find another place." },
             { "Fire.Failed.FireRate", "It does not work well. You failed to make a fire." },
+            { "Fire.PutOut.Move", "It's time to move, you put out the campfire." },
             { "Backpack.Header", "Backpack" },
             { "Backpack.CannotUse", "Can't Use" },
             { "Backpack.Use", "Use" },

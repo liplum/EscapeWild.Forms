@@ -13,6 +13,7 @@ namespace WildernessSurvival.Core
 
         public Backpack Backpack { get; private set; }
         public IRoute<IPlace> CurRoute;
+        public Hardness Hardness;
         private float _healthValue;
         private float _energyValue;
         private float _foodValue;
@@ -21,6 +22,7 @@ namespace WildernessSurvival.Core
         private IPlace _location;
         private float _journeyProgress;
         private int _actionNumber;
+        private readonly Dictionary<string, dynamic> _extra = new Dictionary<string, dynamic>();
         public readonly AttributeManager Attrs;
 
         public Player()
@@ -33,7 +35,8 @@ namespace WildernessSurvival.Core
         {
             Health = Food = Water = Energy = AttributeManager.MaxValue;
             _journeyProgress = 0;
-            CurRoute = Routes.SubtropicsRoute(HardnessTable.Normal);
+            Hardness = HardnessTable.Normal;
+            CurRoute = Routes.SubtropicsRoute(Hardness);
             Location = CurRoute.InitialPlace;
             ActionNumber = 0;
             Backpack = new Backpack(this);
@@ -43,6 +46,12 @@ namespace WildernessSurvival.Core
 
         public IEnumerable<ICookableItem> GetCookableItems() => Backpack.AllItems.OfType<ICookableItem>();
         public IEnumerable<IFuelItem> GetFuelItems() => Backpack.AllItems.OfType<IFuelItem>();
+
+        public dynamic this[string key]
+        {
+            get => _extra.TryGetValue(key, out var extra) ? extra : null;
+            set => _extra[key] = value;
+        }
 
         public IEnumerable<IToolItem> GetToolsOf(ToolType type) =>
             Backpack.AllItems.OfType<IToolItem>().Where(e => e.ToolType == type);

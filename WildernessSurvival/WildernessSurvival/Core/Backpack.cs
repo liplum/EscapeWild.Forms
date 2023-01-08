@@ -26,11 +26,21 @@ namespace WildernessSurvival.Core
 
         public int CountItemWhere(Func<IItem, bool> predicate) => AllItems.Count(predicate);
 
-        public bool RemoveItemByName(string name) => AllItems.Remove(AllItems.FirstOrDefault(e => e.Name.Equals(name)));
+        public IItem PopItemByName(string name)
+        {
+            var removed = AllItems.FirstOrDefault(e => e.Name.Equals(name));
+            AllItems.Remove(removed);
+            return removed;
+        }
 
         public int RemoveItemsWhere(Predicate<IItem> predicate) => AllItems.RemoveAll(predicate);
 
-        public bool RemoveItemByType(Type type) => AllItems.Remove(AllItems.FirstOrDefault(type.IsInstanceOfType));
+        public IItem PopItemByType(Type type)
+        {
+            var removed = AllItems.FirstOrDefault(type.IsInstanceOfType);
+            AllItems.Remove(removed);
+            return removed;
+        }
 
         public bool RemoveItem(IItem item) => AllItems.Remove(item);
 
