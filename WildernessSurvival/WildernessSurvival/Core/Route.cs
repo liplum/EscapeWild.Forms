@@ -4,8 +4,6 @@ using WildernessSurvival.Localization;
 
 namespace WildernessSurvival.Core
 {
-    public delegate IRoute<TPlace> RouteMaker<out TPlace>() where TPlace : IPlace;
-
     public interface IRoute<out TPlace> where TPlace : IPlace
     {
         string Name { get; }
@@ -20,7 +18,7 @@ namespace WildernessSurvival.Core
         ISet<ActionType> AvailableActions { get; }
 
         /// <summary>
-        /// [0f,1f]
+        /// [-1f,1f]
         /// </summary>
         float Wet { get; }
     }

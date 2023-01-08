@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
-using WildernessSurvival.Game.Subtropics;
 
 namespace WildernessSurvival.Game.Subtropics
 {
@@ -27,9 +26,9 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(AttrType.Food, -0.02f, HardnessFix);
-            player.Modify(AttrType.Water, -0.05f, HardnessFix);
-            player.Modify(AttrType.Energy, -0.10f, HardnessFix);
+            player.Modify(AttrType.Food, -0.02f, CostFix);
+            player.Modify(AttrType.Water, -0.05f, CostFix);
+            player.Modify(AttrType.Energy, -0.10f, CostFix);
             const float BerryRate = 0.3f,
                 LogRate = 0.2f,
                 NutsRate = 0.5f,

@@ -72,7 +72,7 @@ namespace WildernessSurvival.Game
             if (player.HasFire) return;
             await base.Use(player);
             var wet = player.Location.Wet;
-            if (Rand.Float() < FireRate * (1f - wet))
+            if (Rand.Float() < FireRate * (1f + wet))
             {
                 player.FireFuel = InitialFireFuel;
                 await player.DisplayMakingFireResult("Fire.Success".Tr());

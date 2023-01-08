@@ -7,14 +7,9 @@ using WildernessSurvival.Game;
 
 namespace WildernessSurvival.Core
 {
-    public delegate float ValueFixer(float raw);
-
-
     public partial class Player : IAttributeModel, INotifyPropertyChanged
     {
         private const float MaxVisualFuel = 25f;
-
-        public const float MoveStep = 0.02f;
 
         public Backpack Backpack { get; private set; }
         public IRoute<IPlace> CurRoute;
@@ -24,7 +19,7 @@ namespace WildernessSurvival.Core
         private float _waterValue;
         private float _fireFuel;
         private IPlace _location;
-        private float _tripProgress;
+        private float _journeyProgress;
         private int _actionNumber;
         public readonly AttributeManager Attrs;
 
@@ -37,8 +32,8 @@ namespace WildernessSurvival.Core
         public void Reset()
         {
             Health = Food = Water = Energy = AttributeManager.MaxValue;
-            _tripProgress = 0;
-            CurRoute = Routes.SubtropicsRoute();
+            _journeyProgress = 0;
+            CurRoute = Routes.SubtropicsRoute(HardnessTable.Normal);
             Location = CurRoute.InitialPlace;
             ActionNumber = 0;
             Backpack = new Backpack(this);
@@ -133,17 +128,17 @@ namespace WildernessSurvival.Core
 
         public float FireFuelProgress => FireFuel / MaxVisualFuel;
 
-        public float TripProgress
+        public float JourneyProgress
         {
-            get => _tripProgress;
-            private set
+            get => _journeyProgress;
+            set
             {
                 if (value < 0)
-                    _tripProgress = 0;
+                    _journeyProgress = 0;
                 else if (value > 1)
-                    _tripProgress = 1;
+                    _journeyProgress = 1;
                 else
-                    _tripProgress = value;
+                    _journeyProgress = value;
             }
         }
 
@@ -152,7 +147,7 @@ namespace WildernessSurvival.Core
         public bool IsDead => Health <= 0;
         public bool IsAlive => !IsDead;
         public bool CanPerformAnyAction => IsAlive && !IsWon;
-        public bool IsWon => TripProgress >= 1;
+        public bool IsWon => JourneyProgress >= 1;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -172,8 +167,6 @@ namespace WildernessSurvival.Core
         public void SetAttr(AttrType attr, float value) => Attrs.SetAttr(attr, value);
 
         public float GetAttr(AttrType attr) => Attrs.GetAttr(attr);
-
-        public void AdvanceTrip(float delta = MoveStep) => TripProgress += delta;
 
         public async Task UseItem(IUsableItem item) => await item.Use(this);
 

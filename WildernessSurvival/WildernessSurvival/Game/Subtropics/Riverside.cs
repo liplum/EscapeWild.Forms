@@ -27,9 +27,9 @@ namespace WildernessSurvival.Game.Subtropics
         protected override async Task PerformFish(Player player)
         {
             var tool = player.TryGetBestToolOf(ToolType.Fishing);
-            player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
-            player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
-            player.Modify(AttrType.Energy, -(0.1f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), CostFix);
+            player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), CostFix);
+            player.Modify(AttrType.Energy, -(0.1f * tool.CalcExtraCostByTool()), CostFix);
             var (rate, doubleRate) = tool.CalcRateByTool();
 
             var gained = new List<IItem>();
@@ -63,9 +63,9 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(AttrType.Food, -0.02f, HardnessFix);
-            player.Modify(AttrType.Water, -0.04f, HardnessFix);
-            player.Modify(AttrType.Energy, -0.08f, HardnessFix);
+            player.Modify(AttrType.Food, -0.02f, CostFix);
+            player.Modify(AttrType.Water, -0.04f, CostFix);
+            player.Modify(AttrType.Energy, -0.08f, CostFix);
             const int RawFishRate = 10, CleanWaterRate = 70, DoubleRate = 40;
 
             var proportion = 10 - ExploreCount;

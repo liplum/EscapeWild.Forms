@@ -133,7 +133,7 @@ namespace WildernessSurvival
             // Update Restart button
             if (updateProgressBarInSequence)
             {
-                await TripProgressBar.ProgressTo(_player.TripProgress, 300, Easing.Linear);
+                await TripProgressBar.ProgressTo(_player.JourneyProgress, 300, Easing.Linear);
                 await HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
                 await FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
                 await WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
@@ -141,7 +141,7 @@ namespace WildernessSurvival
             }
             else
             {
-                TripProgressBar.ProgressTo(_player.TripProgress, 300, Easing.Linear);
+                TripProgressBar.ProgressTo(_player.JourneyProgress, 300, Easing.Linear);
                 HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
                 FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
                 WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);

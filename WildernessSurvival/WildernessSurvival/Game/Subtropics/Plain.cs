@@ -15,8 +15,8 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(AttrType.Water, -0.04f, HardnessFix);
-            player.Modify(AttrType.Energy, -0.08f, HardnessFix);
+            player.Modify(AttrType.Water, -0.04f, CostFix);
+            player.Modify(AttrType.Energy, -0.08f, CostFix);
             const int BerryRate = 60, DirtyWaterRate = 60, StickRate = 30, DoubleRate = 30;
 
             var proportion = 10 - ExploreCount;

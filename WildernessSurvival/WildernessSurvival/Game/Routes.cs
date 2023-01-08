@@ -1,54 +1,70 @@
-﻿using WildernessSurvival.Core;
+﻿using System.Collections.Generic;
+using WildernessSurvival.Core;
 
 namespace WildernessSurvival.Game
 {
     public static class Routes
     {
-        public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new Subtropics.Route(
-            name: "Subtropics", hardness: Rand.Float(0f, 0.3f),
-            new Subtropics.Route.Entry
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hardness"></param>
+        /// <returns></returns>
+        public static IRoute<IPlace> SubtropicsRoute(Hardness hardness)
+        {
+            var generator = new Subtropics.RouteGenerator
             {
-                Place = new Subtropics.PlainPlace
+                Hardness = hardness,
+                Blocks = new List<Subtropics.RouteBlock>
                 {
-                    Name = "Plain",
-                    HuntingRate = 50,
+                    new Subtropics.RouteBlock
+                    {
+                        Place = () => new Subtropics.PlainPlace
+                        {
+                            Name = "Plain",
+                            HuntingRate = 50,
+                        },
+                        BlockSize = 30f,
+                    },
+                    new Subtropics.RouteBlock
+                    {
+                        Place = () => new Subtropics.RiversidePlace
+                        {
+                            Name = "Riverside",
+                            HuntingRate = 30,
+                            Wet = 0.4f,
+                        },
+                        BlockSize = 10f,
+                    },
+                    new Subtropics.RouteBlock
+                    {
+                        Place = () => new Subtropics.ForestPlace
+                        {
+                            Name = "Forest",
+                            HuntingRate = 60,
+                        },
+                        BlockSize = 10f,
+                    }
                 },
-                Proportion = 30,
-                Inertia = 0.6f,
-                MaxStayCount = 12,
-            }, new Subtropics.Route.Entry
-            {
-                Place = new Subtropics.RiversidePlace
+                Decorate = places =>
                 {
-                    Name = "Riverside",
-                    HuntingRate = 30,
-                    Wet = 0.4f,
-                },
-                Proportion = 30,
-                Inertia = 0.4f,
-                MaxStayCount = 8,
-            }, new Subtropics.Route.Entry
-            {
-                Place = new Subtropics.ForestPlace
-                {
-                    Name = "Forest",
-                    HuntingRate = 60,
-                },
-                Proportion = 30,
-                Inertia = 0.6f,
-                MaxStayCount = 10,
-            }, new Subtropics.Route.Entry
-            {
-                Place = new Subtropics.HutPlace
-                {
-                    Name = "Hut",
-                    HuntingRate = 30,
-                },
-                Proportion = 10,
-                Inertia = 0f,
-                MaxStayCount = 1,
-                MaxAppearCount = 1,
-            }
-        );
+                    var hutPos = places.Count switch
+                    {
+                        0 => 0,
+                        1 => 0,
+                        _ => Rand.Int(1, places.Count - 1)
+                    };
+                    places.Insert(hutPos, new Subtropics.RouteEntry
+                    {
+                        Place = new Subtropics.HutPlace
+                        {
+                            Name = "Hut",
+                            HuntingRate = 30,
+                        }
+                    });
+                }
+            };
+            return generator.Generate(name: "Subtropics");
+        }
     }
 }

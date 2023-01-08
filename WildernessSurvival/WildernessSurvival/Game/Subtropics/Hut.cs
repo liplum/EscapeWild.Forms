@@ -33,16 +33,16 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected override async Task PerformRest(Player player)
         {
-            player.Modify(AttrType.Food, -0.03f, HardnessFix);
-            player.Modify(AttrType.Water, -0.03f, HardnessFix);
+            player.Modify(AttrType.Food, -0.03f, CostFix);
+            player.Modify(AttrType.Water, -0.03f, CostFix);
             if (player.Food > 0f && player.Water > 0f)
             {
-                player.Modify(AttrType.Health, 0.15f, HardnessFix);
-                player.Modify(AttrType.Energy, 0.4f, HardnessFix);
+                player.Modify(AttrType.Health, 0.15f, BounceFix);
+                player.Modify(AttrType.Energy, 0.4f, BounceFix);
             }
             else
             {
-                player.Modify(AttrType.Energy, 0.1f, HardnessFix);
+                player.Modify(AttrType.Energy, 0.1f, CostFix);
             }
 
             await ShowRestDialog(restType: "Hut");
@@ -64,9 +64,9 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected override async Task PerformExplore(Player player)
         {
-            player.Modify(AttrType.Food, -0.01f, HardnessFix);
-            player.Modify(AttrType.Water, -0.02f, HardnessFix);
-            player.Modify(AttrType.Energy, -0.03f, HardnessFix);
+            player.Modify(AttrType.Food, -0.01f, CostFix);
+            player.Modify(AttrType.Water, -0.02f, CostFix);
+            player.Modify(AttrType.Energy, -0.03f, CostFix);
             const int OxeRate = 50, FishRodRate = 30, TrapRate = 20, GunRate = 5;
 
             var gained = new List<IItem>();

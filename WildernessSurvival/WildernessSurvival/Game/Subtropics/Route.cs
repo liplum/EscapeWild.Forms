@@ -4,118 +4,33 @@ using System.Linq;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
+using WildernessSurvival.Utils;
 
 namespace WildernessSurvival.Game.Subtropics
 {
     public class Route : IRoute<Place>
     {
-        public class Entry
+        public string Name { get; set; }
+        private readonly List<RouteEntry> _entries;
+
+        public float RouteProgress { get; set; }
+        public Hardness Hardness;
+
+        public Route(List<RouteEntry> entries)
         {
-            public Place Place;
-
-            /// <summary>
-            /// The appear rate of all places.
-            /// Larger proportion will be more likely to appear.
-            /// </summary>
-            public int Proportion;
-
-            /// <summary>
-            /// [0f,1f]
-            /// Larger inertia will try to keep player stay the same location.
-            /// If it's zero, player will leave the place instantly. 
-            /// </summary>
-            public float Inertia;
-
-            public int MaxAppearCount;
-
-            public int MaxStayCount;
-
-            public override string ToString() => Place.ToString();
-        }
-
-        private class EntryImpl
-        {
-            public Entry Meta;
-            public float AppearRate;
-            public int AppearCount;
-            public int Proportion => Meta.Proportion;
-            public bool CanAppear => MaxAppearCount <= 0 || AppearCount < MaxAppearCount;
-            public int MaxAppearCount => Meta.MaxAppearCount;
-            public float Inertia => Meta.Inertia;
-            public int MaxStayCount => Meta.MaxStayCount;
-            public Place Place => Meta.Place;
-            public override string ToString() => Meta.Place.ToString();
-        }
-
-        public string Name { get; }
-        private readonly List<EntryImpl> _entries;
-
-        /// <summary>
-        /// [0,1]
-        /// </summary>
-        private float Hardness { get; }
-
-        public Route(string name, float hardness, params Entry[] entries)
-        {
-            Name = name;
-            Hardness = hardness;
-            _entries = new List<EntryImpl>();
-            var sum = 0f;
-            foreach (var entry in entries)
-            {
-                entry.Place.Route = this;
-                _entries.Add(new EntryImpl
-                {
-                    Meta = entry,
-                });
-                sum += entry.Proportion;
-            }
-
-            foreach (var entry in _entries)
-            {
-                entry.AppearRate = entry.Proportion / sum;
-            }
-
-            _cur = _entries[0];
+            entries.ForEach(e => e.Place.Route = this);
+            _entries = entries;
         }
 
         public Place InitialPlace => _entries[0].Place;
 
-        private EntryImpl _cur;
+        /// <summary>
+        /// [0f,1f]
+        /// </summary>
+        public float JourneyProgress => RouteProgress / (_entries.Count - 1);
 
-        public float HardnessFix(float raw)
-        {
-            float fixedValue;
-            if (raw < 0) fixedValue = raw - raw * Hardness;
-            else fixedValue = raw * (1f - Hardness);
-            return fixedValue * (1f + Rand.Float(-0.01f, 0.01f));
-        }
-
-        public async Task<Place> GoNextPlace(Player player)
-        {
-            // Stay the same place if player is "attracted".
-            var isStay = Rand.Float() < _cur.Inertia * (1f - (float)_cur.AppearCount / _cur.MaxStayCount);
-            if (isStay) return _cur.Place;
-            var old = _cur;
-            var otherPlaces = (from p in _entries where p != old && p.CanAppear select p).ToList();
-            var changeHit = Rand.Float(0f, otherPlaces.Sum(e => e.AppearRate));
-            var sum = 0f;
-            foreach (var newPlace in otherPlaces)
-            {
-                sum += newPlace.AppearRate;
-                if (changeHit <= sum)
-                {
-                    // Hit the place
-                    await old.Place.OnLeave(player);
-                    _cur = newPlace;
-                    await newPlace.Place.OnEnter(player);
-                    newPlace.AppearCount++;
-                    return newPlace.Place;
-                }
-            }
-
-            return old.Place;
-        }
+        public RouteEntry Current => _entries[((int)RouteProgress).CoerceIn(0, _entries.Count - 1)];
+        public Place CurrentPlace => _entries[((int)RouteProgress).CoerceIn(0, _entries.Count - 1)].Place;
     }
 
     /// <summary>
@@ -139,37 +54,39 @@ namespace WildernessSurvival.Game.Subtropics
 
     public class RouteGenerator
     {
-        /// <summary>
-        /// To prompt how many place should be generated.
-        /// </summary>
-        public int PlaceNumberPrompt;
+        public Hardness Hardness;
 
         public IList<RouteBlock> Blocks;
 
         public Action<List<RouteEntry>> Decorate;
 
-        public Route Generate()
+        public Route Generate(string name)
         {
             var blocks = GenerateWithBlock();
             Decorate?.Invoke(blocks);
-            return new Route("", 0f);
+            return new Route(blocks)
+            {
+                Name = name,
+                Hardness = Hardness,
+            };
         }
 
-        public List<RouteEntry> GenerateWithBlock()
+        private List<RouteEntry> GenerateWithBlock()
         {
+            // To prompt how many place should be generated.
+            var PlaceNumberPrompt = Hardness.JourneyLength();
             var res = new List<RouteEntry>();
             var totalSize = Blocks.Sum(e => e.BlockSize);
             foreach (var block in Blocks)
             {
-                var shouldGenerate = (int)(block.BlockSize / totalSize);
+                var shouldGenerate = (int)(block.BlockSize / totalSize * PlaceNumberPrompt);
                 for (var i = 0; i < shouldGenerate; i++)
                 {
                     var place = block.Place();
-                    var entry = new RouteEntry
+                    res.Add(new RouteEntry
                     {
                         Place = place
-                    };
-                    res.Add(entry);
+                    });
                 }
             }
 
@@ -188,7 +105,8 @@ namespace WildernessSurvival.Game.Subtropics
 
         protected Route Owner => Route as Route;
 
-        public float HardnessFix(float raw) => Owner.HardnessFix(raw);
+        public float CostFix(float raw) => Owner.Hardness.AttrCostFix(raw);
+        public float BounceFix(float raw) => Owner.Hardness.AttrBounceFix(raw);
         protected int ExploreCount;
 
         public virtual async Task OnLeave(Player player)
@@ -237,11 +155,12 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected virtual async Task PerformMove(Player player)
         {
-            player.Modify(AttrType.Food, -0.05f, HardnessFix);
-            player.Modify(AttrType.Water, -0.05f, HardnessFix);
-            player.Modify(AttrType.Energy, -0.135f, HardnessFix);
-            player.AdvanceTrip(HardnessFix(Player.MoveStep));
-            player.Location = await Owner.GoNextPlace(player);
+            player.Modify(AttrType.Food, -0.05f, CostFix);
+            player.Modify(AttrType.Water, -0.05f, CostFix);
+            player.Modify(AttrType.Energy, -0.135f, CostFix);
+            Owner.RouteProgress += 1f;
+            player.JourneyProgress = Owner.JourneyProgress;
+            player.Location = Owner.CurrentPlace;
             player.FireFuel = 0;
         }
 
@@ -252,16 +171,16 @@ namespace WildernessSurvival.Game.Subtropics
         /// </summary>
         protected virtual async Task PerformRest(Player player)
         {
-            player.Modify(AttrType.Food, -0.03f, HardnessFix);
-            player.Modify(AttrType.Water, -0.03f, HardnessFix);
+            player.Modify(AttrType.Food, -0.03f, CostFix);
+            player.Modify(AttrType.Water, -0.03f, CostFix);
             if (player.Food > 0f && player.Water > 0f)
             {
-                player.Modify(AttrType.Health, 0.1f, HardnessFix);
-                player.Modify(AttrType.Energy, 0.25f, HardnessFix);
+                player.Modify(AttrType.Health, 0.1f, BounceFix);
+                player.Modify(AttrType.Energy, 0.25f, BounceFix);
             }
             else
             {
-                player.Modify(AttrType.Energy, 0.05f, HardnessFix);
+                player.Modify(AttrType.Energy, 0.05f, BounceFix);
             }
 
             await ShowRestDialog();
@@ -289,9 +208,9 @@ namespace WildernessSurvival.Game.Subtropics
         protected virtual async Task PerformHunt(Player player)
         {
             var tool = player.TryGetBestToolOf(ToolType.Hunting);
-            player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
-            player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), HardnessFix);
-            player.Modify(AttrType.Energy, -(0.15f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Food, -(0.08f * tool.CalcExtraCostByTool()), CostFix);
+            player.Modify(AttrType.Water, -(0.08f * tool.CalcExtraCostByTool()), CostFix);
+            player.Modify(AttrType.Energy, -(0.15f * tool.CalcExtraCostByTool()), CostFix);
 
             var (rate, doubleRate) = tool.CalcRateByTool();
 
@@ -327,9 +246,9 @@ namespace WildernessSurvival.Game.Subtropics
         protected virtual async Task PerformCutDownTree(Player player)
         {
             var tool = player.TryGetBestToolOf(ToolType.Oxe);
-            player.Modify(AttrType.Food, -(0.04f * tool.CalcExtraCostByTool()), HardnessFix);
-            player.Modify(AttrType.Water, -(0.03f * tool.CalcExtraCostByTool()), HardnessFix);
-            player.Modify(AttrType.Energy, -(0.3f * tool.CalcExtraCostByTool()), HardnessFix);
+            player.Modify(AttrType.Food, -(0.04f * tool.CalcExtraCostByTool()), CostFix);
+            player.Modify(AttrType.Water, -(0.03f * tool.CalcExtraCostByTool()), CostFix);
+            player.Modify(AttrType.Energy, -(0.3f * tool.CalcExtraCostByTool()), CostFix);
             var (rate, _) = tool.CalcRateByTool();
             var gained = new List<IItem>();
             gained.Add(new Log

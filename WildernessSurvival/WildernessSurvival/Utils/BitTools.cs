@@ -1,4 +1,4 @@
-﻿namespace WildernessSurvival
+﻿namespace WildernessSurvival.Utils
 {
     public static class ByteTools
     {
