@@ -84,8 +84,11 @@ namespace WildernessSurvival.Game
             await base.Use(player);
             var wet = player.Location.Wet;
             int makingPromptNumber = player["Fire.MakingPrompt"] ?? 0;
-            if (Rand.Float() < FireRate * (1f + wet) *
-                (1f - (float)makingPromptNumber / player.Hardness.MaxFireMakingPrompt()))
+            // wet will reduce the possibility to start a fire
+            var wetFix = 1f + wet;
+            var maxFireMakingPrompt = player.Hardness.MaxFireMakingPrompt();
+            var maxTryFix = 1f - (float)makingPromptNumber / maxFireMakingPrompt;
+            if (Rand.Float() < FireRate * wetFix * maxTryFix)
             {
                 player.FireFuel = InitialFireFuel;
                 player["Fire.MakingPrompt"] = 0;
