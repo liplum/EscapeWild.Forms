@@ -41,7 +41,10 @@ namespace WildernessSurvival
             var item = AllItems[index];
             if (!(item is IUsableItem i) || !i.CanUse(Player)) return;
             await Player.UseItem(i);
+            var afterUsed = i.AfterUsed();
             Player.RemoveItem(item);
+            if (afterUsed != null)
+                Player.AddItem(afterUsed);
             // Player might die from poison.
             if (Player.IsDead)
             {

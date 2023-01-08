@@ -24,7 +24,7 @@ namespace WildernessSurvival.Game
             Name = "OldFishRod",
             Level = ToolLevel.Normal,
             ToolType = ToolType.Fishing,
-        };
+        }; 
     }
 
     public static class HuntingToolItems

@@ -22,6 +22,8 @@ namespace WildernessSurvival.Localization
             { "Item.OldOxe.Desc", "An old axe, but still sharp." },
             { "Item.BottledWater.Name", "Bottled Water" },
             { "Item.BottledWater.Desc", "A bottle of water, no one knows how long it has been stored." },
+            { "Item.PlasticBottle.Name", "Plastic Bottle" },
+            { "Item.PlasticBottle.Desc", "The best material." },
             { "Item.RawRabbit.Name", "Raw Rabbit" },
             { "Item.RawRabbit.Desc", "No fat, rich in protein." },
             { "Item.CookedRabbit.Name", "Cooked Rabbit" },

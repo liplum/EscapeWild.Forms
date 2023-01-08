@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace WildernessSurvival.Core
 {
@@ -65,7 +66,7 @@ namespace WildernessSurvival.Core
                         case AttrType.Water:
                         case AttrType.Energy:
                             SetAttr(attr, 0);
-                            SetAttr(AttrType.Health,GetAttr(AttrType.Health) - underflow * UnderflowPunishmentRadio);
+                            SetAttr(AttrType.Health, GetAttr(AttrType.Health) - underflow * UnderflowPunishmentRadio);
                             break;
                     }
                 }
@@ -113,5 +114,47 @@ namespace WildernessSurvival.Core
         public float Food { get; set; }
         public float Water { get; set; }
         public float Energy { get; set; }
+    }
+
+    public class AttrModifier
+    {
+        public readonly AttrType AttrType;
+        public readonly float Delta;
+
+        public AttrModifier(AttrType attr, float delta)
+        {
+            AttrType = attr;
+            Delta = delta;
+        }
+    }
+
+    public static class AttrModifierHelper
+    {
+        public static AttrModifier WithEffect(this AttrType attr, float delta) => new AttrModifier(attr, delta);
+    }
+
+    public class AttrModifierBuilder
+    {
+        public readonly List<AttrModifier> Modifiers = new List<AttrModifier>();
+
+        public void Add(AttrModifier effect)
+        {
+            Modifiers.Add(effect);
+        }
+
+        public void Add(params AttrModifier[] effect)
+        {
+            Modifiers.AddRange(effect);
+        }
+
+        public void PerformModification(AttributeManager attrs)
+        {
+            foreach (var effect in Modifiers)
+            {
+                attrs.Modify(effect.AttrType, effect.Delta);
+            }
+        }
+
+        public bool HasAnyEffect => Modifiers.Count > 0;
     }
 }

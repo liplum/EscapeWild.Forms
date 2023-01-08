@@ -63,53 +63,12 @@ namespace WildernessSurvival.Core
         Eat
     }
 
-    public class AttrModifier
-    {
-        public readonly AttrType AttrType;
-        public readonly float Delta;
-
-        public AttrModifier(AttrType attr, float delta)
-        {
-            AttrType = attr;
-            Delta = delta;
-        }
-    }
-
-    public static class AttrModifierHelper
-    {
-        public static AttrModifier WithEffect(this AttrType attr, float delta) => new AttrModifier(attr, delta);
-    }
-
-    public class AttrModifierBuilder
-    {
-        public readonly List<AttrModifier> Effects = new List<AttrModifier>();
-
-        public void Add(AttrModifier effect)
-        {
-            Effects.Add(effect);
-        }
-
-        public void Add(params AttrModifier[] effect)
-        {
-            Effects.AddRange(effect);
-        }
-
-        public void PerformModification(AttributeManager attrs)
-        {
-            foreach (var effect in Effects)
-            {
-                attrs.Modify(effect.AttrType, effect.Delta);
-            }
-        }
-
-        public bool HasAnyEffect => Effects.Count > 0;
-    }
-
     public interface IUsableItem : IItem
     {
         void BuildAttrModification(AttrModifierBuilder builder);
         bool CanUse(Player player);
         Task Use(Player player);
+        IItem AfterUsed();
         UseType UseType { get; }
         bool DisplayPreview { get; }
     }
@@ -119,6 +78,8 @@ namespace WildernessSurvival.Core
         public abstract string Name { get; }
         public abstract void BuildAttrModification(AttrModifierBuilder builder);
         public virtual bool CanUse(Player player) => true;
+
+        public virtual IItem AfterUsed() => null;
 
         public abstract UseType UseType { get; }
         public virtual bool DisplayPreview => true;

@@ -32,6 +32,8 @@ namespace WildernessSurvival.Game
         {
             builder.Add(AttrType.Water.WithEffect(Restore));
         }
+
+        public override IItem AfterUsed() => new PlasticBottle();
     }
 
     public class RawRabbit : UsableItem, ICookableItem

@@ -51,4 +51,11 @@ namespace WildernessSurvival.Game
         public float Fuel { get; set; } = DefaultFuel;
         public string Name => nameof(Log);
     }
+
+    public class PlasticBottle : IFuelItem
+    {
+        public const float DefaultFuel = 5f;
+        public float Fuel { get; set; } = DefaultFuel;
+        public string Name => nameof(PlasticBottle);
+    }
 }
