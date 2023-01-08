@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using WildernessSurvival.Core;
 using WildernessSurvival.Game;
 using WildernessSurvival.Localization;
 using Xamarin.Forms;
@@ -7,6 +8,7 @@ namespace WildernessSurvival
 {
     public partial class App : Application
     {
+        public static readonly Player Player = new Player();
         static App()
         {
             I18N.EnableFallbackToDefault = true;

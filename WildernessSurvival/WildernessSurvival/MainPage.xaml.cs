@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Threading;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
@@ -14,74 +13,73 @@ namespace WildernessSurvival
     [DesignTimeVisible(false)]
     public partial class MainPage : ContentPage
     {
-        private static Player _player;
+        private static Player Player => App.Player;
 
         public MainPage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["Player"];
             UpdateUI(updateProgressBarInSequence: true);
         }
 
         private async void Move_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.Move);
+            if (Player.IsDead) return;
+            await Player.PerformAction(ActionType.Move);
             UpdateUI();
         }
 
         private async void Explore_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.Explore);
+            if (Player.IsDead) return;
+            await Player.PerformAction(ActionType.Explore);
             UpdateUI();
         }
 
         private async void Rest_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.Rest);
+            if (Player.IsDead) return;
+            await Player.PerformAction(ActionType.Rest);
             UpdateUI();
         }
 
         private async void Hunt_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.Hunt);
+            if (Player.IsDead) return;
+            await Player.PerformAction(ActionType.Hunt);
             UpdateUI();
         }
 
         private async void CutDownTree_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.CutDownTree);
+            if (Player.IsDead) return;
+            await Player.PerformAction(ActionType.CutDownTree);
             UpdateUI();
         }
 
         private async void Fish_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
-            await _player.PerformAction(ActionType.Fish);
+            if (Player.IsDead) return;
+            await Player.PerformAction(ActionType.Fish);
             UpdateUI();
         }
 
         private async void Fire_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
+            if (Player.IsDead) return;
             await this.ShowModalSheetAndAwaitPop(new FirePage());
             UpdateUI();
         }
 
         private async void Cook_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
+            if (Player.IsDead) return;
             await this.ShowModalSheetAndAwaitPop(new CookPage());
             UpdateUI();
         }
 
         private async void Craft_Clicked(object sender, EventArgs e)
         {
-            if (_player.IsDead) return;
+            if (Player.IsDead) return;
             await this.ShowModalSheetAndAwaitPop(new CraftPage());
             UpdateUI();
         }
@@ -96,9 +94,9 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private async void UpdateUI(bool updateProgressBarInSequence = false)
         {
-            RouteLabel.Text = _player.CurRoute.LocalizedName();
+            RouteLabel.Text = Player.CurRoute.LocalizedName();
             // Initialized by location actions
-            var actions = _player.Location.AvailableActions;
+            var actions = Player.Location.AvailableActions;
             Move.IsEnabled = actions.Contains(ActionType.Move);
             Explore.IsEnabled = actions.Contains(ActionType.Explore);
             Rest.IsEnabled = actions.Contains(ActionType.Rest);
@@ -107,45 +105,45 @@ namespace WildernessSurvival
             CutDownTree.IsEnabled = actions.Contains(ActionType.CutDownTree);
             Fish.IsEnabled = actions.Contains(ActionType.Fish);
             // Initialized by player states
-            Cook.IsEnabled = _player.HasFire;
+            Cook.IsEnabled = Player.HasFire;
             Craft.IsEnabled = true;
             // Modified by player states
-            Fire.IsEnabled &= _player.HasFire;
-            CutDownTree.IsEnabled &= _player.HasToolOf(ToolType.Oxe);
-            Hunt.IsEnabled &= _player.HasToolOf(ToolType.Hunting);
-            Fish.IsEnabled &= _player.HasToolOf(ToolType.Fishing);
+            Fire.IsEnabled &= Player.HasFire;
+            CutDownTree.IsEnabled &= Player.HasToolOf(ToolType.Oxe);
+            Hunt.IsEnabled &= Player.HasToolOf(ToolType.Hunting);
+            Fish.IsEnabled &= Player.HasToolOf(ToolType.Fishing);
             // Modified by win or failure
-            Move.IsEnabled &= _player.CanPerformAnyAction;
-            Hunt.IsEnabled &= _player.CanPerformAnyAction;
-            CutDownTree.IsEnabled &= _player.CanPerformAnyAction;
-            Fish.IsEnabled &= _player.CanPerformAnyAction;
-            Explore.IsEnabled &= _player.CanPerformAnyAction;
-            Rest.IsEnabled &= _player.CanPerformAnyAction;
-            Fire.IsEnabled &= _player.CanPerformAnyAction;
-            Cook.IsEnabled &= _player.CanPerformAnyAction;
-            Craft.IsEnabled &= _player.CanPerformAnyAction;
+            Move.IsEnabled &= Player.CanPerformAnyAction;
+            Hunt.IsEnabled &= Player.CanPerformAnyAction;
+            CutDownTree.IsEnabled &= Player.CanPerformAnyAction;
+            Fish.IsEnabled &= Player.CanPerformAnyAction;
+            Explore.IsEnabled &= Player.CanPerformAnyAction;
+            Rest.IsEnabled &= Player.CanPerformAnyAction;
+            Fire.IsEnabled &= Player.CanPerformAnyAction;
+            Cook.IsEnabled &= Player.CanPerformAnyAction;
+            Craft.IsEnabled &= Player.CanPerformAnyAction;
             // Modified by energy
-            Move.IsEnabled &= _player.HasEnergy;
-            Hunt.IsEnabled &= _player.HasEnergy;
-            CutDownTree.IsEnabled &= _player.HasEnergy;
-            Fish.IsEnabled &= _player.HasEnergy;
-            Explore.IsEnabled &= _player.HasEnergy;
+            Move.IsEnabled &= Player.HasEnergy;
+            Hunt.IsEnabled &= Player.HasEnergy;
+            CutDownTree.IsEnabled &= Player.HasEnergy;
+            Fish.IsEnabled &= Player.HasEnergy;
+            Explore.IsEnabled &= Player.HasEnergy;
             // Update Restart button
             if (updateProgressBarInSequence)
             {
-                await TripProgressBar.ProgressTo(_player.JourneyProgress, 300, Easing.Linear);
-                await HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
-                await FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
-                await WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
-                await EnergyProgressBar.ProgressTo(_player.Energy, 300, Easing.Linear);
+                await TripProgressBar.ProgressTo(Player.JourneyProgress, 300, Easing.Linear);
+                await HealthProgressBar.ProgressTo(Player.Health, 300, Easing.Linear);
+                await FoodProgressBar.ProgressTo(Player.Food, 300, Easing.Linear);
+                await WaterProgressBar.ProgressTo(Player.Water, 300, Easing.Linear);
+                await EnergyProgressBar.ProgressTo(Player.Energy, 300, Easing.Linear);
             }
             else
             {
-                TripProgressBar.ProgressTo(_player.JourneyProgress, 300, Easing.Linear);
-                HealthProgressBar.ProgressTo(_player.Health, 300, Easing.Linear);
-                FoodProgressBar.ProgressTo(_player.Food, 300, Easing.Linear);
-                WaterProgressBar.ProgressTo(_player.Water, 300, Easing.Linear);
-                EnergyProgressBar.ProgressTo(_player.Energy, 300, Easing.Linear);
+                TripProgressBar.ProgressTo(Player.JourneyProgress, 300, Easing.Linear);
+                HealthProgressBar.ProgressTo(Player.Health, 300, Easing.Linear);
+                FoodProgressBar.ProgressTo(Player.Food, 300, Easing.Linear);
+                WaterProgressBar.ProgressTo(Player.Water, 300, Easing.Linear);
+                EnergyProgressBar.ProgressTo(Player.Energy, 300, Easing.Linear);
             }
 
             await CheckDeadOrWin();
@@ -155,12 +153,12 @@ namespace WildernessSurvival
         {
             // Don't show the tip again if player can hit the restart button.
             if (Restart.IsVisible) return;
-            Restart.IsVisible = !_player.CanPerformAnyAction;
-            if (_player.IsDead)
+            Restart.IsVisible = !Player.CanPerformAnyAction;
+            if (Player.IsDead)
             {
                 await ShowDialog("Failed");
             }
-            else if (_player.IsWon)
+            else if (Player.IsWon)
             {
                 await ShowDialog("Win");
             }
@@ -171,7 +169,7 @@ namespace WildernessSurvival
             string i(string key) => I18N.Get($"Dialog.{state}.{key}");
             if (await DisplayAlert(
                     title: i("Title"),
-                    message: string.Format(i("Content"), _player.ActionNumber),
+                    message: string.Format(i("Content"), Player.ActionNumber),
                     accept: i("Accept"),
                     cancel: i("Cancel")
                 ))
@@ -182,7 +180,7 @@ namespace WildernessSurvival
 
         private void RestartGame()
         {
-            _player.Reset();
+            Player.Reset();
             Restart.IsVisible = false;
             UpdateUI();
         }

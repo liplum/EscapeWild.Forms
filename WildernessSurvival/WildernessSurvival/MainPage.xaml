@@ -7,6 +7,7 @@
   x:DataType="core:Player"
   xmlns:ui="clr-namespace:WildernessSurvival.UI"
   xmlns:core="clr-namespace:WildernessSurvival.Core;assembly=WildernessSurvival"
+  xmlns:app="clr-namespace:WildernessSurvival;assembly=WildernessSurvival"
   xmlns:m2="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
   xmlns:mf="clr-namespace:Sharpnado.MaterialFrame;assembly=Sharpnado.MaterialFrame"
   mc:Ignorable="d"
@@ -61,7 +62,7 @@
             Grid.Column="1"
             Grid.Row="3" />
           <Label
-            Text="{Binding LocationName,Source={StaticResource Player},Mode=OneWay}" Grid.Column="1"
+            Text="{Binding LocationName,Source={x:Static app:App.Player},Mode=OneWay}" Grid.Column="1"
             Grid.Row="4" />
         </Grid>
       </StackLayout>

@@ -7,7 +7,6 @@
   xmlns:mf="clr-namespace:Sharpnado.MaterialFrame;assembly=Sharpnado.MaterialFrame"
   x:Class="WildernessSurvival.App">
   <Application.Resources>
-    <core:Player x:Key="Player" x:Name="Player" />
     <Style TargetType="Button">
       <Setter Property="CornerRadius" Value="12" />
     </Style>

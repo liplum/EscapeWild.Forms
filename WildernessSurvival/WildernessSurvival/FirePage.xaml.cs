@@ -11,13 +11,14 @@ namespace WildernessSurvival
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class FirePage : ContentPage
     {
-        private readonly Player _player;
+        private static Player Player => App.Player;
+
+        private static IList<IItem> AllItems => Player.AllItems;
 
         public FirePage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["Player"];
-            _fuels = _player.GetFuelItems().ToList();
+            _fuels = Player.GetFuelItems().ToList();
             RebuildPicker();
             UpdateUI();
         }
@@ -36,9 +37,9 @@ namespace WildernessSurvival
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _fuels.Count) return;
             var fuel = _fuels[index];
-            _player.FireFuel += fuel.Fuel;
-            _player.RemoveItem(fuel);
-            _fuels = _player.GetFuelItems().ToList();
+            Player.FireFuel += fuel.Fuel;
+            Player.RemoveItem(fuel);
+            _fuels = Player.GetFuelItems().ToList();
             if (_fuels.Count <= 0)
             {
                 UpdateUI();
@@ -65,7 +66,7 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
-            FireFuelProgress.ProgressTo(_player.FireFuelProgress, 300, Easing.Linear);
+            FireFuelProgress.ProgressTo(Player.FireFuelProgress, 300, Easing.Linear);
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _fuels.Count)
             {
@@ -75,7 +76,7 @@ namespace WildernessSurvival
             }
             else
             {
-                Throw.IsEnabled = _player.CanPerformAnyAction;
+                Throw.IsEnabled = Player.CanPerformAnyAction;
                 var fuel = _fuels[index];
                 ItemDescription.Text = fuel.LocalizedDesc();
             }

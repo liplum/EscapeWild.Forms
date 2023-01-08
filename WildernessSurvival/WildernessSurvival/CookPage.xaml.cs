@@ -12,13 +12,14 @@ namespace WildernessSurvival
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CookPage : ContentPage
     {
-        private readonly Player _player;
+        private static Player Player => App.Player;
+
+        private static IList<IItem> AllItems => Player.AllItems;
 
         public CookPage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["Player"];
-            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
+            _raw2Cooked = (from cookable in Player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
             RebuildPicker();
             UpdateUI();
         }
@@ -37,11 +38,11 @@ namespace WildernessSurvival
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _raw2Cooked.Count) return;
             var (raw, cooked) = _raw2Cooked[index];
-            if (_player.FireFuel < raw.FlueCost) return;
-            _player.FireFuel -= raw.FlueCost;
-            _player.RemoveItem(raw);
-            _player.AddItem(cooked);
-            _raw2Cooked = (from cookable in _player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
+            if (Player.FireFuel < raw.FlueCost) return;
+            Player.FireFuel -= raw.FlueCost;
+            Player.RemoveItem(raw);
+            Player.AddItem(cooked);
+            _raw2Cooked = (from cookable in Player.GetCookableItems() select (cookable, cookable.Cook())).ToList();
             if (_raw2Cooked.Count <= 0)
             {
                 UpdateUI();
@@ -68,7 +69,7 @@ namespace WildernessSurvival
         // ReSharper disable once InconsistentNaming
         private void UpdateUI()
         {
-            FireFuelProgress.ProgressTo(_player.FireFuelProgress, 300, Easing.Linear);
+            FireFuelProgress.ProgressTo(Player.FireFuelProgress, 300, Easing.Linear);
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _raw2Cooked.Count)
             {
@@ -79,9 +80,9 @@ namespace WildernessSurvival
             }
             else
             {
-                Cook.IsEnabled = _player.CanPerformAnyAction;
+                Cook.IsEnabled = Player.CanPerformAnyAction;
                 var (raw, cooked) = _raw2Cooked[index];
-                var hasEnoughFuel = _player.FireFuel >= raw.FlueCost;
+                var hasEnoughFuel = Player.FireFuel >= raw.FlueCost;
                 Cook.IsEnabled &= hasEnoughFuel;
                 Cook.Text = hasEnoughFuel ? _i18n(raw.CookType.ToString()) : _i18n("LowFuel");
                 ItemDescription.Text = string.Format(_i18n($"After{raw.CookType}"), cooked.LocalizedName());

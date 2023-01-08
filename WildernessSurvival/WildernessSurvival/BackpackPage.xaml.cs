@@ -11,20 +11,19 @@ namespace WildernessSurvival
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BackpackPage : ContentPage
     {
-        private readonly Player _player;
+        private static Player Player => App.Player;
 
-        private IList<IItem> AllItems => _player.AllItems;
+        private static IList<IItem> AllItems => Player.AllItems;
 
         public BackpackPage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["Player"];
-            Use.IsEnabled = _player.CanPerformAnyAction && ItemsPicker.SelectedIndex >= 0;
+            Use.IsEnabled = Player.CanPerformAnyAction && ItemsPicker.SelectedIndex >= 0;
             RebuildPicker();
-            HealthProgressBar.Progress = _player.Health;
-            FoodProgressBar.Progress = _player.Food;
-            WaterProgressBar.Progress = _player.Water;
-            EnergyProgressBar.Progress = _player.Energy;
+            HealthProgressBar.Progress = Player.Health;
+            FoodProgressBar.Progress = Player.Food;
+            WaterProgressBar.Progress = Player.Water;
+            EnergyProgressBar.Progress = Player.Energy;
             UpdateUI();
         }
 
@@ -40,11 +39,11 @@ namespace WildernessSurvival
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= AllItems.Count) return;
             var item = AllItems[index];
-            if (!(item is IUsableItem i) || !i.CanUse(_player)) return;
-            await _player.UseItem(i);
-            _player.RemoveItem(item);
+            if (!(item is IUsableItem i) || !i.CanUse(Player)) return;
+            await Player.UseItem(i);
+            Player.RemoveItem(item);
             // Player might die from poison.
-            if (_player.IsDead)
+            if (Player.IsDead)
             {
                 UpdateUI();
                 await Navigation.PopModalAsync();
@@ -103,10 +102,10 @@ namespace WildernessSurvival
             {
                 var selected = AllItems[index];
                 ItemDescription.Text = selected.LocalizedDesc();
-                if (selected is IUsableItem item && item.CanUse(_player))
+                if (selected is IUsableItem item && item.CanUse(Player))
                 {
                     UpdatePreview(item.DisplayPreview);
-                    Use.IsEnabled = _player.CanPerformAnyAction;
+                    Use.IsEnabled = Player.CanPerformAnyAction;
                     Use.Text = $"Backpack.{item.UseType}".Tr();
                     AfterUseLabel.Text = $"Backpack.After{item.UseType}".Tr();
                     var builder = new AttrModifierBuilder();
@@ -115,10 +114,10 @@ namespace WildernessSurvival
                     {
                         var mock = new DefaultAttributeModel
                         {
-                            Health = _player.Health,
-                            Food = _player.Food,
-                            Water = _player.Water,
-                            Energy = _player.Energy,
+                            Health = Player.Health,
+                            Food = Player.Food,
+                            Water = Player.Water,
+                            Energy = Player.Energy,
                         };
                         builder.PerformModification(new AttributeManager(mock));
                         AfterUseArea.IsVisible = true;

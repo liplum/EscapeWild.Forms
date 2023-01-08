@@ -10,18 +10,19 @@ namespace WildernessSurvival
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class CraftPage : ContentPage
     {
-        private readonly Player _player;
+        private static Player Player => App.Player;
+
+        private static IList<IItem> AllItems => Player.AllItems;
 
         public CraftPage()
         {
             InitializeComponent();
-            _player = (Player)Application.Current.Resources["Player"];
-            _recipe2Preview = Core.Craft.TestAvailableRecipes(_player.Backpack);
+            _recipe2Preview = Core.Craft.TestAvailableRecipes(Player.Backpack);
             RebuildPicker();
-            HealthProgressBar.Progress = _player.Health;
-            FoodProgressBar.Progress = _player.Food;
-            WaterProgressBar.Progress = _player.Water;
-            EnergyProgressBar.Progress = _player.Energy;
+            HealthProgressBar.Progress = Player.Health;
+            FoodProgressBar.Progress = Player.Food;
+            WaterProgressBar.Progress = Player.Water;
+            EnergyProgressBar.Progress = Player.Energy;
             UpdateUI();
         }
 
@@ -39,19 +40,20 @@ namespace WildernessSurvival
             var index = ItemsPicker.SelectedIndex;
             if (index < 0 || index >= _recipe2Preview.Count) return;
             var (recipe, _) = _recipe2Preview[index];
-            var output = recipe.ConsumeAndCraft(_player.Backpack);
+            var output = recipe.ConsumeAndCraft(Player.Backpack);
             var builder = new AttrModifierBuilder();
             recipe.BuildCraftAttrRequirements(builder);
-            builder.PerformModification(_player.Attrs);
-            _player.AddItem(output);
-            _recipe2Preview = Core.Craft.TestAvailableRecipes(_player.Backpack);
+            builder.PerformModification(Player.Attrs);
+            Player.AddItem(output);
+            _recipe2Preview = Core.Craft.TestAvailableRecipes(Player.Backpack);
             // Player might die from exhaustion.
-            if (_player.IsDead)
+            if (Player.IsDead)
             {
                 UpdateUI();
                 await Navigation.PopModalAsync();
                 return;
             }
+
             if (_recipe2Preview.Count <= 0)
             {
                 UpdateUI();
@@ -88,7 +90,7 @@ namespace WildernessSurvival
             }
             else
             {
-                Craft.IsEnabled = _player.CanPerformAnyAction;
+                Craft.IsEnabled = Player.CanPerformAnyAction;
                 var (recipe, preview) = _recipe2Preview[index];
                 ItemDescription.Text = preview.LocalizedDesc();
                 var builder = new AttrModifierBuilder();
@@ -97,10 +99,10 @@ namespace WildernessSurvival
                 {
                     var mock = new DefaultAttributeModel
                     {
-                        Health = _player.Health,
-                        Food = _player.Food,
-                        Water = _player.Water,
-                        Energy = _player.Energy,
+                        Health = Player.Health,
+                        Food = Player.Food,
+                        Water = Player.Water,
+                        Energy = Player.Energy,
                     };
                     builder.PerformModification(new AttributeManager(mock));
                     AfterCraftArea.IsVisible = true;
