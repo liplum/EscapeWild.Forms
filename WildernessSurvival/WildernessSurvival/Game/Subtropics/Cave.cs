@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
+using WildernessSurvival.Game.Subtropics;
 
 namespace WildernessSurvival.Game
 {

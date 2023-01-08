@@ -1,10 +1,8 @@
-﻿// ReSharper disable CheckNamespace
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Game.Subtropics
 {
     public class RiversidePlace : Place
     {

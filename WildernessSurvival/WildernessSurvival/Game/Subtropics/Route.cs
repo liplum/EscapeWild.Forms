@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using WildernessSurvival.Core;
 using WildernessSurvival.Localization;
 
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Game.Subtropics
 {
     public class Route : IRoute<Place>
     {
@@ -134,15 +134,15 @@ namespace WildernessSurvival.Game
 
     public class RouteEntry
     {
-    }
-
-    public class GenerateContext
-    {
-        public int TotalPlaceNumber { get; set; }
+        
     }
 
     public class RouteGenerator
     {
+        /// <summary>
+        /// To prompt how many place should be generated.
+        /// </summary>
+        public int PlaceNumberPrompt { get; set; }
         public IList<RouteEntry> Generate()
         {
             return new List<RouteEntry>();

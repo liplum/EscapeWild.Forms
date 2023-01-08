@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WildernessSurvival.Core;
+using WildernessSurvival.Game.Subtropics;
 
-// ReSharper disable CheckNamespace
-namespace WildernessSurvival.Game
+namespace WildernessSurvival.Game.Subtropics
 {
     public class HutPlace : Place
     {

@@ -4,11 +4,11 @@ namespace WildernessSurvival.Game
 {
     public static class Routes
     {
-        public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new Route(
+        public static readonly RouteMaker<IPlace> SubtropicsRoute = () => new Subtropics.Route(
             name: "Subtropics", hardness: Rand.Float(0f, 0.3f),
-            new Route.Entry
+            new Subtropics.Route.Entry
             {
-                Place = new PlainPlace
+                Place = new Subtropics.PlainPlace
                 {
                     Name = "Plain",
                     HuntingRate = 50,
@@ -16,9 +16,9 @@ namespace WildernessSurvival.Game
                 Proportion = 30,
                 Inertia = 0.6f,
                 MaxStayCount = 12,
-            }, new Route.Entry
+            }, new Subtropics.Route.Entry
             {
-                Place = new RiversidePlace
+                Place = new Subtropics.RiversidePlace
                 {
                     Name = "Riverside",
                     HuntingRate = 30,
@@ -27,9 +27,9 @@ namespace WildernessSurvival.Game
                 Proportion = 30,
                 Inertia = 0.4f,
                 MaxStayCount = 8,
-            }, new Route.Entry
+            }, new Subtropics.Route.Entry
             {
-                Place = new ForestPlace
+                Place = new Subtropics.ForestPlace
                 {
                     Name = "Forest",
                     HuntingRate = 60,
@@ -37,9 +37,9 @@ namespace WildernessSurvival.Game
                 Proportion = 30,
                 Inertia = 0.6f,
                 MaxStayCount = 10,
-            }, new Route.Entry
+            }, new Subtropics.Route.Entry
             {
-                Place = new HutPlace
+                Place = new Subtropics.HutPlace
                 {
                     Name = "Hut",
                     HuntingRate = 30,
