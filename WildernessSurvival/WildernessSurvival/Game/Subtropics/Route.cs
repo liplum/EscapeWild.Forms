@@ -70,6 +70,8 @@ namespace WildernessSurvival.Game.Subtropics
     {
         public Hardness Hardness;
 
+        public bool RandomizeBlocks;
+
         public IList<RouteBlock> Blocks;
 
         public Action<List<RouteEntry>> Decorate;
@@ -91,6 +93,8 @@ namespace WildernessSurvival.Game.Subtropics
             var PlaceNumberPrompt = Hardness.JourneyLength();
             var res = new List<RouteEntry>();
             var totalSize = Blocks.Sum(e => e.BlockSize);
+            if (RandomizeBlocks)
+                Blocks.Shuffle();
             foreach (var block in Blocks)
             {
                 var shouldGenerate = (int)(block.BlockSize / totalSize * PlaceNumberPrompt);

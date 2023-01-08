@@ -15,6 +15,7 @@ namespace WildernessSurvival.Game
             var generator = new Subtropics.RouteGenerator
             {
                 Hardness = hardness,
+                RandomizeBlocks = true,
                 Blocks = new List<Subtropics.RouteBlock>
                 {
                     new Subtropics.RouteBlock
