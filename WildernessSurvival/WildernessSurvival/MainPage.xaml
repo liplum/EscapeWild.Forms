@@ -62,7 +62,8 @@
             Grid.Column="1"
             Grid.Row="3" />
           <Label
-            Text="{Binding LocationName,Source={x:Static app:App.Player},Mode=OneWay}" Grid.Column="1"
+            x:Name="LocationName"
+            Grid.Column="1"
             Grid.Row="4" />
         </Grid>
       </StackLayout>

@@ -12,7 +12,9 @@
 
 EscapeWild.Forms is open source under GUN v3.0 license.
 
-Welcome to contribute localization, please see [this contribution guide](CONTRIBUTING.md). 
+Welcome to contribute localization, or add more content.
+
+Please see [this contribution guide](CONTRIBUTING.md). 
 
 ## Acknowledgements
 

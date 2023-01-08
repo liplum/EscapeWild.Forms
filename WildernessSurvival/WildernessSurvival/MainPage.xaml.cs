@@ -95,6 +95,7 @@ namespace WildernessSurvival
         private async void UpdateUI(bool updateProgressBarInSequence = false)
         {
             RouteLabel.Text = Player.CurRoute.LocalizedName();
+            LocationName.Text = Player.Location.LocalizedName();
             // Initialized by location actions
             var actions = Player.Location.AvailableActions;
             Move.IsEnabled = actions.Contains(ActionType.Move);

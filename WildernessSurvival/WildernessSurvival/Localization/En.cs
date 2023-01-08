@@ -66,6 +66,8 @@ namespace WildernessSurvival.Localization
             { "Item.UnknownMushrooms.Desc", "Don't touch bright mushrooms. Well, let you have a taste." },
             { "Item.GrilledUnknownMushrooms.Name", "Grilled Unknown Mushrooms" },
             { "Item.GrilledUnknownMushrooms.Desc", "Hope the fire will cleanse the poison." },
+            { "Item.SurvivalKnife.Name", "Survival Knife" },
+            { "Item.SurvivalKnife.Desc", "Hope the fire will cleanse the poison." },
             { "Cook.Cook", "Cook" },
             { "Cook.Boil", "Boil" },
             { "Cook.Roast", "Roast" },

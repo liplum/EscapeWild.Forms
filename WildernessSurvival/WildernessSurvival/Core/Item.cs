@@ -36,6 +36,7 @@ namespace WildernessSurvival.Core
         }
 
         public static readonly ToolType
+            Cutting = new ToolType("Cutting"),
             Oxe = new ToolType("Oxe"),
             Hunting = new ToolType("Hunting"),
             Fishing = new ToolType("Fishing");

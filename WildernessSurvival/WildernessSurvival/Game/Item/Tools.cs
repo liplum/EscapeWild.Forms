@@ -5,6 +5,17 @@ using WildernessSurvival.Localization;
 // ReSharper disable CheckNamespace
 namespace WildernessSurvival.Game
 {
+    public static class CuttingItems
+    {
+        public static readonly ItemMaker<ToolItem> SurvivalKnife = () => new ToolItem
+        {
+            Durability = 18,
+            Name = "SurvivalKnife",
+            Level = ToolLevel.High,
+            ToolType = ToolType.Cutting,
+        };
+    }
+
     public static class OxeItems
     {
         public static readonly ItemMaker<ToolItem> OldOxe = () => new ToolItem
@@ -24,7 +35,7 @@ namespace WildernessSurvival.Game
             Name = "OldFishRod",
             Level = ToolLevel.Normal,
             ToolType = ToolType.Fishing,
-        }; 
+        };
     }
 
     public static class HuntingToolItems
@@ -87,7 +98,7 @@ namespace WildernessSurvival.Game
             else
             {
                 player["Fire.MakingPrompt"] = makingPromptNumber + 1;
-                var reason = wet > 0.5f ? "Fire.Failed.Wet" : "Fire.Failed.FireRate";
+                var reason = wet > 0.3f ? "Fire.Failed.Wet" : "Fire.Failed.FireRate";
                 await App.Current.MainPage.DisplayAlert(
                     title: ActionType.Fire.LocalizedName(),
                     message: reason.Tr(),

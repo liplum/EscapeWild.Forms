@@ -70,11 +70,9 @@ namespace WildernessSurvival.Core
             {
                 if (_location == value) return;
                 _location = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LocationName)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Location)));
             }
         }
-
-        public string LocationName => Location.LocalizedName();
 
         public int ActionNumber
         {
