@@ -123,7 +123,7 @@ namespace WildernessSurvival.Game.Subtropics
     /// </summary>
     public class RouteBlock
     {
-        public Func<IPlace> Place { get; set; }
+        public Func<Place> Place { get; set; }
 
         /// <summary>
         /// [0f,1f]
@@ -134,7 +134,7 @@ namespace WildernessSurvival.Game.Subtropics
 
     public class RouteEntry
     {
-        
+        public Place Place;
     }
 
     public class RouteGenerator
@@ -142,10 +142,38 @@ namespace WildernessSurvival.Game.Subtropics
         /// <summary>
         /// To prompt how many place should be generated.
         /// </summary>
-        public int PlaceNumberPrompt { get; set; }
-        public IList<RouteEntry> Generate()
+        public int PlaceNumberPrompt;
+
+        public IList<RouteBlock> Blocks;
+
+        public Action<List<RouteEntry>> Decorate;
+
+        public Route Generate()
         {
-            return new List<RouteEntry>();
+            var blocks = GenerateWithBlock();
+            Decorate?.Invoke(blocks);
+            return new Route("", 0f);
+        }
+
+        public List<RouteEntry> GenerateWithBlock()
+        {
+            var res = new List<RouteEntry>();
+            var totalSize = Blocks.Sum(e => e.BlockSize);
+            foreach (var block in Blocks)
+            {
+                var shouldGenerate = (int)(block.BlockSize / totalSize);
+                for (var i = 0; i < shouldGenerate; i++)
+                {
+                    var place = block.Place();
+                    var entry = new RouteEntry
+                    {
+                        Place = place
+                    };
+                    res.Add(entry);
+                }
+            }
+
+            return res;
         }
     }
 
