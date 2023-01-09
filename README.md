@@ -6,7 +6,7 @@
 
 #### *It's a prototype of an oncoming game.*
 
-<img src="GFX/showcase.png" alt="Showcase" width=300/>
+<img src="GFX/showcase-v1.4.1.png" alt="Showcase" width=300/>
 
 ### See Also
 
